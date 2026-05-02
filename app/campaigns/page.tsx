@@ -23,13 +23,19 @@ export default async function CampaignsPage() {
         ) : (
           <ul className="space-y-2">
             {campaigns.map(c => (
-              <li key={c.id} className="bg-lantern-panel border border-lantern-border p-3">
-                <Link href={`/c/${c.id}`} className="text-lantern-gold">
-                  {c.name}
+              <li key={c.id} className="bg-lantern-panel border border-lantern-border p-3 flex items-center justify-between">
+                <div>
+                  <Link href={`/c/${c.id}`} className="text-lantern-gold">{c.name}</Link>
+                  {c.description && (
+                    <p className="text-lantern-muted text-sm mt-1">{c.description}</p>
+                  )}
+                </div>
+                <Link
+                  href={`/campaigns/${c.id}/edit`}
+                  className="text-lantern-muted text-sm hover:text-lantern-gold"
+                >
+                  Edit
                 </Link>
-                {c.description && (
-                  <p className="text-lantern-muted text-sm mt-1">{c.description}</p>
-                )}
               </li>
             ))}
           </ul>
