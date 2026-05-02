@@ -13,6 +13,15 @@ Web hub for D&D DM tools. Vercel + Supabase + Next.js 15.
 ## Spec
 See `docs/design.md` (mirror of the canonical spec).
 
+## Running e2e tests locally
+
+The e2e tests need:
+1. A test user provisioned in Supabase Auth.
+2. `.env.local` with `E2E_USER_EMAIL` and `E2E_USER_PASSWORD` set to that user's credentials.
+3. Browser binaries: `npx playwright install chromium`.
+
+Then: `npm run e2e`. Tests live in `tests/e2e/`.
+
 ## For DMs
 
 This is a personal hub for D&D tools — sign in with Google or email, create a
