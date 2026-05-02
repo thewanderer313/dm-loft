@@ -7,7 +7,7 @@ export type Campaign = {
   accent_color: string | null;
   last_tool_id: string | null;
   last_opened_at: string | null;
-  created_at: string;
+  created_at: string | null;
 };
 
 export async function listMyCampaigns(): Promise<Campaign[]> {

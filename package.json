@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "tools:port": "node scripts/port-all.mjs",
     "e2e": "playwright test",
-    "e2e:ui": "playwright test --ui"
+    "e2e:ui": "playwright test --ui",
+    "db:types": "supabase gen types typescript --project-id okvnehycqtwdeyuvhgqf > lib/supabase/database.types.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
@@ -33,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "jsdom": "^29.1.1",
+    "supabase": "^2.98.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.5"
