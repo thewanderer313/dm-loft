@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "backgroundImage": null,
+  "favorites": [],
+  "categories": [
+    {
+      "id": "loot",
+      "name": "Loot",
+      "tables": [
+        {
+          "id": "loot-pockets",
+          "name": "Pockets of the Dead",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A handful of corroded copper pennies, dated before the war."
+            },
+            {
+              "type": "text",
+              "text": "A crumpled letter, ink long faded, smelling of lavender and rot."
+            },
+            {
+              "type": "text",
+              "text": "Three teeth tied together with black thread."
+            },
+            {
+              "type": "text",
+              "text": "A tarnished locket containing a lock of gray hair."
+            },
+            {
+              "type": "text",
+              "text": "A carved bone whistle that makes no sound when blown."
+            },
+            {
+              "type": "text",
+              "text": "A small jar of honey, still perfectly preserved."
+            },
+            {
+              "type": "text",
+              "text": "A rabbit's foot, far too large to be from any ordinary rabbit."
+            },
+            {
+              "type": "text",
+              "text": "A hand-drawn map to a place that doesn't exist anymore."
+            },
+            {
+              "type": "text",
+              "text": "Seven iron nails wrapped in oilcloth."
+            },
+            {
+              "type": "text",
+              "text": "A pocket watch stopped at 3:33."
+            }
+          ]
+        },
+        {
+          "id": "loot-abandoned",
+          "name": "Abandoned Homestead Finds",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A quilt sewn with patterns that hurt to look at too long."
+            },
+            {
+              "type": "text",
+              "text": "Mason jars filled with murky preserves—something moves inside one."
+            },
+            {
+              "type": "text",
+              "text": "A family Bible with entire generations crossed out in red ink."
+            },
+            {
+              "type": "text",
+              "text": "A rocking chair that creaks even when empty."
+            },
+            {
+              "type": "text",
+              "text": "Bundles of dried herbs hanging from the rafters, some unidentifiable."
+            },
+            {
+              "type": "text",
+              "text": "A shotgun with one shell remaining, rusted shut."
+            },
+            {
+              "type": "text",
+              "text": "A child's doll made of corn husks, dressed in mourning clothes."
+            },
+            {
+              "type": "text",
+              "text": "An iron cookstove still warm to the touch."
+            },
+            {
+              "type": "text",
+              "text": "A stack of yellowed newspapers reporting events yet to happen."
+            },
+            {
+              "type": "text",
+              "text": "A moonshine still, operational, tended by no one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "npc",
+      "name": "NPC",
+      "tables": [
+        {
+          "id": "npc-strangers",
+          "name": "Strangers on the Road",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A traveling preacher whose shadow moves independently of his body."
+            },
+            {
+              "type": "text",
+              "text": "An old woman selling apples from a cart that leaves no wheel tracks."
+            },
+            {
+              "type": "text",
+              "text": "A census taker asking questions about people who died decades ago."
+            },
+            {
+              "type": "text",
+              "text": "A child walking alone, humming a tune no one taught them."
+            },
+            {
+              "type": "text",
+              "text": "A mail carrier delivering letters to abandoned houses."
+            },
+            {
+              "type": "text",
+              "text": "Twin sisters who finish each other's sentences before they're spoken."
+            },
+            {
+              "type": "text",
+              "text": "A fiddler whose music makes the trees lean closer."
+            },
+            {
+              "type": "text",
+              "text": "A mute beggar whose eyes reflect places you've never been."
+            },
+            {
+              "type": "text",
+              "text": "A tax collector for a county that no longer exists."
+            },
+            {
+              "type": "text",
+              "text": "A woman in a wedding dress, walking toward something only she can see."
+            }
+          ]
+        },
+        {
+          "id": "npc-townsfolk",
+          "name": "Hollow Ridge Townsfolk",
+          "entries": [
+            {
+              "type": "text",
+              "text": "The shopkeeper who weighs everything twice and trusts nothing."
+            },
+            {
+              "type": "text",
+              "text": "The blacksmith whose forge burns cold and blue at midnight."
+            },
+            {
+              "type": "text",
+              "text": "The schoolmarm teaching lessons from books written in no known language."
+            },
+            {
+              "type": "text",
+              "text": "The barber who knows everyone's secrets and pretends otherwise."
+            },
+            {
+              "type": "text",
+              "text": "The undertaker who measures the living with a knowing eye."
+            },
+            {
+              "type": "text",
+              "text": "The midwife who has never lost a mother, though some wish she had."
+            },
+            {
+              "type": "text",
+              "text": "The drunk who speaks prophecy between blackouts."
+            },
+            {
+              "type": "text",
+              "text": "The church organist who only plays songs for the dead."
+            },
+            {
+              "type": "text",
+              "text": "The general store clerk who remembers purchases you haven't made yet."
+            },
+            {
+              "type": "text",
+              "text": "The mayor, elected unanimously, though no one recalls the vote."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "encounter",
+      "name": "Encounter",
+      "tables": [
+        {
+          "id": "encounter-woods",
+          "name": "Deep Woods Encounters",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A clearing where all the trees have grown facing away from the center."
+            },
+            {
+              "type": "text",
+              "text": "The sound of chopping, but no woodsman to be found."
+            },
+            {
+              "type": "text",
+              "text": "A perfectly stacked cairn of stones that wasn't there a moment ago."
+            },
+            {
+              "type": "text",
+              "text": "Animal bones arranged in geometric patterns along the trail."
+            },
+            {
+              "type": "text",
+              "text": "A spring whose water tastes of copper and regret."
+            },
+            {
+              "type": "text",
+              "text": "Bootprints in the mud that end abruptly mid-stride."
+            },
+            {
+              "type": "text",
+              "text": "A hunting blind built high in the trees, watching the trail below."
+            },
+            {
+              "type": "text",
+              "text": "The smell of woodsmoke but no fire visible for miles."
+            },
+            {
+              "type": "text",
+              "text": "A tree scarred with claw marks far too high for any bear."
+            },
+            {
+              "type": "text",
+              "text": "A child's laughter echoing from all directions at once."
+            }
+          ]
+        },
+        {
+          "id": "encounter-night",
+          "name": "Things After Dark",
+          "entries": [
+            {
+              "type": "text",
+              "text": "Lights bobbing through the hollow that aren't lanterns or fireflies."
+            },
+            {
+              "type": "text",
+              "text": "The sensation of being watched from just beyond the firelight."
+            },
+            {
+              "type": "text",
+              "text": "A knock at the door, though you're miles from any dwelling."
+            },
+            {
+              "type": "text",
+              "text": "Your campfire dims as something large passes overhead."
+            },
+            {
+              "type": "text",
+              "text": "Whispers in a language you almost understand."
+            },
+            {
+              "type": "text",
+              "text": "The sound of a congregation singing hymns from an empty church."
+            },
+            {
+              "type": "text",
+              "text": "A figure at the crossroads, standing perfectly still."
+            },
+            {
+              "type": "text",
+              "text": "Your reflection in the water doesn't match your movements."
+            },
+            {
+              "type": "text",
+              "text": "The moon seems wrong tonight—too large, too close, too hungry."
+            },
+            {
+              "type": "text",
+              "text": "Hoofbeats approaching, but the road remains empty."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "complication",
+      "name": "Complication",
+      "tables": [
+        {
+          "id": "complication-social",
+          "name": "Social Complications",
+          "entries": [
+            {
+              "type": "text",
+              "text": "Someone recognizes you from a place you've never been."
+            },
+            {
+              "type": "text",
+              "text": "An old debt comes due—one you don't remember incurring."
+            },
+            {
+              "type": "text",
+              "text": "The locals go silent the moment they see your face."
+            },
+            {
+              "type": "text",
+              "text": "A child delivers a message meant for someone else, but it's in your handwriting."
+            },
+            {
+              "type": "text",
+              "text": "You've been expected. A room was already prepared."
+            },
+            {
+              "type": "text",
+              "text": "Someone you trust has been spreading lies about your intentions."
+            },
+            {
+              "type": "text",
+              "text": "The town holds a grudge against your family going back generations."
+            },
+            {
+              "type": "text",
+              "text": "A rival arrives, claiming you've stolen something precious."
+            },
+            {
+              "type": "text",
+              "text": "You're offered hospitality that feels more like imprisonment."
+            },
+            {
+              "type": "text",
+              "text": "The person you came to meet died last night—but sent a letter this morning."
+            }
+          ]
+        },
+        {
+          "id": "complication-environment",
+          "name": "Environmental Complications",
+          "entries": [
+            {
+              "type": "text",
+              "text": "The bridge you crossed yesterday is gone, as if it never existed."
+            },
+            {
+              "type": "text",
+              "text": "A fog rolls in that your compass cannot navigate."
+            },
+            {
+              "type": "text",
+              "text": "The road loops back on itself no matter which direction you travel."
+            },
+            {
+              "type": "text",
+              "text": "A sudden storm forces shelter in a place best avoided."
+            },
+            {
+              "type": "text",
+              "text": "The local well has gone dry—or worse, changed color."
+            },
+            {
+              "type": "text",
+              "text": "Landslide blocks the only pass; the long way adds three days."
+            },
+            {
+              "type": "text",
+              "text": "Something has spooked all the animals for miles around."
+            },
+            {
+              "type": "text",
+              "text": "The temperature drops unnaturally as you approach your destination."
+            },
+            {
+              "type": "text",
+              "text": "Your supplies have spoiled overnight, though they were fresh at dusk."
+            },
+            {
+              "type": "text",
+              "text": "The map shows a town here. There is only a foundation and graves."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat-1770570538359",
+      "name": "Player Loot Tables",
+      "tables": [
+        {
+          "id": "id-1770570698998-181h2oasb",
+          "name": "Dustfoot Loot",
+          "entries": []
+        },
+        {
+          "id": "id-1770570711213-lmwa51cvq",
+          "name": "Callen Loot",
+          "entries": []
+        },
+        {
+          "id": "id-1770570720253-6i25a4a5c",
+          "name": "Allonius Loot",
+          "entries": []
+        },
+        {
+          "id": "id-1770570728918-x9p96osau",
+          "name": "Biggus Loot",
+          "entries": []
+        },
+        {
+          "id": "id-1770570736341-j8pcsxohg",
+          "name": "Kefka Loot",
+          "entries": []
+        }
+      ]
+    }
+  ]
+}

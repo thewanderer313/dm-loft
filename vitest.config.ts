@@ -9,5 +9,10 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./tests/setup.ts"],
   },
-  resolve: { alias: { "@": path.resolve(__dirname, ".") } },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "."),
+      "@/scripts/port-tool": path.resolve(__dirname, "scripts/port-tool.mjs"),
+    },
+  },
 });

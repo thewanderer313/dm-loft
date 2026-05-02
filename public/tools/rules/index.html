@@ -1,0 +1,2701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>/* dm-loft:localStorage-namespace */
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var c = p.get('campaign');
+  if (!c) return;
+  var ns = 'dmloft:' + c + ':';
+  var ls = window.localStorage;
+  var origGet = ls.getItem.bind(ls),
+      origSet = ls.setItem.bind(ls),
+      origRemove = ls.removeItem.bind(ls);
+  ls.getItem    = function (k) { return origGet(ns + k); };
+  ls.setItem    = function (k, v) { return origSet(ns + k, v); };
+  ls.removeItem = function (k) { return origRemove(ns + k); };
+})();
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rules Reference</title>
+  <style>
+    :root {
+      --bg-primary: #111816;
+      --bg-secondary: #161f1b;
+      --bg-tertiary: #1c2723;
+      --bg-card: #212d28;
+      --border-color: #2a3832;
+      --border-strong: #3a4a42;
+      --text-primary: #e4ebe4;
+      --text-secondary: #9aaa9a;
+      --text-muted: #5a6a5a;
+      --accent: #4a7c59;
+      --accent-hover: #5a9469;
+      --accent-glow: rgba(74, 124, 89, 0.25);
+      --danger: #8b3a3a;
+      --warning: #8b7355;
+      --success: #4a7c59;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .app-header {
+      background: var(--bg-secondary);
+      border-bottom: 2px solid var(--border-strong);
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .app-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .app-title svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--accent);
+    }
+
+    /* Search */
+    .search-container {
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Main Layout */
+    .main-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-section {
+      padding: 0.5rem 0;
+    }
+
+    .sidebar-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+    }
+
+    .sidebar-item {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .sidebar-item.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .sidebar-item .count {
+      float: right;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .sidebar-item.active .count {
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .category-header {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    /* Rule Cards */
+    .rule-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .rule-card.expanded .rule-header {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .rule-header {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .rule-header:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .rule-title {
+      flex: 1;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .rule-pages {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-right: 1rem;
+    }
+
+    .rule-toggle {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      transition: transform 0.2s;
+    }
+
+    .rule-card.expanded .rule-toggle {
+      transform: rotate(180deg);
+    }
+
+    .rule-content {
+      display: none;
+      padding: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .rule-card.expanded .rule-content {
+      display: block;
+    }
+
+    .rule-content p {
+      margin-bottom: 0.75rem;
+    }
+
+    .rule-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .rule-content ul, .rule-content ol {
+      margin: 0.5rem 0 0.75rem 1.5rem;
+    }
+
+    .rule-content li {
+      margin-bottom: 0.25rem;
+    }
+
+    .rule-content strong {
+      color: var(--text-primary);
+    }
+
+    .rule-content .highlight {
+      background: var(--accent-glow);
+      padding: 0.125rem 0.25rem;
+      border-radius: 3px;
+    }
+
+    .rule-content .page-ref {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: var(--bg-tertiary);
+      padding: 0.125rem 0.5rem;
+      border-radius: 3px;
+      margin-left: 0.25rem;
+    }
+
+    .rule-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0;
+      font-size: 0.85rem;
+    }
+
+    .rule-content th, .rule-content td {
+      padding: 0.5rem;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+
+    .rule-content th {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Search Results */
+    .search-results-count {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+
+    .no-results-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Highlight search matches */
+    .search-match,
+    .search-highlight {
+      background: var(--warning);
+      color: var(--bg-primary);
+      padding: 0 0.125rem;
+      border-radius: 2px;
+    }
+
+    /* Quick Reference Box */
+    .quick-ref {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1rem;
+      margin: 0.75rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .quick-ref-title {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Conditions Badge */
+    .condition-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .condition-badge.debuff { background: var(--danger); color: white; }
+    .condition-badge.buff { background: var(--success); color: white; }
+    .condition-badge.neutral { background: var(--text-muted); color: white; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 180px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .main-content {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        max-height: 200px;
+      }
+    }
+
+    /* ============ TOOLTIPS ============ */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: rgba(20, 30, 25, 0.98);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: normal;
+      white-space: nowrap;
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      border: 1px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    [data-tooltip]::before {
+      content: '';
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: rgba(20, 30, 25, 0.98);
+      z-index: 10001;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    [data-tooltip]:hover::after,
+    [data-tooltip]:hover::before {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    [data-tooltip]:hover::before {
+      transform: translateX(-50%);
+    }
+
+    /* Bottom tooltips for elements near top */
+    [data-tooltip-pos="bottom"]::after {
+      bottom: auto;
+      top: calc(100% + 8px);
+    }
+
+    [data-tooltip-pos="bottom"]::before {
+      bottom: auto;
+      top: calc(100% + 2px);
+      border-top-color: transparent;
+      border-bottom-color: rgba(20, 30, 25, 0.98);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1 class="app-title">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 2H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3zm-7 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        <span id="app-title-text">Rules Reference</span>
+      </h1>
+    </header>
+
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchBox" placeholder="Search rules by title or content..." onkeyup="window.doSearch && window.doSearch()" title="Type to search rules by title, content, or keywords">
+      <button onclick="window.doSearch && window.doSearch()" style="margin-left: 8px; padding: 0.75rem 1rem; background: var(--accent); border: none; border-radius: 6px; color: white; cursor: pointer;" data-tooltip="Search rules" data-tooltip-pos="bottom">Search</button>
+    </div>
+
+    <main class="main-content">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Categories</div>
+          <button class="sidebar-item active" data-category="all">All Rules <span class="count" id="count-all">0</span></button>
+          <button class="sidebar-item" data-category="combat">Combat <span class="count" id="count-combat">0</span></button>
+          <button class="sidebar-item" data-category="conditions">Conditions <span class="count" id="count-conditions">0</span></button>
+          <button class="sidebar-item" data-category="spellcasting">Spellcasting <span class="count" id="count-spellcasting">0</span></button>
+          <button class="sidebar-item" data-category="exploration">Exploration <span class="count" id="count-exploration">0</span></button>
+          <button class="sidebar-item" data-category="social">Social & Skills <span class="count" id="count-social">0</span></button>
+          <button class="sidebar-item" data-category="equipment">Equipment <span class="count" id="count-equipment">0</span></button>
+          <button class="sidebar-item" data-category="classes">Classes <span class="count" id="count-classes">0</span></button>
+          <button class="sidebar-item" data-category="class-features">Class Features <span class="count" id="count-class-features">0</span></button>
+          <button class="sidebar-item" data-category="house-rules">House Rules <span class="count" id="count-house-rules">0</span></button>
+        </div>
+      </aside>
+
+      <div class="content-area" id="content-area">
+        <h2 class="category-header" id="category-header">All Rules</h2>
+        <div id="rules-container"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // =====================================================
+    // RULES DATABASE
+    // Page references: PHB = Player's Handbook (2014)
+    //                  PHB24 = Player's Handbook (2024)
+    //                  DMG = Dungeon Master's Guide (2014)
+    //                  DMG24 = Dungeon Master's Guide (2024)
+    // =====================================================
+    const RULES_DATA = [
+      // ========== COMBAT ==========
+      {
+        id: 'initiative',
+        title: 'Initiative',
+        category: 'combat',
+        pages: { PHB: 189, PHB24: 361, DMG: 247 },
+        keywords: ['initiative', 'turn order', 'combat order', 'dexterity'],
+        content: `
+          <p>At the start of combat, every participant makes a <strong>Dexterity check</strong> to determine their place in the initiative order.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Initiative Roll</div>
+            d20 + Dexterity modifier (+ any bonuses like Alert feat or class features)
+          </div>
+          <p>The DM ranks combatants in order from highest to lowest. This order remains the same from round to round.</p>
+          <p><strong>Ties:</strong> The DM decides the order among tied DM-controlled creatures. Players decide among themselves if they tie with each other. The DM decides if a tie is between a monster and a player.</p>
+        `
+      },
+      {
+        id: 'actions-in-combat',
+        title: 'Actions in Combat',
+        category: 'combat',
+        pages: { PHB: 192, PHB24: 361 },
+        keywords: ['action', 'attack', 'cast', 'dash', 'disengage', 'dodge', 'help', 'hide', 'ready', 'search', 'use object'],
+        content: `
+          <p>On your turn, you can take <strong>one action</strong>. Common actions include:</p>
+          <ul>
+            <li><strong>Attack:</strong> Make one melee or ranged attack (or more with Extra Attack)</li>
+            <li><strong>Cast a Spell:</strong> Cast a spell with a casting time of 1 action</li>
+            <li><strong>Dash:</strong> Gain extra movement equal to your speed</li>
+            <li><strong>Disengage:</strong> Your movement doesn't provoke opportunity attacks</li>
+            <li><strong>Dodge:</strong> Attack rolls against you have disadvantage; Dex saves have advantage</li>
+            <li><strong>Help:</strong> Give an ally advantage on their next ability check or attack roll</li>
+            <li><strong>Hide:</strong> Make a Dexterity (Stealth) check to hide</li>
+            <li><strong>Ready:</strong> Prepare to act later with a trigger condition</li>
+            <li><strong>Search:</strong> Make a Wisdom (Perception) or Intelligence (Investigation) check</li>
+            <li><strong>Use an Object:</strong> Interact with a second object (first is free)</li>
+          </ul>
+        `
+      },
+      {
+        id: 'bonus-action',
+        title: 'Bonus Actions',
+        category: 'combat',
+        pages: { PHB: 189, PHB24: 361 },
+        keywords: ['bonus action', 'offhand', 'two weapon', 'cunning action'],
+        content: `
+          <p>You can take a <strong>bonus action</strong> only when a special ability, spell, or feature states that you can do something as a bonus action.</p>
+          <p>You can only take <strong>one bonus action</strong> per turn. You choose when to take it during your turn, unless the timing is specified.</p>
+          <p><strong>Common bonus actions:</strong></p>
+          <ul>
+            <li>Two-Weapon Fighting (offhand attack)</li>
+            <li>Cunning Action (Rogue)</li>
+            <li>Bonus action spells (Healing Word, Misty Step, etc.)</li>
+            <li>Class features (Rage, Wild Shape, etc.)</li>
+          </ul>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Important</div>
+            If you cast a spell as a bonus action, you can only cast a cantrip with your action (not another leveled spell).
+          </div>
+        `
+      },
+      {
+        id: 'reactions',
+        title: 'Reactions',
+        category: 'combat',
+        pages: { PHB: 190, PHB24: 361 },
+        keywords: ['reaction', 'opportunity attack', 'counterspell', 'shield'],
+        content: `
+          <p>A <strong>reaction</strong> is an instant response to a trigger. You can take one reaction per round (resets at the start of your turn).</p>
+          <p><strong>Common reactions:</strong></p>
+          <ul>
+            <li><strong>Opportunity Attack:</strong> When a hostile creature leaves your reach</li>
+            <li><strong>Counterspell:</strong> When you see a creature casting a spell within 60 ft</li>
+            <li><strong>Shield:</strong> When you are hit by an attack or targeted by magic missile</li>
+            <li><strong>Readied Action:</strong> When your specified trigger occurs</li>
+            <li><strong>Hellish Rebuke:</strong> When you are damaged by a creature you can see</li>
+          </ul>
+        `
+      },
+      {
+        id: 'opportunity-attacks',
+        title: 'Opportunity Attacks',
+        category: 'combat',
+        pages: { PHB: 195, PHB24: 371 },
+        keywords: ['opportunity attack', 'AoO', 'leaving reach', 'disengage', 'provoke'],
+        content: `
+          <p>You can make an opportunity attack when a hostile creature that you can see <strong>moves out of your reach</strong>.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Trigger</div>
+            A hostile creature you can see uses its movement to leave your reach.
+          </div>
+          <p><strong>Does NOT provoke:</strong></p>
+          <ul>
+            <li>Teleportation (Misty Step, Dimension Door, etc.)</li>
+            <li>Being moved against your will (shoved, thunderwave, etc.)</li>
+            <li>Using the Disengage action</li>
+            <li>Moving within someone's reach (only leaving triggers it)</li>
+          </ul>
+          <p>The attack uses your <strong>reaction</strong> and is a single melee attack (not a full Attack action).</p>
+        `
+      },
+      {
+        id: 'cover',
+        title: 'Cover',
+        category: 'combat',
+        pages: { PHB: 196, PHB24: 363, DMG: 251 },
+        keywords: ['cover', 'half cover', 'three-quarters cover', 'total cover', 'AC bonus'],
+        content: `
+          <p>Obstacles can provide cover, granting bonuses to AC and Dexterity saving throws.</p>
+          <table>
+            <tr><th>Cover Type</th><th>AC & Dex Save Bonus</th><th>Example</th></tr>
+            <tr><td><strong>Half Cover</strong></td><td>+2</td><td>Low wall, furniture, another creature</td></tr>
+            <tr><td><strong>Three-Quarters Cover</strong></td><td>+5</td><td>Arrow slit, tree trunk</td></tr>
+            <tr><td><strong>Total Cover</strong></td><td>Can't be targeted directly</td><td>Completely concealed</td></tr>
+          </table>
+          <p><strong>Note:</strong> A creature can't have cover from an attacker if they're in the same space.</p>
+        `
+      },
+      {
+        id: 'grappling',
+        title: 'Grappling',
+        category: 'combat',
+        pages: { PHB: 195, PHB24: 367 },
+        keywords: ['grapple', 'grab', 'restrain', 'escape', 'athletics', 'acrobatics'],
+        content: `
+          <p><strong>To Grapple:</strong> Use the Attack action to make a special melee attack (replaces one attack if you have Extra Attack).</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Grapple Check</div>
+            Your Strength (Athletics) vs. target's Strength (Athletics) OR Dexterity (Acrobatics)
+          </div>
+          <p><strong>Requirements:</strong></p>
+          <ul>
+            <li>Target must be no more than one size larger than you</li>
+            <li>You need at least one free hand</li>
+          </ul>
+          <p><strong>Effect:</strong> Target's speed becomes 0. You can move the grappled creature with you (half speed unless it's two+ sizes smaller).</p>
+          <p><strong>Escape:</strong> Target uses action to make Athletics or Acrobatics check vs. your Athletics.</p>
+        `
+      },
+      {
+        id: 'shoving',
+        title: 'Shoving',
+        category: 'combat',
+        pages: { PHB: 195, PHB24: 377 },
+        keywords: ['shove', 'push', 'prone', 'knock down', 'athletics'],
+        content: `
+          <p><strong>To Shove:</strong> Use the Attack action to make a special melee attack (replaces one attack).</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Shove Check</div>
+            Your Strength (Athletics) vs. target's Strength (Athletics) OR Dexterity (Acrobatics)
+          </div>
+          <p><strong>Requirements:</strong> Target must be no more than one size larger than you.</p>
+          <p><strong>On Success, choose one:</strong></p>
+          <ul>
+            <li>Knock the target <strong>prone</strong></li>
+            <li>Push the target <strong>5 feet away</strong> from you</li>
+          </ul>
+        `
+      },
+      {
+        id: 'two-weapon-fighting',
+        title: 'Two-Weapon Fighting',
+        category: 'combat',
+        pages: { PHB: 195, PHB24: 213 },
+        keywords: ['two weapon', 'dual wield', 'offhand', 'light weapon', 'bonus action attack'],
+        content: `
+          <p>When you take the Attack action with a <strong>light melee weapon</strong> in one hand, you can use your bonus action to attack with a different light melee weapon in your other hand.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Key Points</div>
+            <ul>
+              <li>Both weapons must have the <strong>light</strong> property (unless you have Dual Wielder feat)</li>
+              <li>You <strong>don't add</strong> your ability modifier to the bonus attack's damage (unless it's negative, or you have the Two-Weapon Fighting style)</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        id: 'mounted-combat',
+        title: 'Mounted Combat',
+        category: 'combat',
+        pages: { PHB: 198, PHB24: 369 },
+        keywords: ['mount', 'horse', 'riding', 'mounted', 'cavalry'],
+        content: `
+          <p><strong>Mounting/Dismounting:</strong> Costs movement equal to half your speed.</p>
+          <p><strong>Controlled Mount:</strong> (trained to accept a rider)</p>
+          <ul>
+            <li>Acts on your initiative</li>
+            <li>Can only Dash, Disengage, or Dodge</li>
+            <li>Moves as you direct</li>
+          </ul>
+          <p><strong>Independent Mount:</strong> (intelligent creature or untrained)</p>
+          <ul>
+            <li>Keeps its own initiative and actions</li>
+            <li>Acts according to its nature</li>
+          </ul>
+          <p><strong>If Mount is Knocked Prone:</strong> You can use your reaction to land on your feet. Otherwise, you're dismounted and fall prone within 5 feet.</p>
+        `
+      },
+      {
+        id: 'underwater-combat',
+        title: 'Underwater Combat',
+        category: 'combat',
+        pages: { PHB: 198, PHB24: 380 },
+        keywords: ['underwater', 'swimming', 'aquatic', 'water'],
+        content: `
+          <p><strong>Melee Attacks:</strong> Disadvantage unless wielding a dagger, javelin, shortsword, spear, or trident (or have swimming speed).</p>
+          <p><strong>Ranged Attacks:</strong></p>
+          <ul>
+            <li>Automatically miss beyond normal range</li>
+            <li>Disadvantage within normal range</li>
+            <li><strong>Exception:</strong> Crossbows, nets, and thrown weapons like javelins work normally</li>
+          </ul>
+        `
+      },
+
+      // ========== CONDITIONS ==========
+      {
+        id: 'blinded',
+        title: 'Blinded',
+        category: 'conditions',
+        pages: { PHB: 290, PHB24: 361 },
+        keywords: ['blinded', 'blind', 'can\'t see', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Can't see and automatically fails any check that requires sight</li>
+            <li>Attack rolls against the creature have <strong>advantage</strong></li>
+            <li>The creature's attack rolls have <strong>disadvantage</strong></li>
+          </ul>
+        `
+      },
+      {
+        id: 'charmed',
+        title: 'Charmed',
+        category: 'conditions',
+        pages: { PHB: 290, PHB24: 361 },
+        keywords: ['charmed', 'charm', 'friendly', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Can't attack the charmer or target them with harmful abilities/spells</li>
+            <li>The charmer has <strong>advantage</strong> on social checks against the creature</li>
+          </ul>
+        `
+      },
+      {
+        id: 'deafened',
+        title: 'Deafened',
+        category: 'conditions',
+        pages: { PHB: 290, PHB24: 363 },
+        keywords: ['deafened', 'deaf', 'can\'t hear', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Can't hear and automatically fails any check that requires hearing</li>
+          </ul>
+        `
+      },
+      {
+        id: 'exhaustion',
+        title: 'Exhaustion',
+        category: 'conditions',
+        pages: { PHB: 291, PHB24: 365, DMG: 252 },
+        keywords: ['exhaustion', 'exhausted', 'tired', 'fatigue', 'levels'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <p><strong>5e 2014 Rules:</strong></p>
+          <table>
+            <tr><th>Level</th><th>Effect</th></tr>
+            <tr><td>1</td><td>Disadvantage on ability checks</td></tr>
+            <tr><td>2</td><td>Speed halved</td></tr>
+            <tr><td>3</td><td>Disadvantage on attack rolls and saving throws</td></tr>
+            <tr><td>4</td><td>Hit point maximum halved</td></tr>
+            <tr><td>5</td><td>Speed reduced to 0</td></tr>
+            <tr><td>6</td><td>Death</td></tr>
+          </table>
+          <p><strong>5e 2024 Rules:</strong> Each level gives -2 to d20 rolls and spell save DCs. Speed reduced by 5 ft × level. At 10 levels: death.</p>
+          <p><strong>Recovery:</strong> Long rest removes one level (with food and drink).</p>
+        `
+      },
+      {
+        id: 'frightened',
+        title: 'Frightened',
+        category: 'conditions',
+        pages: { PHB: 290, PHB24: 366 },
+        keywords: ['frightened', 'fear', 'scared', 'afraid', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li><strong>Disadvantage</strong> on ability checks and attack rolls while the source of fear is within line of sight</li>
+            <li>Can't willingly move closer to the source of fear</li>
+          </ul>
+        `
+      },
+      {
+        id: 'grappled-condition',
+        title: 'Grappled (Condition)',
+        category: 'conditions',
+        pages: { PHB: 290, PHB24: 367 },
+        keywords: ['grappled', 'grabbed', 'held', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Speed becomes <strong>0</strong>, can't benefit from speed bonuses</li>
+            <li>Ends if grappler is incapacitated or effect moves you out of reach</li>
+          </ul>
+        `
+      },
+      {
+        id: 'incapacitated',
+        title: 'Incapacitated',
+        category: 'conditions',
+        pages: { PHB: 290, PHB24: 368 },
+        keywords: ['incapacitated', 'can\'t act', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Can't take <strong>actions</strong> or <strong>reactions</strong></li>
+          </ul>
+          <p><em>Note: Many conditions include incapacitation (paralyzed, petrified, stunned, unconscious).</em></p>
+        `
+      },
+      {
+        id: 'invisible',
+        title: 'Invisible',
+        category: 'conditions',
+        pages: { PHB: 291, PHB24: 368 },
+        keywords: ['invisible', 'unseen', 'hidden', 'condition'],
+        content: `
+          <span class="condition-badge buff">Buff</span>
+          <ul>
+            <li>Impossible to see without special sense or magic</li>
+            <li>Considered <strong>heavily obscured</strong> for hiding (auto-succeed on Hide?)</li>
+            <li>Attack rolls against have <strong>disadvantage</strong></li>
+            <li>Your attack rolls have <strong>advantage</strong></li>
+          </ul>
+          <p><em>Note: Location can still be detected by noise or tracks.</em></p>
+        `
+      },
+      {
+        id: 'paralyzed',
+        title: 'Paralyzed',
+        category: 'conditions',
+        pages: { PHB: 291, PHB24: 369 },
+        keywords: ['paralyzed', 'paralysis', 'can\'t move', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li><strong>Incapacitated</strong> (can't take actions or reactions)</li>
+            <li>Can't move or speak</li>
+            <li>Automatically fails Strength and Dexterity saving throws</li>
+            <li>Attack rolls against have <strong>advantage</strong></li>
+            <li>Any attack from within 5 feet is a <strong>critical hit</strong></li>
+          </ul>
+        `
+      },
+      {
+        id: 'petrified',
+        title: 'Petrified',
+        category: 'conditions',
+        pages: { PHB: 291, PHB24: 370 },
+        keywords: ['petrified', 'stone', 'turned to stone', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Transformed to inanimate stone substance (with equipment)</li>
+            <li>Weight increases by factor of 10</li>
+            <li>Stops aging</li>
+            <li><strong>Incapacitated</strong>, can't move or speak, unaware of surroundings</li>
+            <li>Resistance to all damage</li>
+            <li>Immune to poison and disease (existing ones suspended)</li>
+          </ul>
+        `
+      },
+      {
+        id: 'poisoned',
+        title: 'Poisoned',
+        category: 'conditions',
+        pages: { PHB: 292, PHB24: 370 },
+        keywords: ['poisoned', 'poison', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li><strong>Disadvantage</strong> on attack rolls and ability checks</li>
+          </ul>
+        `
+      },
+      {
+        id: 'prone',
+        title: 'Prone',
+        category: 'conditions',
+        pages: { PHB: 292, PHB24: 370 },
+        keywords: ['prone', 'knocked down', 'lying', 'standing up', 'condition'],
+        content: `
+          <span class="condition-badge neutral">Mixed</span>
+          <ul>
+            <li>Can only crawl (1 ft costs 2 ft of movement) or stand up</li>
+            <li><strong>Standing up</strong> costs half your speed</li>
+            <li><strong>Disadvantage</strong> on attack rolls</li>
+            <li>Attackers within 5 ft have <strong>advantage</strong></li>
+            <li>Attackers beyond 5 ft have <strong>disadvantage</strong></li>
+          </ul>
+        `
+      },
+      {
+        id: 'restrained',
+        title: 'Restrained',
+        category: 'conditions',
+        pages: { PHB: 292, PHB24: 373 },
+        keywords: ['restrained', 'entangled', 'web', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li>Speed becomes <strong>0</strong></li>
+            <li>Attack rolls against have <strong>advantage</strong></li>
+            <li>Your attack rolls have <strong>disadvantage</strong></li>
+            <li><strong>Disadvantage</strong> on Dexterity saving throws</li>
+          </ul>
+        `
+      },
+      {
+        id: 'stunned',
+        title: 'Stunned',
+        category: 'conditions',
+        pages: { PHB: 292, PHB24: 378 },
+        keywords: ['stunned', 'stun', 'dazed', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li><strong>Incapacitated</strong> (can't take actions or reactions)</li>
+            <li>Can't move, can only speak falteringly</li>
+            <li>Automatically fails Strength and Dexterity saving throws</li>
+            <li>Attack rolls against have <strong>advantage</strong></li>
+          </ul>
+        `
+      },
+      {
+        id: 'unconscious',
+        title: 'Unconscious',
+        category: 'conditions',
+        pages: { PHB: 292, PHB24: 380 },
+        keywords: ['unconscious', 'knocked out', 'KO', 'dying', 'condition'],
+        content: `
+          <span class="condition-badge debuff">Debuff</span>
+          <ul>
+            <li><strong>Incapacitated</strong>, can't move or speak</li>
+            <li>Unaware of surroundings</li>
+            <li>Drops whatever it's holding and falls <strong>prone</strong></li>
+            <li>Automatically fails Strength and Dexterity saving throws</li>
+            <li>Attack rolls against have <strong>advantage</strong></li>
+            <li>Any attack from within 5 feet is a <strong>critical hit</strong></li>
+          </ul>
+        `
+      },
+
+      // ========== SPELLCASTING ==========
+      {
+        id: 'concentration',
+        title: 'Concentration',
+        category: 'spellcasting',
+        pages: { PHB: 203, PHB24: 236 },
+        keywords: ['concentration', 'concentrating', 'maintain spell', 'con save'],
+        content: `
+          <p>Some spells require <strong>concentration</strong> to maintain. You can only concentrate on <strong>one spell at a time</strong>.</p>
+          <p><strong>Concentration breaks when:</strong></p>
+          <ul>
+            <li>You cast another concentration spell</li>
+            <li>You take damage and fail a Constitution saving throw (DC = 10 or half damage, whichever is higher)</li>
+            <li>You're incapacitated or killed</li>
+            <li>DM decides environmental factors break it</li>
+          </ul>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Concentration Save DC</div>
+            DC = 10 OR half the damage taken (whichever is higher)
+          </div>
+        `
+      },
+      {
+        id: 'spell-components',
+        title: 'Spell Components',
+        category: 'spellcasting',
+        pages: { PHB: 203, PHB24: 235 },
+        keywords: ['components', 'verbal', 'somatic', 'material', 'V', 'S', 'M', 'focus'],
+        content: `
+          <p><strong>V (Verbal):</strong> Must speak the incantation. Can't cast if silenced.</p>
+          <p><strong>S (Somatic):</strong> Must gesture with at least one free hand. Can't cast if restrained/bound.</p>
+          <p><strong>M (Material):</strong> Must have the listed components. A component pouch or spellcasting focus can substitute for materials <em>without a gold cost</em>.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Important</div>
+            Materials with a gold cost must be acquired and can't be substituted. If "consumed," you need new ones.
+          </div>
+        `
+      },
+      {
+        id: 'spell-slots',
+        title: 'Spell Slots',
+        category: 'spellcasting',
+        pages: { PHB: 201, PHB24: 233 },
+        keywords: ['spell slots', 'slot', 'upcasting', 'higher level', 'spell level'],
+        content: `
+          <p>Spellcasters have a limited number of spell slots of various levels that refresh on a long rest (or short rest for Warlocks).</p>
+          <p><strong>Casting a Spell:</strong> Expend a slot of the spell's level or higher.</p>
+          <p><strong>Upcasting:</strong> Many spells gain additional effects when cast using a higher-level slot (described in the spell).</p>
+          <p><strong>Cantrips:</strong> Don't require spell slots and can be cast at will.</p>
+        `
+      },
+      {
+        id: 'ritual-casting',
+        title: 'Ritual Casting',
+        category: 'spellcasting',
+        pages: { PHB: 201, PHB24: 237 },
+        keywords: ['ritual', 'ritual casting', 'ritual tag', '10 minutes'],
+        content: `
+          <p>Spells with the <strong>ritual</strong> tag can be cast as a ritual, taking <strong>10 minutes longer</strong> but not expending a spell slot.</p>
+          <p><strong>Requirements by class:</strong></p>
+          <ul>
+            <li><strong>Wizard:</strong> Must have spell in spellbook (doesn't need to be prepared)</li>
+            <li><strong>Cleric/Druid:</strong> Must have spell prepared</li>
+            <li><strong>Bard:</strong> Must know the spell</li>
+            <li><strong>Ritual Caster feat:</strong> Must have spell in ritual book</li>
+          </ul>
+        `
+      },
+      {
+        id: 'counterspell-rules',
+        title: 'Counterspell',
+        category: 'spellcasting',
+        pages: { PHB: 228, PHB24: 259 },
+        keywords: ['counterspell', 'counter', 'interrupt', 'ability check'],
+        content: `
+          <p><strong>Range:</strong> 60 feet | <strong>Casting Time:</strong> Reaction (when you see a creature casting a spell)</p>
+          <p>If the target is casting a spell of <strong>3rd level or lower</strong>, it automatically fails.</p>
+          <p>For spells of <strong>4th level or higher</strong>, make an ability check using your spellcasting ability:</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Counterspell Check DC</div>
+            DC = 10 + the spell's level
+          </div>
+          <p><strong>Upcasting:</strong> If you counterspell using a slot equal to or higher than the target spell's level, it automatically succeeds.</p>
+        `
+      },
+      {
+        id: 'dispel-magic-rules',
+        title: 'Dispel Magic',
+        category: 'spellcasting',
+        pages: { PHB: 234, PHB24: 264 },
+        keywords: ['dispel magic', 'dispel', 'end spell', 'ability check'],
+        content: `
+          <p>Choose one creature, object, or magical effect within range. Any spell of <strong>3rd level or lower</strong> ends.</p>
+          <p>For spells of <strong>4th level or higher</strong>, make an ability check using your spellcasting ability:</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Dispel Magic Check DC</div>
+            DC = 10 + the spell's level
+          </div>
+          <p><strong>Upcasting:</strong> Automatically ends spells of the slot level used or lower.</p>
+        `
+      },
+      {
+        id: 'spell-attack-roll',
+        title: 'Spell Attack Rolls',
+        category: 'spellcasting',
+        pages: { PHB: 205, PHB24: 236 },
+        keywords: ['spell attack', 'ranged spell attack', 'melee spell attack', 'attack roll'],
+        content: `
+          <div class="quick-ref">
+            <div class="quick-ref-title">Spell Attack Modifier</div>
+            d20 + spellcasting ability modifier + proficiency bonus
+          </div>
+          <p><strong>Ranged spell attacks</strong> have disadvantage if a hostile creature is within 5 feet (unless you have Crossbow Expert or similar).</p>
+          <p><strong>Cover</strong> applies to spell attacks just like weapon attacks.</p>
+        `
+      },
+      {
+        id: 'spell-save-dc',
+        title: 'Spell Save DC',
+        category: 'spellcasting',
+        pages: { PHB: 205, PHB24: 236 },
+        keywords: ['spell save DC', 'saving throw', 'DC calculation'],
+        content: `
+          <div class="quick-ref">
+            <div class="quick-ref-title">Spell Save DC</div>
+            8 + spellcasting ability modifier + proficiency bonus
+          </div>
+          <p>When a creature makes a saving throw against your spell, they roll against this DC.</p>
+        `
+      },
+
+      // ========== EXPLORATION ==========
+      {
+        id: 'short-rest',
+        title: 'Short Rest',
+        category: 'exploration',
+        pages: { PHB: 186, PHB24: 374, DMG: 267 },
+        keywords: ['short rest', 'rest', 'hit dice', 'recover', '1 hour'],
+        content: `
+          <p>A short rest is at least <strong>1 hour</strong> of downtime (eating, reading, tending wounds, etc.).</p>
+          <p><strong>During a short rest, you can:</strong></p>
+          <ul>
+            <li><strong>Spend Hit Dice:</strong> Roll any number of your Hit Dice, adding your Con modifier to each, to regain HP</li>
+            <li>Use features that recharge on a short rest (Second Wind, Action Surge, some spells)</li>
+            <li><strong>Warlocks:</strong> Regain all spell slots</li>
+          </ul>
+        `
+      },
+      {
+        id: 'long-rest',
+        title: 'Long Rest',
+        category: 'exploration',
+        pages: { PHB: 186, PHB24: 370, DMG: 267 },
+        keywords: ['long rest', 'rest', 'overnight', 'recover', '8 hours', 'sleep'],
+        content: `
+          <p>A long rest is at least <strong>8 hours</strong>, during which you sleep for at least 6 hours and do no more than 2 hours of light activity.</p>
+          <p><strong>Benefits:</strong></p>
+          <ul>
+            <li>Regain <strong>all lost hit points</strong></li>
+            <li>Regain spent <strong>Hit Dice</strong> up to half your total (minimum 1)</li>
+            <li>Regain all spell slots and other long-rest features</li>
+            <li>Remove one level of exhaustion (with food and drink)</li>
+          </ul>
+          <p><strong>Limit:</strong> Only one long rest per 24 hours.</p>
+          <p><strong>Interrupted:</strong> If interrupted by 1+ hour of strenuous activity, must restart.</p>
+        `
+      },
+      {
+        id: 'travel-pace',
+        title: 'Travel Pace',
+        category: 'exploration',
+        pages: { PHB: 182, PHB24: 379, DMG: 242 },
+        keywords: ['travel', 'pace', 'fast', 'normal', 'slow', 'miles', 'overland'],
+        content: `
+          <table>
+            <tr><th>Pace</th><th>Per Minute</th><th>Per Hour</th><th>Per Day</th><th>Effect</th></tr>
+            <tr><td>Fast</td><td>400 ft</td><td>4 miles</td><td>30 miles</td><td>-5 passive Perception</td></tr>
+            <tr><td>Normal</td><td>300 ft</td><td>3 miles</td><td>24 miles</td><td>—</td></tr>
+            <tr><td>Slow</td><td>200 ft</td><td>2 miles</td><td>18 miles</td><td>Can use Stealth</td></tr>
+          </table>
+          <p><strong>Difficult Terrain:</strong> Halves travel distance.</p>
+          <p><strong>Forced March:</strong> Beyond 8 hours, DC 10 + 1 per extra hour Con save or gain exhaustion.</p>
+        `
+      },
+      {
+        id: 'light-and-vision',
+        title: 'Light & Vision',
+        category: 'exploration',
+        pages: { PHB: 183, PHB24: 369, DMG: 243 },
+        keywords: ['light', 'vision', 'darkness', 'dim light', 'bright light', 'darkvision', 'obscured'],
+        content: `
+          <p><strong>Bright Light:</strong> Normal vision. Most creatures see normally.</p>
+          <p><strong>Dim Light (Lightly Obscured):</strong> Shadows. <em>Disadvantage on Perception checks relying on sight.</em></p>
+          <p><strong>Darkness (Heavily Obscured):</strong> Effectively blinded. <em>Can't see, auto-fail sight-based checks.</em></p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Darkvision</div>
+            Treats darkness as dim light (within range), dim light as bright light. Can't discern color.
+          </div>
+          <table>
+            <tr><th>Light Source</th><th>Bright</th><th>Dim</th></tr>
+            <tr><td>Candle</td><td>5 ft</td><td>+5 ft</td></tr>
+            <tr><td>Torch</td><td>20 ft</td><td>+20 ft</td></tr>
+            <tr><td>Lantern</td><td>30 ft</td><td>+30 ft</td></tr>
+            <tr><td>Light cantrip</td><td>20 ft</td><td>+20 ft</td></tr>
+            <tr><td>Daylight spell</td><td>60 ft</td><td>+60 ft</td></tr>
+          </table>
+        `
+      },
+      {
+        id: 'suffocating',
+        title: 'Suffocating',
+        category: 'exploration',
+        pages: { PHB: 183, PHB24: 378 },
+        keywords: ['suffocating', 'drowning', 'breath', 'holding breath', 'underwater'],
+        content: `
+          <p><strong>Holding Breath:</strong> You can hold your breath for <strong>1 + Con modifier</strong> minutes (minimum 30 seconds).</p>
+          <p><strong>Running Out of Air:</strong> When out of breath or choking, you can survive for a number of rounds equal to your <strong>Con modifier</strong> (minimum 1 round).</p>
+          <p><strong>At the start of your next turn after that:</strong> Drop to 0 HP and are dying. You can't regain HP or stabilize until you can breathe.</p>
+        `
+      },
+      {
+        id: 'falling',
+        title: 'Falling',
+        category: 'exploration',
+        pages: { PHB: 183, PHB24: 365, DMG: 249 },
+        keywords: ['falling', 'fall damage', 'falling prone', 'height'],
+        content: `
+          <div class="quick-ref">
+            <div class="quick-ref-title">Fall Damage</div>
+            1d6 bludgeoning damage per 10 feet fallen (max 20d6 = 200 ft)
+          </div>
+          <p>You land <strong>prone</strong> unless you avoid taking damage from the fall.</p>
+          <p><strong>DMG Variant - Falling onto Creature:</strong> Target makes DC 15 Dex save. On fail, both take equal damage and target is knocked prone. On success, target takes no damage and isn't prone.</p>
+        `
+      },
+      {
+        id: 'food-and-water',
+        title: 'Food & Water',
+        category: 'exploration',
+        pages: { PHB: 185, PHB24: 365, DMG: 249 },
+        keywords: ['food', 'water', 'rations', 'starvation', 'dehydration', 'foraging'],
+        content: `
+          <p><strong>Daily Requirements:</strong></p>
+          <ul>
+            <li><strong>Food:</strong> 1 pound per day (half for Small creatures)</li>
+            <li><strong>Water:</strong> 1 gallon per day (2 gallons in hot weather)</li>
+          </ul>
+          <p><strong>Going Without Food:</strong></p>
+          <ul>
+            <li>Can go 3 + Con modifier days without food</li>
+            <li>After that, gain 1 exhaustion level per day</li>
+            <li>Eating resets the count</li>
+          </ul>
+          <p><strong>Going Without Water:</strong></p>
+          <ul>
+            <li>1 exhaustion level after 1 day (or half a day in hot weather)</li>
+            <li>Must make DC 15 Con save or gain another level per additional day</li>
+          </ul>
+        `
+      },
+
+      // ========== SOCIAL & SKILLS ==========
+      {
+        id: 'ability-checks',
+        title: 'Ability Checks',
+        category: 'social',
+        pages: { PHB: 174, PHB24: 358 },
+        keywords: ['ability check', 'skill check', 'DC', 'difficulty class'],
+        content: `
+          <div class="quick-ref">
+            <div class="quick-ref-title">Ability Check</div>
+            d20 + ability modifier (+ proficiency bonus if proficient in relevant skill)
+          </div>
+          <table>
+            <tr><th>Task Difficulty</th><th>DC</th></tr>
+            <tr><td>Very easy</td><td>5</td></tr>
+            <tr><td>Easy</td><td>10</td></tr>
+            <tr><td>Medium</td><td>15</td></tr>
+            <tr><td>Hard</td><td>20</td></tr>
+            <tr><td>Very hard</td><td>25</td></tr>
+            <tr><td>Nearly impossible</td><td>30</td></tr>
+          </table>
+        `
+      },
+      {
+        id: 'advantage-disadvantage',
+        title: 'Advantage & Disadvantage',
+        category: 'social',
+        pages: { PHB: 173, PHB24: 358 },
+        keywords: ['advantage', 'disadvantage', 'adv', 'dis', 'cancel'],
+        content: `
+          <p><strong>Advantage:</strong> Roll 2d20 and take the <strong>higher</strong> result.</p>
+          <p><strong>Disadvantage:</strong> Roll 2d20 and take the <strong>lower</strong> result.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Stacking Rule</div>
+            Multiple sources of advantage or disadvantage don't stack. If you have ANY amount of both, they cancel out (roll normally).
+          </div>
+        `
+      },
+      {
+        id: 'passive-checks',
+        title: 'Passive Checks',
+        category: 'social',
+        pages: { PHB: 175, PHB24: 370 },
+        keywords: ['passive', 'passive perception', 'passive insight', 'passive check'],
+        content: `
+          <div class="quick-ref">
+            <div class="quick-ref-title">Passive Score</div>
+            10 + all modifiers that apply to the check
+          </div>
+          <p><strong>Modifiers:</strong></p>
+          <ul>
+            <li>+5 if you have advantage on such checks</li>
+            <li>-5 if you have disadvantage</li>
+          </ul>
+          <p><strong>Common uses:</strong> Passive Perception (noticing hidden creatures/traps), Passive Insight (detecting lies), Passive Investigation (noticing clues).</p>
+        `
+      },
+      {
+        id: 'contests',
+        title: 'Contests',
+        category: 'social',
+        pages: { PHB: 174, PHB24: 358 },
+        keywords: ['contest', 'opposed check', 'versus', 'vs'],
+        content: `
+          <p>When one creature's effort is directly opposed to another's, both make ability checks. The <strong>higher total wins</strong>.</p>
+          <p><strong>Tie:</strong> The situation remains as it was. This might mean the defender wins, or that neither side gains advantage.</p>
+          <p><strong>Examples:</strong></p>
+          <ul>
+            <li>Grappling: Athletics vs. Athletics or Acrobatics</li>
+            <li>Hiding: Stealth vs. Perception</li>
+            <li>Lying: Deception vs. Insight</li>
+            <li>Arm wrestling: Athletics vs. Athletics</li>
+          </ul>
+        `
+      },
+      {
+        id: 'group-checks',
+        title: 'Group Checks',
+        category: 'social',
+        pages: { PHB: 175, PHB24: 367, DMG: 237 },
+        keywords: ['group check', 'group stealth', 'party check'],
+        content: `
+          <p>When the whole party tries something together, everyone makes the check. The group succeeds if <strong>at least half succeed</strong>.</p>
+          <p><strong>Common uses:</strong></p>
+          <ul>
+            <li>Group Stealth (sneaking past guards)</li>
+            <li>Navigating treacherous terrain</li>
+            <li>Noticing an ambush</li>
+          </ul>
+        `
+      },
+      {
+        id: 'help-action',
+        title: 'Help Action',
+        category: 'social',
+        pages: { PHB: 192, PHB24: 367 },
+        keywords: ['help', 'assist', 'aid', 'advantage'],
+        content: `
+          <p>Use your action to help another creature with a task. They gain <strong>advantage</strong> on their next ability check for that task (if made before your next turn).</p>
+          <p><strong>In Combat:</strong> You can Help with an attack. Choose a friendly creature within 5 feet of your target. That ally has advantage on their next attack roll against the target (before your next turn).</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Requirement</div>
+            You must be able to reasonably assist. The DM might require you to be proficient in the skill.
+          </div>
+        `
+      },
+      {
+        id: 'inspiration',
+        title: 'Inspiration',
+        category: 'social',
+        pages: { PHB: 125, PHB24: 368, DMG: 240 },
+        keywords: ['inspiration', 'DM reward', 'advantage'],
+        content: `
+          <p>The DM can award <strong>inspiration</strong> for good roleplaying, creative problem-solving, or staying true to your character.</p>
+          <p><strong>Using Inspiration:</strong> Spend it to gain <strong>advantage</strong> on one attack roll, saving throw, or ability check.</p>
+          <p><strong>Rules:</strong></p>
+          <ul>
+            <li>You either have inspiration or you don't (can't stockpile)</li>
+            <li>You can give your inspiration to another player</li>
+            <li>Must declare before rolling</li>
+          </ul>
+        `
+      },
+
+      // ========== EQUIPMENT ==========
+      {
+        id: 'donning-doffing-armor',
+        title: 'Donning & Doffing Armor',
+        category: 'equipment',
+        pages: { PHB: 146, PHB24: 219 },
+        keywords: ['armor', 'don', 'doff', 'put on', 'remove', 'equip'],
+        content: `
+          <table>
+            <tr><th>Category</th><th>Don</th><th>Doff</th></tr>
+            <tr><td>Light Armor</td><td>1 minute</td><td>1 minute</td></tr>
+            <tr><td>Medium Armor</td><td>5 minutes</td><td>1 minute</td></tr>
+            <tr><td>Heavy Armor</td><td>10 minutes</td><td>5 minutes</td></tr>
+            <tr><td>Shield</td><td>1 action</td><td>1 action</td></tr>
+          </table>
+        `
+      },
+      {
+        id: 'weapon-properties',
+        title: 'Weapon Properties',
+        category: 'equipment',
+        pages: { PHB: 146, PHB24: 213 },
+        keywords: ['weapon', 'properties', 'finesse', 'heavy', 'light', 'reach', 'thrown', 'versatile', 'two-handed', 'loading', 'ammunition'],
+        content: `
+          <ul>
+            <li><strong>Ammunition:</strong> Requires ammo; draw ammo as part of attack; recover half after battle</li>
+            <li><strong>Finesse:</strong> Use Str OR Dex for attack and damage</li>
+            <li><strong>Heavy:</strong> Small creatures have disadvantage</li>
+            <li><strong>Light:</strong> Can be used for two-weapon fighting</li>
+            <li><strong>Loading:</strong> Only one attack per action/bonus action/reaction regardless of Extra Attack</li>
+            <li><strong>Range:</strong> Two numbers (normal/long range). Long range = disadvantage</li>
+            <li><strong>Reach:</strong> Adds 5 ft to your reach for attacks and opportunity attacks</li>
+            <li><strong>Thrown:</strong> Can throw for ranged attack using same modifier as melee</li>
+            <li><strong>Two-Handed:</strong> Requires two hands to attack</li>
+            <li><strong>Versatile:</strong> Can be used one or two-handed (larger damage die two-handed)</li>
+          </ul>
+        `
+      },
+      {
+        id: 'improvised-weapons',
+        title: 'Improvised Weapons',
+        category: 'equipment',
+        pages: { PHB: 147, PHB24: 213 },
+        keywords: ['improvised', 'improvised weapon', 'chair', 'bottle', 'rock'],
+        content: `
+          <p>Objects not designed as weapons deal <strong>1d4 damage</strong> (DM assigns damage type).</p>
+          <p>If similar to an actual weapon, DM may rule it functions as that weapon.</p>
+          <p><strong>Thrown improvised weapons:</strong> Range 20/60 feet.</p>
+          <p>You're <strong>not proficient</strong> unless DM rules otherwise or you have Tavern Brawler feat.</p>
+        `
+      },
+      {
+        id: 'carrying-capacity',
+        title: 'Carrying Capacity',
+        category: 'equipment',
+        pages: { PHB: 176, PHB24: 361 },
+        keywords: ['carrying', 'capacity', 'encumbrance', 'weight', 'lift', 'drag', 'push'],
+        content: `
+          <div class="quick-ref">
+            <div class="quick-ref-title">Carrying Capacity</div>
+            Strength score × 15 = pounds you can carry
+          </div>
+          <p><strong>Push/Drag/Lift:</strong> Up to twice your carrying capacity (but speed drops to 5 ft).</p>
+          <p><strong>Size Modifiers:</strong></p>
+          <ul>
+            <li>Tiny: ×0.5</li>
+            <li>Large: ×2</li>
+            <li>Huge: ×4</li>
+            <li>Gargantuan: ×8</li>
+          </ul>
+          <p><strong>Variant Encumbrance:</strong> <span class="page-ref">PHB 176</span></p>
+          <ul>
+            <li>Str × 5 lb: speed -10 ft</li>
+            <li>Str × 10 lb: speed -20 ft, disadvantage on ability checks, attacks, saves using Str, Dex, Con</li>
+          </ul>
+        `
+      },
+
+      // ========== CLASSES ==========
+      {
+        id: 'barbarian',
+        title: 'Barbarian',
+        category: 'classes',
+        pages: { PHB: 46, PHB24: 51 },
+        keywords: ['barbarian', 'rage', 'reckless attack', 'danger sense', 'brutal critical', 'primal path', 'berserker', 'totem warrior', 'unarmored defense'],
+        content: `
+          <p><strong>Hit Die:</strong> d12 | <strong>Primary Ability:</strong> Strength | <strong>Saves:</strong> Strength, Constitution</p>
+          <p><strong>Armor/Weapons:</strong> Light & medium armor, shields, simple & martial weapons</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Rage (Bonus Action)</div>
+            Advantage on Str checks/saves, bonus rage damage on Str melee attacks, resistance to bludgeoning/piercing/slashing. Lasts 1 minute. Can't cast or concentrate on spells.
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Rage, Unarmored Defense (AC = 10 + Dex + Con)</li>
+            <li><strong>2:</strong> Reckless Attack (advantage on attacks, enemies have advantage on you), Danger Sense (advantage on Dex saves vs seen effects)</li>
+            <li><strong>3:</strong> Primal Path subclass</li>
+            <li><strong>5:</strong> Extra Attack, Fast Movement (+10 ft unarmored)</li>
+            <li><strong>9:</strong> Brutal Critical (+1 die)</li>
+            <li><strong>11:</strong> Relentless Rage</li>
+            <li><strong>20:</strong> Primal Champion (+4 Str and Con)</li>
+          </ul>
+          <p><strong>Common Subclasses:</strong> Path of the Berserker <span class="page-ref">PHB 49</span>, Path of the Totem Warrior <span class="page-ref">PHB 50</span>, Path of Wild Magic <span class="page-ref">TCoE 25</span></p>
+        `
+      },
+      {
+        id: 'bard',
+        title: 'Bard',
+        category: 'classes',
+        pages: { PHB: 51, PHB24: 58 },
+        keywords: ['bard', 'bardic inspiration', 'jack of all trades', 'song of rest', 'magical secrets', 'expertise', 'college', 'lore', 'valor', 'spellcasting'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Charisma | <strong>Saves:</strong> Dexterity, Charisma</p>
+          <p><strong>Armor/Weapons:</strong> Light armor, simple weapons, hand crossbows, longswords, rapiers, shortswords</p>
+          <p><strong>Spellcasting:</strong> Charisma-based, known spells, full caster</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Bardic Inspiration (Bonus Action)</div>
+            Give ally within 60 ft a die (d6→d12) to add to one ability check, attack roll, or saving throw within 10 minutes. Uses = Charisma modifier, recharge on long rest (short rest at 5th).
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Spellcasting, Bardic Inspiration (d6)</li>
+            <li><strong>2:</strong> Jack of All Trades (+½ prof to non-proficient checks), Song of Rest (d6 healing during short rest)</li>
+            <li><strong>3:</strong> Bard College subclass, Expertise (2 skills)</li>
+            <li><strong>5:</strong> Bardic Inspiration (d8), Font of Inspiration (recharge on short rest)</li>
+            <li><strong>6:</strong> Countercharm</li>
+            <li><strong>10:</strong> Bardic Inspiration (d10), Magical Secrets (learn 2 spells from any class)</li>
+            <li><strong>20:</strong> Superior Inspiration</li>
+          </ul>
+          <p><strong>Common Subclasses:</strong> College of Lore <span class="page-ref">PHB 54</span>, College of Valor <span class="page-ref">PHB 55</span>, College of Eloquence <span class="page-ref">TCoE 29</span></p>
+        `
+      },
+      {
+        id: 'cleric',
+        title: 'Cleric',
+        category: 'classes',
+        pages: { PHB: 56, PHB24: 66 },
+        keywords: ['cleric', 'divine domain', 'channel divinity', 'turn undead', 'destroy undead', 'divine intervention', 'spellcasting', 'life', 'light', 'war'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Wisdom | <strong>Saves:</strong> Wisdom, Charisma</p>
+          <p><strong>Armor/Weapons:</strong> Light & medium armor, shields, simple weapons (varies by domain)</p>
+          <p><strong>Spellcasting:</strong> Wisdom-based, prepared spells, full caster, ritual casting</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Channel Divinity</div>
+            Special abilities from domain. All clerics get Turn Undead. Uses recharge on short or long rest.
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Spellcasting, Divine Domain (subclass + domain spells)</li>
+            <li><strong>2:</strong> Channel Divinity (1/rest), Turn Undead</li>
+            <li><strong>5:</strong> Destroy Undead (CR ½)</li>
+            <li><strong>6:</strong> Channel Divinity (2/rest)</li>
+            <li><strong>8:</strong> Domain feature (often Divine Strike or Potent Spellcasting)</li>
+            <li><strong>10:</strong> Divine Intervention (% = cleric level)</li>
+            <li><strong>18:</strong> Channel Divinity (3/rest)</li>
+            <li><strong>20:</strong> Divine Intervention auto-succeeds</li>
+          </ul>
+          <p><strong>Common Domains:</strong> Life <span class="page-ref">PHB 60</span>, Light <span class="page-ref">PHB 60</span>, War <span class="page-ref">PHB 63</span>, Tempest <span class="page-ref">PHB 62</span>, Twilight <span class="page-ref">TCoE 34</span></p>
+        `
+      },
+      {
+        id: 'druid',
+        title: 'Druid',
+        category: 'classes',
+        pages: { PHB: 64, PHB24: 78 },
+        keywords: ['druid', 'wild shape', 'druidic', 'circle', 'moon', 'land', 'spellcasting', 'beast shape', 'nature'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Wisdom | <strong>Saves:</strong> Intelligence, Wisdom</p>
+          <p><strong>Armor/Weapons:</strong> Light & medium armor (non-metal), shields (non-metal), clubs, daggers, darts, javelins, maces, quarterstaffs, scimitars, sickles, slings, spears</p>
+          <p><strong>Spellcasting:</strong> Wisdom-based, prepared spells, full caster, ritual casting</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Wild Shape (Action, 2/short rest)</div>
+            Transform into a beast you've seen. Max CR = level ÷ 3 (no swim/fly at first). Keep Int, Wis, Cha. Gain beast's HP as temp HP.
+          </div>
+          <table>
+            <tr><th>Level</th><th>Max CR</th><th>Limitations</th></tr>
+            <tr><td>2</td><td>1/4</td><td>No flying or swimming</td></tr>
+            <tr><td>4</td><td>1/2</td><td>No flying</td></tr>
+            <tr><td>8</td><td>1</td><td>None</td></tr>
+          </table>
+          <p><strong>Key Features:</strong></p>
+          <ul>
+            <li><strong>2:</strong> Wild Shape, Druid Circle subclass</li>
+            <li><strong>18:</strong> Timeless Body, Beast Spells (cast while wild shaped)</li>
+            <li><strong>20:</strong> Archdruid (unlimited Wild Shape)</li>
+          </ul>
+          <p><strong>Common Circles:</strong> Circle of the Moon <span class="page-ref">PHB 69</span> (combat wild shape), Circle of the Land <span class="page-ref">PHB 68</span> (extra spells), Circle of Stars <span class="page-ref">TCoE 38</span></p>
+        `
+      },
+      {
+        id: 'fighter',
+        title: 'Fighter',
+        category: 'classes',
+        pages: { PHB: 70, PHB24: 90 },
+        keywords: ['fighter', 'fighting style', 'second wind', 'action surge', 'extra attack', 'indomitable', 'champion', 'battle master', 'eldritch knight'],
+        content: `
+          <p><strong>Hit Die:</strong> d10 | <strong>Primary Ability:</strong> Strength or Dexterity | <strong>Saves:</strong> Strength, Constitution</p>
+          <p><strong>Armor/Weapons:</strong> All armor, shields, simple & martial weapons</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Action Surge (1/short rest)</div>
+            Take one additional action on your turn. At 17th level, can use twice per rest (but only once per turn).
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Fighting Style, Second Wind (bonus action heal 1d10+level, 1/short rest)</li>
+            <li><strong>2:</strong> Action Surge (1/rest)</li>
+            <li><strong>3:</strong> Martial Archetype subclass</li>
+            <li><strong>5:</strong> Extra Attack (2 attacks)</li>
+            <li><strong>9:</strong> Indomitable (reroll failed save, 1/long rest)</li>
+            <li><strong>11:</strong> Extra Attack (3 attacks)</li>
+            <li><strong>17:</strong> Action Surge (2/rest), Indomitable (3/rest)</li>
+            <li><strong>20:</strong> Extra Attack (4 attacks)</li>
+          </ul>
+          <p><strong>Common Subclasses:</strong> Champion <span class="page-ref">PHB 72</span> (crits on 19-20), Battle Master <span class="page-ref">PHB 73</span> (maneuvers), Eldritch Knight <span class="page-ref">PHB 74</span> (spellcasting)</p>
+        `
+      },
+      {
+        id: 'monk',
+        title: 'Monk',
+        category: 'classes',
+        pages: { PHB: 76, PHB24: 100 },
+        keywords: ['monk', 'martial arts', 'ki', 'unarmored defense', 'flurry of blows', 'patient defense', 'step of the wind', 'stunning strike', 'open hand', 'shadow', 'way'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Dexterity & Wisdom | <strong>Saves:</strong> Strength, Dexterity</p>
+          <p><strong>Armor/Weapons:</strong> Simple weapons, shortswords (no armor or shields for class features)</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Ki Points (= Monk Level)</div>
+            Recharge on short rest. Spend for: Flurry of Blows (2 unarmed strikes as bonus action), Patient Defense (Dodge as bonus action), Step of the Wind (Disengage or Dash as bonus action + jump distance doubled).
+          </div>
+          <p><strong>Martial Arts:</strong> Use Dex for unarmed/monk weapons, bonus unarmed strike, martial arts die scales (d4→d10)</p>
+          <table>
+            <tr><th>Level</th><th>Martial Arts Die</th><th>Ki Points</th><th>Unarmored Movement</th></tr>
+            <tr><td>1-4</td><td>d4</td><td>Level</td><td>+10 ft</td></tr>
+            <tr><td>5-10</td><td>d6</td><td>Level</td><td>+15-20 ft</td></tr>
+            <tr><td>11-16</td><td>d8</td><td>Level</td><td>+25 ft</td></tr>
+            <tr><td>17-20</td><td>d10</td><td>Level</td><td>+30 ft</td></tr>
+          </table>
+          <p><strong>Key Features:</strong></p>
+          <ul>
+            <li><strong>2:</strong> Ki, Unarmored Movement</li>
+            <li><strong>3:</strong> Monastic Tradition subclass, Deflect Missiles</li>
+            <li><strong>4:</strong> Slow Fall</li>
+            <li><strong>5:</strong> Extra Attack, Stunning Strike (1 ki, Con save or stunned)</li>
+            <li><strong>7:</strong> Evasion, Stillness of Mind</li>
+            <li><strong>14:</strong> Diamond Soul (proficient in all saves)</li>
+          </ul>
+          <p><strong>Common Subclasses:</strong> Way of the Open Hand <span class="page-ref">PHB 79</span>, Way of Shadow <span class="page-ref">PHB 80</span>, Way of Mercy <span class="page-ref">TCoE 49</span></p>
+        `
+      },
+      {
+        id: 'paladin',
+        title: 'Paladin',
+        category: 'classes',
+        pages: { PHB: 82, PHB24: 110 },
+        keywords: ['paladin', 'divine sense', 'lay on hands', 'divine smite', 'aura', 'oath', 'devotion', 'vengeance', 'ancients', 'spellcasting'],
+        content: `
+          <p><strong>Hit Die:</strong> d10 | <strong>Primary Ability:</strong> Strength & Charisma | <strong>Saves:</strong> Wisdom, Charisma</p>
+          <p><strong>Armor/Weapons:</strong> All armor, shields, simple & martial weapons</p>
+          <p><strong>Spellcasting:</strong> Charisma-based (starts at 2nd level), prepared spells, half caster</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Divine Smite</div>
+            When you hit with a melee weapon attack, expend a spell slot to deal extra radiant damage: 2d8 + 1d8 per slot level above 1st (max 5d8). +1d8 vs undead/fiends.
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Divine Sense, Lay on Hands (heal pool = 5 × level)</li>
+            <li><strong>2:</strong> Fighting Style, Spellcasting, Divine Smite</li>
+            <li><strong>3:</strong> Sacred Oath subclass, Channel Divinity</li>
+            <li><strong>5:</strong> Extra Attack</li>
+            <li><strong>6:</strong> Aura of Protection (+Cha to saves within 10 ft)</li>
+            <li><strong>10:</strong> Aura of Courage (allies immune to frightened in aura)</li>
+            <li><strong>14:</strong> Cleansing Touch</li>
+            <li><strong>18:</strong> Auras extend to 30 ft</li>
+          </ul>
+          <p><strong>Common Oaths:</strong> Oath of Devotion <span class="page-ref">PHB 85</span>, Oath of Vengeance <span class="page-ref">PHB 87</span>, Oath of the Ancients <span class="page-ref">PHB 86</span>, Oathbreaker <span class="page-ref">DMG 97</span></p>
+        `
+      },
+      {
+        id: 'ranger',
+        title: 'Ranger',
+        category: 'classes',
+        pages: { PHB: 89, PHB24: 118 },
+        keywords: ['ranger', 'favored enemy', 'natural explorer', 'primeval awareness', 'hunter', 'beast master', 'gloom stalker', 'spellcasting', 'fighting style'],
+        content: `
+          <p><strong>Hit Die:</strong> d10 | <strong>Primary Ability:</strong> Dexterity & Wisdom | <strong>Saves:</strong> Strength, Dexterity</p>
+          <p><strong>Armor/Weapons:</strong> Light & medium armor, shields, simple & martial weapons</p>
+          <p><strong>Spellcasting:</strong> Wisdom-based (starts at 2nd level), known spells, half caster</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">2024 Revision Note</div>
+            PHB 2024 significantly revised Ranger. Favored Enemy now grants Hunter's Mark as always-prepared, free casting = Wis mod/day.
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Favored Enemy, Natural Explorer (or Deft Explorer in TCoE)</li>
+            <li><strong>2:</strong> Fighting Style, Spellcasting</li>
+            <li><strong>3:</strong> Ranger Conclave/Archetype subclass, Primeval Awareness</li>
+            <li><strong>5:</strong> Extra Attack</li>
+            <li><strong>8:</strong> Land's Stride</li>
+            <li><strong>10:</strong> Hide in Plain Sight / Nature's Veil</li>
+            <li><strong>14:</strong> Vanish</li>
+            <li><strong>18:</strong> Feral Senses</li>
+            <li><strong>20:</strong> Foe Slayer</li>
+          </ul>
+          <p><strong>Common Subclasses:</strong> Hunter <span class="page-ref">PHB 93</span>, Beast Master <span class="page-ref">PHB 93</span>, Gloom Stalker <span class="page-ref">XGtE 41</span>, Fey Wanderer <span class="page-ref">TCoE 58</span></p>
+        `
+      },
+      {
+        id: 'rogue',
+        title: 'Rogue',
+        category: 'classes',
+        pages: { PHB: 94, PHB24: 128 },
+        keywords: ['rogue', 'sneak attack', 'thieves cant', 'cunning action', 'uncanny dodge', 'evasion', 'expertise', 'thief', 'assassin', 'arcane trickster'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Dexterity | <strong>Saves:</strong> Dexterity, Intelligence</p>
+          <p><strong>Armor/Weapons:</strong> Light armor, simple weapons, hand crossbows, longswords, rapiers, shortswords</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Sneak Attack (1/turn)</div>
+            Extra damage when you have advantage OR an ally is within 5 ft of target. Must use finesse or ranged weapon. Damage scales: 1d6 at 1st, +1d6 every odd level (10d6 at 19th).
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Expertise (2 skills), Sneak Attack, Thieves' Cant</li>
+            <li><strong>2:</strong> Cunning Action (Dash, Disengage, or Hide as bonus action)</li>
+            <li><strong>3:</strong> Roguish Archetype subclass</li>
+            <li><strong>5:</strong> Uncanny Dodge (reaction: halve attack damage)</li>
+            <li><strong>6:</strong> Expertise (2 more skills)</li>
+            <li><strong>7:</strong> Evasion (Dex saves: no damage on success, half on fail)</li>
+            <li><strong>11:</strong> Reliable Talent (minimum 10 on proficient checks)</li>
+            <li><strong>14:</strong> Blindsense</li>
+            <li><strong>18:</strong> Elusive (no advantage against you while not incapacitated)</li>
+            <li><strong>20:</strong> Stroke of Luck</li>
+          </ul>
+          <p><strong>Common Subclasses:</strong> Thief <span class="page-ref">PHB 97</span>, Assassin <span class="page-ref">PHB 97</span>, Arcane Trickster <span class="page-ref">PHB 97</span>, Soulknife <span class="page-ref">TCoE 63</span></p>
+        `
+      },
+      {
+        id: 'sorcerer',
+        title: 'Sorcerer',
+        category: 'classes',
+        pages: { PHB: 99, PHB24: 138 },
+        keywords: ['sorcerer', 'sorcery points', 'metamagic', 'font of magic', 'flexible casting', 'draconic', 'wild magic', 'divine soul', 'spellcasting', 'origin'],
+        content: `
+          <p><strong>Hit Die:</strong> d6 | <strong>Primary Ability:</strong> Charisma | <strong>Saves:</strong> Constitution, Charisma</p>
+          <p><strong>Armor/Weapons:</strong> None (daggers, darts, slings, quarterstaffs, light crossbows)</p>
+          <p><strong>Spellcasting:</strong> Charisma-based, known spells, full caster</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Metamagic (Sorcery Points)</div>
+            Modify spells as you cast them. Sorcery points = sorcerer level. Can convert spell slots ↔ points. Choose 2 options at 3rd level, more later.
+          </div>
+          <p><strong>Popular Metamagic Options:</strong></p>
+          <ul>
+            <li><strong>Quickened Spell (2 pts):</strong> Cast as bonus action</li>
+            <li><strong>Twinned Spell (spell level pts):</strong> Target two creatures with single-target spell</li>
+            <li><strong>Subtle Spell (1 pt):</strong> No verbal or somatic components</li>
+            <li><strong>Heightened Spell (3 pts):</strong> Target has disadvantage on save</li>
+          </ul>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Spellcasting, Sorcerous Origin subclass</li>
+            <li><strong>2:</strong> Font of Magic (sorcery points)</li>
+            <li><strong>3:</strong> Metamagic (2 options)</li>
+            <li><strong>20:</strong> Sorcerous Restoration (4 sorcery points on short rest)</li>
+          </ul>
+          <p><strong>Common Origins:</strong> Draconic Bloodline <span class="page-ref">PHB 102</span>, Wild Magic <span class="page-ref">PHB 103</span>, Divine Soul <span class="page-ref">XGtE 50</span>, Aberrant Mind <span class="page-ref">TCoE 66</span></p>
+        `
+      },
+      {
+        id: 'warlock',
+        title: 'Warlock',
+        category: 'classes',
+        pages: { PHB: 105, PHB24: 150 },
+        keywords: ['warlock', 'pact magic', 'eldritch invocations', 'pact boon', 'patron', 'fiend', 'archfey', 'great old one', 'eldritch blast', 'short rest'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Charisma | <strong>Saves:</strong> Wisdom, Charisma</p>
+          <p><strong>Armor/Weapons:</strong> Light armor, simple weapons</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Pact Magic</div>
+            Few spell slots (1-4), but ALL at highest level (up to 5th), and recharge on SHORT rest. Learn Mystic Arcanum for 6th-9th level spells (1/long rest each).
+          </div>
+          <table>
+            <tr><th>Level</th><th>Slots</th><th>Slot Level</th></tr>
+            <tr><td>1</td><td>1</td><td>1st</td></tr>
+            <tr><td>2-10</td><td>2</td><td>scales to 5th</td></tr>
+            <tr><td>11-16</td><td>3</td><td>5th</td></tr>
+            <tr><td>17-20</td><td>4</td><td>5th</td></tr>
+          </table>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Otherworldly Patron (subclass), Pact Magic</li>
+            <li><strong>2:</strong> Eldritch Invocations (customize abilities)</li>
+            <li><strong>3:</strong> Pact Boon (Blade, Chain, Tome, or Talisman)</li>
+            <li><strong>11:</strong> Mystic Arcanum (6th level spell 1/long rest)</li>
+            <li><strong>20:</strong> Eldritch Master (regain all slots 1/long rest as 1 minute action)</li>
+          </ul>
+          <p><strong>Common Patrons:</strong> The Fiend <span class="page-ref">PHB 109</span>, The Archfey <span class="page-ref">PHB 108</span>, The Great Old One <span class="page-ref">PHB 109</span>, The Hexblade <span class="page-ref">XGtE 55</span></p>
+        `
+      },
+      {
+        id: 'wizard',
+        title: 'Wizard',
+        category: 'classes',
+        pages: { PHB: 112, PHB24: 162 },
+        keywords: ['wizard', 'spellbook', 'arcane recovery', 'arcane tradition', 'spell mastery', 'evocation', 'divination', 'abjuration', 'school', 'ritual'],
+        content: `
+          <p><strong>Hit Die:</strong> d6 | <strong>Primary Ability:</strong> Intelligence | <strong>Saves:</strong> Intelligence, Wisdom</p>
+          <p><strong>Armor/Weapons:</strong> None (daggers, darts, slings, quarterstaffs, light crossbows)</p>
+          <p><strong>Spellcasting:</strong> Intelligence-based, spellbook, prepared spells, full caster, ritual casting</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Spellbook</div>
+            Start with 6 spells. Add 2 free spells per level. Can copy from scrolls/other spellbooks (2 hours + 50 gp per spell level). Prepare Int mod + wizard level spells daily.
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Spellcasting, Arcane Recovery (recover slots = ½ level on short rest, 1/day)</li>
+            <li><strong>2:</strong> Arcane Tradition (school subclass)</li>
+            <li><strong>18:</strong> Spell Mastery (cast one 1st and one 2nd level spell at will)</li>
+            <li><strong>20:</strong> Signature Spells (two 3rd level spells always prepared, 1 free cast each/short rest)</li>
+          </ul>
+          <p><strong>Common Schools:</strong> School of Evocation <span class="page-ref">PHB 117</span>, School of Divination <span class="page-ref">PHB 116</span>, School of Abjuration <span class="page-ref">PHB 115</span>, War Magic <span class="page-ref">XGtE 59</span>, Chronurgy <span class="page-ref">EGtW 184</span></p>
+        `
+      },
+      {
+        id: 'artificer',
+        title: 'Artificer',
+        category: 'classes',
+        pages: { TCoE: 9, ERftLW: 54 },
+        keywords: ['artificer', 'infusions', 'magical tinkering', 'tool expertise', 'alchemist', 'artillerist', 'battle smith', 'armorer', 'spellcasting'],
+        content: `
+          <p><strong>Hit Die:</strong> d8 | <strong>Primary Ability:</strong> Intelligence | <strong>Saves:</strong> Constitution, Intelligence</p>
+          <p><strong>Armor/Weapons:</strong> Light & medium armor, shields, simple weapons</p>
+          <p><strong>Spellcasting:</strong> Intelligence-based (starts at 1st level), prepared spells, half caster, ritual casting. Uses tools as focus.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Infuse Item</div>
+            Imbue mundane items with magical properties. Learn infusions and can have 2+ active at once. Infusions end if you die or infuse another item with that same infusion.
+          </div>
+          <p><strong>Key Features by Level:</strong></p>
+          <ul>
+            <li><strong>1:</strong> Magical Tinkering, Spellcasting</li>
+            <li><strong>2:</strong> Infuse Item (2 infusions known, 2 active)</li>
+            <li><strong>3:</strong> Artificer Specialist subclass, Right Tool for the Job</li>
+            <li><strong>6:</strong> Tool Expertise (double proficiency with tools)</li>
+            <li><strong>7:</strong> Flash of Genius (reaction: +Int to ally's check/save)</li>
+            <li><strong>10:</strong> Magic Item Adept</li>
+            <li><strong>11:</strong> Spell-Storing Item</li>
+            <li><strong>14:</strong> Magic Item Savant</li>
+            <li><strong>20:</strong> Soul of Artifice (+1 to all saves per attuned item)</li>
+          </ul>
+          <p><strong>Subclasses:</strong> Alchemist <span class="page-ref">TCoE 14</span>, Artillerist <span class="page-ref">TCoE 17</span>, Battle Smith <span class="page-ref">TCoE 18</span>, Armorer <span class="page-ref">TCoE 15</span></p>
+        `
+      },
+
+      // =====================================================
+      // CLASS FEATURES (Detailed)
+      // =====================================================
+      {
+        id: 'rage',
+        title: 'Rage (Barbarian)',
+        category: 'class-features',
+        pages: { PHB: '48', PHB24: '52' },
+        content: `
+          <p><strong>Activation:</strong> Bonus action on your turn. Cannot be wearing heavy armor.</p>
+          <p><strong>Duration:</strong> 1 minute. Ends early if:</p>
+          <ul>
+            <li>You are knocked unconscious</li>
+            <li>Your turn ends and you haven't attacked a hostile creature or taken damage since your last turn</li>
+            <li>You use a bonus action to end it</li>
+          </ul>
+          <p><strong>Benefits while raging:</strong></p>
+          <ul>
+            <li><strong>Advantage</strong> on Strength checks and Strength saving throws</li>
+            <li><strong>Rage Damage Bonus</strong> when you hit with a melee weapon attack using Strength</li>
+            <li><strong>Resistance</strong> to bludgeoning, piercing, and slashing damage</li>
+          </ul>
+          <p><strong>Limitations:</strong> Cannot cast spells or concentrate on them while raging.</p>
+          <h4>Rage Damage & Uses by Level</h4>
+          <table class="reference-table">
+            <tr><th>Level</th><th>Rages</th><th>Rage Damage</th></tr>
+            <tr><td>1-2</td><td>2</td><td>+2</td></tr>
+            <tr><td>3-5</td><td>3</td><td>+2</td></tr>
+            <tr><td>6-8</td><td>4</td><td>+2</td></tr>
+            <tr><td>9-11</td><td>4</td><td>+3</td></tr>
+            <tr><td>12-15</td><td>5</td><td>+3</td></tr>
+            <tr><td>16-19</td><td>5</td><td>+4</td></tr>
+            <tr><td>20</td><td>Unlimited</td><td>+4</td></tr>
+          </table>
+          <p><strong>Persistent Rage (15th):</strong> Rage only ends early if you fall unconscious or choose to end it.</p>
+        `
+      },
+      {
+        id: 'reckless-attack',
+        title: 'Reckless Attack (Barbarian)',
+        category: 'class-features',
+        pages: { PHB: '48', PHB24: '52' },
+        content: `
+          <p><strong>When:</strong> When you make your first attack on your turn.</p>
+          <p><strong>Effect:</strong> You can decide to attack recklessly, giving you <strong>advantage on all melee weapon attack rolls using Strength</strong> during this turn.</p>
+          <p><strong>Drawback:</strong> Attack rolls against you have <strong>advantage</strong> until your next turn.</p>
+          <p><strong>Tip:</strong> Combine with Rage for devastating attacks while mitigating the damage you take through resistance.</p>
+        `
+      },
+      {
+        id: 'metamagic',
+        title: 'Metamagic (Sorcerer)',
+        category: 'class-features',
+        pages: { PHB: '101-102', PHB24: '143-144' },
+        content: `
+          <p><strong>Gained:</strong> 3rd level Sorcerer. Choose 2 options (more at higher levels).</p>
+          <p><strong>Resource:</strong> Sorcery Points (equal to sorcerer level). Regain all on long rest.</p>
+          <p><strong>Limit:</strong> Only one Metamagic option can be used on a spell unless otherwise noted.</p>
+
+          <h4>Metamagic Options</h4>
+
+          <p><strong>Careful Spell (1 SP):</strong> Choose up to CHA modifier creatures. They automatically succeed on the spell's saving throw.</p>
+
+          <p><strong>Distant Spell (1 SP):</strong> Double the range of a spell with range 5+ feet. Touch spells become 30 feet range.</p>
+
+          <p><strong>Empowered Spell (1 SP):</strong> Reroll up to CHA modifier damage dice (minimum 1). Must use new rolls. Can combine with other Metamagic.</p>
+
+          <p><strong>Extended Spell (1 SP):</strong> Double the duration of a spell with duration of 1 minute or longer, up to 24 hours.</p>
+
+          <p><strong>Heightened Spell (3 SP):</strong> One target of the spell has disadvantage on their first saving throw against it.</p>
+
+          <p><strong>Quickened Spell (2 SP):</strong> Change casting time from 1 action to 1 bonus action. Remember: You can still only cast cantrips with your action if you cast a bonus action spell.</p>
+
+          <p><strong>Seeking Spell (2 SP, TCoE):</strong> If you miss with a spell attack, reroll the d20 and use the new roll. You can use this even after a failure is declared.</p>
+
+          <p><strong>Subtle Spell (1 SP):</strong> Cast without verbal or somatic components. Perfect for stealth or when restrained/silenced.</p>
+
+          <p><strong>Transmuted Spell (1 SP, TCoE):</strong> Change the damage type to acid, cold, fire, lightning, poison, or thunder.</p>
+
+          <p><strong>Twinned Spell (SP = spell level, min 1):</strong> Target a second creature with a spell that targets only one creature and doesn't have self range. Cantrips cost 1 SP.</p>
+
+          <h4>Sorcery Point Conversion</h4>
+          <p><strong>Creating Spell Slots (Bonus Action):</strong></p>
+          <table class="reference-table">
+            <tr><th>Spell Slot Level</th><th>Sorcery Point Cost</th></tr>
+            <tr><td>1st</td><td>2</td></tr>
+            <tr><td>2nd</td><td>3</td></tr>
+            <tr><td>3rd</td><td>5</td></tr>
+            <tr><td>4th</td><td>6</td></tr>
+            <tr><td>5th</td><td>7</td></tr>
+          </table>
+          <p><strong>Converting Slots to Points:</strong> Bonus action, gain SP equal to slot level.</p>
+        `
+      },
+      {
+        id: 'wild-shape',
+        title: 'Wild Shape (Druid)',
+        category: 'class-features',
+        pages: { PHB: '66-67', PHB24: '82-83' },
+        content: `
+          <p><strong>Activation:</strong> Action (bonus action at 2nd level per PHB'24)</p>
+          <p><strong>Uses:</strong> 2 per short or long rest (more with Circle features)</p>
+          <p><strong>Duration:</strong> Hours equal to half your druid level (rounded down). Minimum 1 hour.</p>
+
+          <h4>Beast Limitations by Level</h4>
+          <table class="reference-table">
+            <tr><th>Level</th><th>Max CR</th><th>Limitations</th><th>Example Beasts</th></tr>
+            <tr><td>2</td><td>1/4</td><td>No flying or swimming speed</td><td>Wolf, Cat, Badger</td></tr>
+            <tr><td>4</td><td>1/2</td><td>No flying speed</td><td>Crocodile, Giant Wasp</td></tr>
+            <tr><td>8</td><td>1</td><td>None</td><td>Giant Eagle, Dire Wolf</td></tr>
+          </table>
+
+          <h4>What Changes</h4>
+          <ul>
+            <li><strong>Replaced:</strong> Strength, Dexterity, Constitution, AC, HP, speed, senses</li>
+            <li><strong>Kept:</strong> Intelligence, Wisdom, Charisma, skills, saving throw proficiencies, personality, alignment</li>
+            <li><strong>Gained:</strong> Beast's proficiencies (if higher than yours)</li>
+          </ul>
+
+          <h4>Rules While Transformed</h4>
+          <ul>
+            <li>Can't cast spells, but concentration can be maintained</li>
+            <li>Can't speak or use equipment (equipment melds into form or falls)</li>
+            <li>Damage carries over when you revert if beast HP drops to 0</li>
+            <li>Can use features that don't require speech/hands</li>
+          </ul>
+
+          <h4>Circle of the Moon (Enhanced Wild Shape)</h4>
+          <ul>
+            <li><strong>Combat Wild Shape:</strong> Transform as bonus action. Spend spell slot to heal 1d8 per slot level while in beast form.</li>
+            <li><strong>Circle Forms:</strong> Transform into beasts with CR = druid level ÷ 3 (rounded down)</li>
+            <li><strong>CR 1 at 2nd level</strong> (immediately)</li>
+            <li><strong>Elemental Wild Shape (10th):</strong> Spend 2 uses to become an elemental</li>
+          </ul>
+
+          <h4>Popular Beast Forms</h4>
+          <p><strong>CR 1/4:</strong> Wolf (Pack Tactics), Giant Badger (Multiattack), Panther (Pounce)</p>
+          <p><strong>CR 1/2:</strong> Giant Wasp (Fly + Poison), Black Bear (Multiattack)</p>
+          <p><strong>CR 1:</strong> Dire Wolf (Pack Tactics, Knockdown), Giant Spider (Web, Climb), Brown Bear (Multiattack)</p>
+          <p><strong>CR 2:</strong> Giant Constrictor Snake (Grapple), Polar Bear (Multiattack)</p>
+        `
+      },
+      {
+        id: 'sneak-attack',
+        title: 'Sneak Attack (Rogue)',
+        category: 'class-features',
+        pages: { PHB: '96', PHB24: '131' },
+        content: `
+          <p><strong>Frequency:</strong> Once per turn (not once per round - can trigger on opportunity attacks!)</p>
+          <p><strong>Weapon Requirement:</strong> Finesse or ranged weapon</p>
+
+          <h4>Triggering Conditions (need one)</h4>
+          <ul>
+            <li><strong>Advantage</strong> on the attack roll, OR</li>
+            <li><strong>Ally within 5 feet</strong> of the target, that ally isn't incapacitated, and you don't have disadvantage</li>
+          </ul>
+
+          <h4>Damage Progression</h4>
+          <table class="reference-table">
+            <tr><th>Rogue Level</th><th>Sneak Attack Damage</th></tr>
+            <tr><td>1-2</td><td>1d6</td></tr>
+            <tr><td>3-4</td><td>2d6</td></tr>
+            <tr><td>5-6</td><td>3d6</td></tr>
+            <tr><td>7-8</td><td>4d6</td></tr>
+            <tr><td>9-10</td><td>5d6</td></tr>
+            <tr><td>11-12</td><td>6d6</td></tr>
+            <tr><td>13-14</td><td>7d6</td></tr>
+            <tr><td>15-16</td><td>8d6</td></tr>
+            <tr><td>17-18</td><td>9d6</td></tr>
+            <tr><td>19-20</td><td>10d6</td></tr>
+          </table>
+
+          <p><strong>Common Sources of Advantage:</strong></p>
+          <ul>
+            <li>Attacking while hidden (Cunning Action: Hide)</li>
+            <li>Target is prone and you're within 5 feet</li>
+            <li>Target is restrained, stunned, paralyzed, or unconscious</li>
+            <li>Attacking with advantage from spells (Faerie Fire, Hold Person)</li>
+            <li>Flanking (optional rule)</li>
+          </ul>
+        `
+      },
+      {
+        id: 'ki',
+        title: 'Ki (Monk)',
+        category: 'class-features',
+        pages: { PHB: '78-79', PHB24: '104-105' },
+        content: `
+          <p><strong>Resource:</strong> Ki Points equal to monk level. Regain all on short or long rest.</p>
+          <p><strong>Save DC:</strong> 8 + proficiency bonus + Wisdom modifier</p>
+
+          <h4>Core Ki Abilities (2nd Level)</h4>
+
+          <p><strong>Flurry of Blows (1 Ki):</strong> Immediately after taking the Attack action, make 2 unarmed strikes as a bonus action (instead of 1 from Martial Arts).</p>
+
+          <p><strong>Patient Defense (1 Ki):</strong> Take the Dodge action as a bonus action.</p>
+
+          <p><strong>Step of the Wind (1 Ki):</strong> Take Disengage or Dash as a bonus action, and your jump distance is doubled for the turn.</p>
+
+          <h4>Additional Ki Abilities</h4>
+
+          <p><strong>Stunning Strike (5th, 1 Ki):</strong> When you hit with a melee weapon attack, the target must make a Con save or be stunned until the end of your next turn.</p>
+
+          <p><strong>Focused Aim (5th, 1-3 Ki, TCoE):</strong> When you miss an attack, spend 1-3 ki to increase the roll by +2 per ki spent.</p>
+
+          <p><strong>Quickened Healing (4th, 2 Ki, TCoE):</strong> As an action, regain HP equal to one roll of your Martial Arts die + proficiency bonus.</p>
+
+          <h4>Martial Arts Die Progression</h4>
+          <table class="reference-table">
+            <tr><th>Monk Level</th><th>Martial Arts Die</th></tr>
+            <tr><td>1-4</td><td>1d4</td></tr>
+            <tr><td>5-10</td><td>1d6</td></tr>
+            <tr><td>11-16</td><td>1d8</td></tr>
+            <tr><td>17-20</td><td>1d10</td></tr>
+          </table>
+
+          <p><strong>Note (PHB'24):</strong> "Ki" is renamed to "Discipline" and "Ki Points" to "Focus Points" in the 2024 rules.</p>
+        `
+      },
+      {
+        id: 'divine-smite',
+        title: 'Divine Smite (Paladin)',
+        category: 'class-features',
+        pages: { PHB: '85', PHB24: '112' },
+        content: `
+          <p><strong>Activation:</strong> When you hit a creature with a melee weapon attack, you can expend one spell slot to deal extra radiant damage.</p>
+          <p><strong>No Action Required:</strong> You can choose to smite after you know the attack hits!</p>
+
+          <h4>Damage Calculation</h4>
+          <p><strong>Base:</strong> 2d8 radiant damage for a 1st-level slot</p>
+          <p><strong>Higher Slots:</strong> +1d8 per slot level above 1st (max 5d8 from slot)</p>
+          <p><strong>Undead/Fiend Bonus:</strong> +1d8 extra damage</p>
+
+          <table class="reference-table">
+            <tr><th>Spell Slot</th><th>Base Damage</th><th>vs Undead/Fiend</th></tr>
+            <tr><td>1st</td><td>2d8</td><td>3d8</td></tr>
+            <tr><td>2nd</td><td>3d8</td><td>4d8</td></tr>
+            <tr><td>3rd</td><td>4d8</td><td>5d8</td></tr>
+            <tr><td>4th</td><td>5d8</td><td>6d8</td></tr>
+            <tr><td>5th</td><td>5d8 (capped)</td><td>6d8</td></tr>
+          </table>
+
+          <p><strong>Critical Hits:</strong> All smite dice are doubled on a crit! A 2nd-level smite becomes 6d8 (doubled from 3d8).</p>
+
+          <p><strong>Improved Divine Smite (11th):</strong> All melee weapon hits deal an extra 1d8 radiant damage automatically (no slot required).</p>
+
+          <h4>PHB 2024 Changes</h4>
+          <p>In the 2024 rules, Divine Smite is a spell that requires a bonus action, not a free addition to attacks. This means:</p>
+          <ul>
+            <li>Can only smite once per turn (bonus action required)</li>
+            <li>Must declare before the attack, not after hitting</li>
+            <li>Can be counterspelled</li>
+          </ul>
+        `
+      },
+      {
+        id: 'lay-on-hands',
+        title: 'Lay on Hands (Paladin)',
+        category: 'class-features',
+        pages: { PHB: '84', PHB24: '110' },
+        content: `
+          <p><strong>Pool:</strong> HP equal to paladin level × 5. Regains fully on long rest.</p>
+          <p><strong>Action:</strong> Touch a creature to restore HP from your pool (any amount up to remaining).</p>
+
+          <h4>Uses</h4>
+          <ul>
+            <li><strong>Healing:</strong> Restore any number of HP from your pool</li>
+            <li><strong>Cure Disease:</strong> Spend 5 HP from pool to cure one disease</li>
+            <li><strong>Neutralize Poison:</strong> Spend 5 HP from pool to neutralize one poison</li>
+          </ul>
+
+          <p><strong>No effect</strong> on undead or constructs.</p>
+
+          <h4>Pool by Level</h4>
+          <table class="reference-table">
+            <tr><th>Paladin Level</th><th>Lay on Hands Pool</th></tr>
+            <tr><td>1</td><td>5 HP</td></tr>
+            <tr><td>5</td><td>25 HP</td></tr>
+            <tr><td>10</td><td>50 HP</td></tr>
+            <tr><td>15</td><td>75 HP</td></tr>
+            <tr><td>20</td><td>100 HP</td></tr>
+          </table>
+
+          <p><strong>Tip:</strong> Use 1 HP to stabilize a dying ally at 0 HP, or bring them back with just enough to act.</p>
+        `
+      },
+      {
+        id: 'bardic-inspiration',
+        title: 'Bardic Inspiration (Bard)',
+        category: 'class-features',
+        pages: { PHB: '53-54', PHB24: '60-61' },
+        content: `
+          <p><strong>Action:</strong> Bonus action</p>
+          <p><strong>Range:</strong> 60 feet (creature must hear you)</p>
+          <p><strong>Uses:</strong> Charisma modifier times per long rest (minimum 1). At 5th level, regain on short rest too.</p>
+
+          <h4>How It Works</h4>
+          <ol>
+            <li>Give one Bardic Inspiration die to a creature within 60 feet</li>
+            <li>They can add the die to ONE of the following within the next 10 minutes:
+              <ul>
+                <li>Ability check</li>
+                <li>Attack roll</li>
+                <li>Saving throw</li>
+              </ul>
+            </li>
+            <li>They can wait until after rolling the d20, but must decide before knowing if it succeeds</li>
+          </ol>
+
+          <h4>Die Progression</h4>
+          <table class="reference-table">
+            <tr><th>Bard Level</th><th>Inspiration Die</th></tr>
+            <tr><td>1-4</td><td>d6</td></tr>
+            <tr><td>5-9</td><td>d8</td></tr>
+            <tr><td>10-14</td><td>d10</td></tr>
+            <tr><td>15-20</td><td>d12</td></tr>
+          </table>
+
+          <h4>College Features Using Inspiration</h4>
+          <p><strong>College of Lore - Cutting Words (3rd):</strong> Use reaction to subtract your Bardic Inspiration die from enemy's attack, ability check, or damage roll.</p>
+          <p><strong>College of Valor - Combat Inspiration (3rd):</strong> Recipients can also add die to weapon damage or AC against one attack.</p>
+          <p><strong>College of Swords - Blade Flourish (3rd):</strong> Use on your own attacks for extra damage + effects.</p>
+        `
+      },
+      {
+        id: 'channel-divinity',
+        title: 'Channel Divinity (Cleric/Paladin)',
+        category: 'class-features',
+        pages: { PHB: '58-59, 85-86', PHB24: '68-69, 112-113' },
+        content: `
+          <p><strong>Uses:</strong> 1 per short or long rest (2 at 6th Cleric, 3 at 18th Cleric)</p>
+          <p><strong>When you use:</strong> Choose which Channel Divinity effect to create</p>
+
+          <h4>Universal Cleric Option</h4>
+          <p><strong>Turn Undead:</strong> Action. Each undead within 30 feet that can see/hear you must make a Wisdom save. On failure, it is turned for 1 minute (must Dash away from you, can't willingly move closer or take reactions). Ends if it takes damage.</p>
+          <p><strong>Destroy Undead (5th+):</strong> Undead of CR 1/2 or lower are instantly destroyed instead of turned. CR threshold increases with level.</p>
+
+          <table class="reference-table">
+            <tr><th>Cleric Level</th><th>Destroys Undead of CR...</th></tr>
+            <tr><td>5</td><td>1/2 or lower</td></tr>
+            <tr><td>8</td><td>1 or lower</td></tr>
+            <tr><td>11</td><td>2 or lower</td></tr>
+            <tr><td>14</td><td>3 or lower</td></tr>
+            <tr><td>17</td><td>4 or lower</td></tr>
+          </table>
+
+          <h4>Popular Domain Channel Divinities</h4>
+          <p><strong>Life - Preserve Life:</strong> Heal up to 5 × cleric level HP, distributed among creatures within 30 feet (can't exceed half their max HP).</p>
+          <p><strong>Light - Radiance of the Dawn:</strong> 30-foot radius, dispel magical darkness, enemies take 2d10 + cleric level radiant (Con save for half).</p>
+          <p><strong>War - Guided Strike:</strong> +10 to an attack roll you make (after rolling but before knowing result).</p>
+          <p><strong>Tempest - Destructive Wrath:</strong> When you roll lightning or thunder damage, deal maximum damage instead.</p>
+
+          <h4>Paladin Channel Divinity (3rd level)</h4>
+          <p>Each Sacred Oath grants a unique Channel Divinity option. Uses: 1 per short or long rest.</p>
+          <p><strong>Devotion - Sacred Weapon:</strong> Weapon gains +CHA to hit, emits light. 1 minute.</p>
+          <p><strong>Vengeance - Vow of Enmity:</strong> Advantage on attacks against one creature. 1 minute.</p>
+          <p><strong>Ancients - Nature's Wrath:</strong> Restrain a creature with spectral vines (Str/Dex save).</p>
+        `
+      },
+      {
+        id: 'action-surge',
+        title: 'Action Surge (Fighter)',
+        category: 'class-features',
+        pages: { PHB: '72', PHB24: '93' },
+        content: `
+          <p><strong>Gained:</strong> 2nd level Fighter</p>
+          <p><strong>Uses:</strong> Once per short or long rest (twice at 17th level)</p>
+
+          <h4>What You Get</h4>
+          <p>On your turn, you can take <strong>one additional action</strong>.</p>
+
+          <h4>Important Notes</h4>
+          <ul>
+            <li>You still only get one bonus action per turn</li>
+            <li>You still only get one reaction per round</li>
+            <li>Extra Attack applies to BOTH actions</li>
+            <li>Can cast two leveled spells if you have the slots (normal bonus action spell rules don't apply to Action Surge)</li>
+          </ul>
+
+          <h4>Example Uses</h4>
+          <ul>
+            <li><strong>11th level Fighter:</strong> Attack (3 attacks) + Action Surge + Attack (3 attacks) = 6 attacks in one turn</li>
+            <li><strong>20th level Fighter:</strong> 4 + 4 = 8 attacks in one turn</li>
+            <li><strong>Fighter/Spellcaster:</strong> Cast Fireball, Action Surge, cast another Fireball</li>
+          </ul>
+        `
+      },
+      {
+        id: 'cunning-action',
+        title: 'Cunning Action (Rogue)',
+        category: 'class-features',
+        pages: { PHB: '96', PHB24: '131' },
+        content: `
+          <p><strong>Gained:</strong> 2nd level Rogue</p>
+          <p><strong>Resource:</strong> None - use every turn!</p>
+
+          <h4>Options (Bonus Action)</h4>
+          <p><strong>Dash:</strong> Double your speed for the turn. Great for repositioning or escaping.</p>
+          <p><strong>Disengage:</strong> Your movement doesn't provoke opportunity attacks. Get out of melee safely.</p>
+          <p><strong>Hide:</strong> Make a Stealth check to hide. If successful, gain advantage on your next attack (and thus Sneak Attack).</p>
+
+          <h4>Subclass Additions</h4>
+          <p><strong>Thief (3rd) - Fast Hands:</strong> Also use bonus action to make Sleight of Hand check, use thieves' tools, or Use an Object.</p>
+          <p><strong>Scout (3rd, XGE):</strong> Use reaction to move half speed when enemy ends turn within 5 feet (no opportunity attack).</p>
+          <p><strong>Soulknife (9th, TCoE):</strong> Also teleport up to 30 feet to unoccupied space you can see.</p>
+
+          <h4>Typical Rogue Turn</h4>
+          <ol>
+            <li>Bonus Action: Hide (roll Stealth)</li>
+            <li>Action: Attack with advantage from being hidden</li>
+            <li>Apply Sneak Attack damage</li>
+            <li>Movement: Reposition for next turn</li>
+          </ol>
+        `
+      },
+      {
+        id: 'eldritch-invocations',
+        title: 'Eldritch Invocations (Warlock)',
+        category: 'class-features',
+        pages: { PHB: '107-111', PHB24: '149-153' },
+        content: `
+          <p><strong>Gained:</strong> 2nd level Warlock. Learn 2, gain more as you level.</p>
+          <p><strong>Swapping:</strong> Can replace one invocation when you gain a warlock level.</p>
+
+          <h4>Popular Invocations</h4>
+
+          <p><strong>Agonizing Blast (requires Eldritch Blast):</strong> Add CHA modifier to Eldritch Blast damage. Essential for damage output.</p>
+
+          <p><strong>Repelling Blast (requires Eldritch Blast):</strong> Push creature 10 feet away on hit. Great for control.</p>
+
+          <p><strong>Devil's Sight:</strong> See normally in magical and nonmagical darkness to 120 feet. Combo with Darkness spell for advantage.</p>
+
+          <p><strong>Mask of Many Faces:</strong> Cast Disguise Self at will without spell slot.</p>
+
+          <p><strong>Misty Visions:</strong> Cast Silent Image at will without spell slot.</p>
+
+          <p><strong>Book of Ancient Secrets (requires Pact of the Tome):</strong> Copy ritual spells from any class into your Book of Shadows.</p>
+
+          <p><strong>Thirsting Blade (5th, requires Pact of the Blade):</strong> Attack twice with your pact weapon (Extra Attack).</p>
+
+          <p><strong>Lifedrinker (12th, requires Pact of the Blade):</strong> Add CHA modifier necrotic damage to pact weapon attacks.</p>
+
+          <p><strong>Eldritch Smite (5th, requires Pact of the Blade):</strong> Expend warlock slot to deal 1d8 + 1d8/slot level force damage and knock prone.</p>
+
+          <p><strong>Armor of Shadows:</strong> Cast Mage Armor on yourself at will without spell slot.</p>
+
+          <h4>Invocations Known</h4>
+          <table class="reference-table">
+            <tr><th>Warlock Level</th><th>Invocations Known</th></tr>
+            <tr><td>2</td><td>2</td></tr>
+            <tr><td>5</td><td>3</td></tr>
+            <tr><td>7</td><td>4</td></tr>
+            <tr><td>9</td><td>5</td></tr>
+            <tr><td>12</td><td>6</td></tr>
+            <tr><td>15</td><td>7</td></tr>
+            <tr><td>18</td><td>8</td></tr>
+          </table>
+        `
+      },
+      {
+        id: 'arcane-recovery',
+        title: 'Arcane Recovery (Wizard)',
+        category: 'class-features',
+        pages: { PHB: '115', PHB24: '163' },
+        content: `
+          <p><strong>Gained:</strong> 1st level Wizard</p>
+          <p><strong>Frequency:</strong> Once per day, after a short rest</p>
+
+          <h4>How It Works</h4>
+          <p>Recover expended spell slots with a combined level equal to or less than <strong>half your wizard level (rounded up)</strong>.</p>
+          <p><strong>Limitation:</strong> None of the slots can be 6th level or higher.</p>
+
+          <h4>Recovery by Level</h4>
+          <table class="reference-table">
+            <tr><th>Wizard Level</th><th>Max Slot Levels Recovered</th><th>Examples</th></tr>
+            <tr><td>1</td><td>1</td><td>One 1st</td></tr>
+            <tr><td>2</td><td>1</td><td>One 1st</td></tr>
+            <tr><td>3</td><td>2</td><td>Two 1st OR one 2nd</td></tr>
+            <tr><td>4</td><td>2</td><td>Two 1st OR one 2nd</td></tr>
+            <tr><td>5</td><td>3</td><td>One 1st + one 2nd OR one 3rd</td></tr>
+            <tr><td>6</td><td>3</td><td>Three 1st OR one 3rd</td></tr>
+            <tr><td>7</td><td>4</td><td>One 1st + one 3rd OR one 4th</td></tr>
+            <tr><td>10</td><td>5</td><td>One 2nd + one 3rd OR one 5th</td></tr>
+            <tr><td>20</td><td>10</td><td>Two 5th slots (6th+ not allowed)</td></tr>
+          </table>
+
+          <p><strong>Tip:</strong> Best used to recover your most-used utility slots. A short rest mid-dungeon can give you back crucial spell slots.</p>
+        `
+      },
+      {
+        id: 'fighting-style',
+        title: 'Fighting Style',
+        category: 'class-features',
+        pages: { PHB: '72, 84, 91', PHB24: '93, 110, 122' },
+        content: `
+          <p><strong>Classes:</strong> Fighter (1st), Paladin (2nd), Ranger (2nd). Each class has access to different styles.</p>
+          <p><strong>Rule:</strong> Can't take the same style twice, even from different classes.</p>
+
+          <h4>Fighting Styles</h4>
+
+          <p><strong>Archery:</strong> +2 bonus to attack rolls with ranged weapons. (Fighter, Ranger)</p>
+
+          <p><strong>Defense:</strong> +1 AC while wearing armor. (Fighter, Paladin, Ranger)</p>
+
+          <p><strong>Dueling:</strong> +2 damage when wielding a melee weapon in one hand and no other weapons. (Fighter, Paladin, Ranger)</p>
+
+          <p><strong>Great Weapon Fighting:</strong> Reroll 1s and 2s on damage dice with two-handed/versatile weapons. Must use new roll. (Fighter, Paladin)</p>
+
+          <p><strong>Protection:</strong> When a creature you can see attacks a target other than you within 5 feet, use reaction to impose disadvantage on attack. Requires shield. (Fighter, Paladin)</p>
+
+          <p><strong>Two-Weapon Fighting:</strong> Add ability modifier to damage of off-hand attack. (Fighter, Ranger)</p>
+
+          <h4>Tasha's/2024 Additional Styles</h4>
+
+          <p><strong>Blind Fighting:</strong> 10 feet blindsight. (Fighter, Paladin, Ranger)</p>
+
+          <p><strong>Interception:</strong> Reaction to reduce damage to creature within 5 feet by 1d10 + proficiency. Requires shield or weapon. (Fighter, Paladin)</p>
+
+          <p><strong>Thrown Weapon Fighting:</strong> +2 damage with thrown weapons, draw as part of attack. (Fighter, Ranger)</p>
+
+          <p><strong>Unarmed Fighting:</strong> Unarmed strikes deal 1d6+STR (1d8 if both hands free). Deal 1d4 to grappled creatures at start of your turn. (Fighter)</p>
+
+          <p><strong>Druidic Warrior:</strong> Learn two druid cantrips. (Ranger)</p>
+
+          <p><strong>Blessed Warrior:</strong> Learn two cleric cantrips. (Paladin)</p>
+        `
+      },
+      {
+        id: 'battle-master-maneuvers',
+        title: 'Battle Master Maneuvers (Fighter)',
+        category: 'class-features',
+        pages: { PHB: '73-74', PHB24: '96-97' },
+        content: `
+          <p><strong>Gained:</strong> 3rd level Battle Master Fighter</p>
+          <p><strong>Superiority Dice:</strong> 4d8 (5d8 at 7th, 6d8 at 15th). Become d10 at 10th, d12 at 18th.</p>
+          <p><strong>Regain:</strong> All dice on short or long rest.</p>
+          <p><strong>Maneuvers Known:</strong> 3 (+ more at 7th, 10th, 15th levels)</p>
+          <p><strong>Save DC:</strong> 8 + proficiency + STR or DEX modifier</p>
+
+          <h4>Combat Maneuvers</h4>
+
+          <p><strong>Trip Attack:</strong> Add die to damage. Target makes STR save or falls prone. (Large or smaller)</p>
+
+          <p><strong>Precision Attack:</strong> Add die to attack roll. Can use after rolling but before knowing result.</p>
+
+          <p><strong>Riposte:</strong> Reaction when creature misses you. Make attack, add die to damage.</p>
+
+          <p><strong>Menacing Attack:</strong> Add die to damage. Target makes WIS save or is frightened until end of your next turn.</p>
+
+          <p><strong>Goading Attack:</strong> Add die to damage. Target makes WIS save or has disadvantage on attacks against anyone but you.</p>
+
+          <p><strong>Pushing Attack:</strong> Add die to damage. Target makes STR save or is pushed 15 feet away. (Large or smaller)</p>
+
+          <p><strong>Disarming Attack:</strong> Add die to damage. Target makes STR save or drops one held item.</p>
+
+          <p><strong>Feinting Attack:</strong> Bonus action, advantage on next attack vs adjacent creature. Add die to damage.</p>
+
+          <p><strong>Parry:</strong> Reaction when hit. Reduce damage by die + DEX modifier.</p>
+
+          <p><strong>Rally:</strong> Bonus action, give ally temp HP = die + CHA modifier.</p>
+
+          <p><strong>Commander's Strike:</strong> Forgo one attack. Ally uses reaction to attack, adding die to damage.</p>
+
+          <p><strong>Maneuvering Attack:</strong> Add die to damage. Ally can use reaction to move half speed without opportunity attacks.</p>
+
+          <p><strong>Distracting Strike:</strong> Add die to damage. Next attack against target by ally has advantage (before your next turn).</p>
+
+          <p><strong>Evasive Footwork:</strong> When moving, add die to AC until you stop.</p>
+
+          <p><strong>Lunging Attack:</strong> Increase reach by 5 feet for this attack. Add die to damage.</p>
+
+          <p><strong>Sweeping Attack:</strong> When you hit, deal die damage to another adjacent creature (if original attack roll would hit).</p>
+        `
+      },
+      // ========== HOUSE RULES ==========
+      {
+        id: 'house-rules-intro',
+        title: 'House Rules Overview',
+        category: 'house-rules',
+        pages: {},
+        keywords: ['house rules', 'custom', 'homebrew', 'campaign rules'],
+        content: `
+          <p>This section contains custom house rules for your campaign. These rules modify or supplement the standard 5e rules.</p>
+          <p><strong>Note:</strong> House rules should be discussed with your group before implementing them. What works for one table may not work for another.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Adding House Rules</div>
+            You can add your own house rules to this section by editing the rules database in the application files.
+          </div>
+        `
+      },
+      {
+        id: 'crit-injuries',
+        title: 'Critical Hit Injuries (Optional)',
+        category: 'house-rules',
+        pages: {},
+        keywords: ['critical', 'injury', 'lingering', 'wounds', 'house rules'],
+        content: `
+          <p>When a creature takes a critical hit, they may suffer a lingering injury. Roll on this table:</p>
+          <ul>
+            <li><strong>1-5:</strong> No lasting injury</li>
+            <li><strong>6-8:</strong> Minor scar (cosmetic only)</li>
+            <li><strong>9-10:</strong> Painful wound - disadvantage on ability checks for 1 hour</li>
+            <li><strong>11-12:</strong> Bleeding wound - 1d4 damage at start of each turn until healed</li>
+            <li><strong>13-14:</strong> Concussion - disadvantage on INT, WIS, CHA saves for 24 hours</li>
+            <li><strong>15-16:</strong> Broken rib - movement speed reduced by 10 feet until healed</li>
+            <li><strong>17-18:</strong> Internal bleeding - max HP reduced by 1d10 until long rest</li>
+            <li><strong>19-20:</strong> Severe injury - DM determines lasting effect</li>
+          </ul>
+        `
+      },
+      {
+        id: 'flanking-rules',
+        title: 'Flanking Rules',
+        category: 'house-rules',
+        pages: {},
+        keywords: ['flanking', 'advantage', 'positioning', 'tactical', 'house rules'],
+        content: `
+          <p><strong>Standard Flanking:</strong> When two allies are on opposite sides of an enemy, melee attacks against that enemy have advantage.</p>
+          <p><strong>Alternative - Flanking Bonus:</strong> Instead of advantage, flanking provides a +2 bonus to attack rolls. This is less powerful but still rewards tactical positioning.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Flanking Requirements</div>
+            <ul>
+              <li>Two allies must be on opposite sides/corners of the enemy</li>
+              <li>Both allies must be able to see the enemy</li>
+              <li>Neither ally can be incapacitated</li>
+            </ul>
+          </div>
+        `
+      },
+      {
+        id: 'potion-action',
+        title: 'Potions as Bonus Action',
+        category: 'house-rules',
+        pages: {},
+        keywords: ['potion', 'bonus action', 'healing', 'action economy', 'house rules'],
+        content: `
+          <p><strong>Drinking a Potion:</strong> You can drink a potion as a bonus action instead of an action.</p>
+          <p><strong>Administering a Potion:</strong> Giving a potion to another creature still requires an action.</p>
+          <div class="quick-ref">
+            <div class="quick-ref-title">Why This Rule?</div>
+            This makes healing potions more viable in combat, as spending your entire action to heal often feels inefficient compared to attacking or casting spells.
+          </div>
+        `
+      }
+    ];
+
+    // =====================================================
+    // APPLICATION STATE (using window for global access)
+    // =====================================================
+    window.currentCategory = 'all';
+    window.searchQuery = '';
+    window.expandedRules = new Set();
+
+    // =====================================================
+    // RENDER FUNCTIONS
+    // =====================================================
+    function formatPages(pages) {
+      var parts = [];
+      if (pages.PHB) parts.push('PHB ' + pages.PHB);
+      if (pages.PHB24) parts.push("PHB'24 " + pages.PHB24);
+      if (pages.DMG) parts.push('DMG ' + pages.DMG);
+      if (pages.DMG24) parts.push("DMG'24 " + pages.DMG24);
+      return parts.join(' | ');
+    }
+
+    function highlightMatches(text, query) {
+      if (!query) return text;
+      var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      var regex = new RegExp('(' + escaped + ')', 'gi');
+      return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+    }
+
+    function filterRules() {
+      var filtered = [];
+      var i, r, q, titleMatch, contentMatch, keywordMatch, j;
+
+      // Start with all rules
+      for (i = 0; i < RULES_DATA.length; i++) {
+        filtered.push(RULES_DATA[i]);
+      }
+
+      // Filter by category
+      if (window.currentCategory !== 'all') {
+        var catFiltered = [];
+        for (i = 0; i < filtered.length; i++) {
+          if (filtered[i].category === window.currentCategory) {
+            catFiltered.push(filtered[i]);
+          }
+        }
+        filtered = catFiltered;
+      }
+
+      // Filter by search query
+      if (window.searchQuery && window.searchQuery.length > 0) {
+        q = window.searchQuery.toLowerCase();
+        var searchFiltered = [];
+        for (i = 0; i < filtered.length; i++) {
+          r = filtered[i];
+          titleMatch = r.title && r.title.toLowerCase().indexOf(q) !== -1;
+          contentMatch = r.content && r.content.toLowerCase().indexOf(q) !== -1;
+          keywordMatch = false;
+          if (r.keywords && r.keywords.length > 0) {
+            for (j = 0; j < r.keywords.length; j++) {
+              if (r.keywords[j].toLowerCase().indexOf(q) !== -1) {
+                keywordMatch = true;
+                break;
+              }
+            }
+          }
+          if (titleMatch || contentMatch || keywordMatch) {
+            searchFiltered.push(r);
+          }
+        }
+        filtered = searchFiltered;
+      }
+
+      return filtered;
+    }
+
+    function renderRules() {
+      var container = document.getElementById('rules-container');
+      if (!container) {
+        console.error('rules-container not found!');
+        return;
+      }
+
+      // Get the search query value directly
+      var sq = window.searchQuery || '';
+      var cat = window.currentCategory || 'all';
+
+      // Build filtered rules array inline
+      var rules = [];
+      var i, r, q, titleMatch, contentMatch, keywordMatch, j;
+
+      for (i = 0; i < RULES_DATA.length; i++) {
+        r = RULES_DATA[i];
+
+        // Category filter
+        if (cat !== 'all' && r.category !== cat) {
+          continue;
+        }
+
+        // Search filter
+        if (sq.length > 0) {
+          q = sq.toLowerCase();
+          titleMatch = r.title && r.title.toLowerCase().indexOf(q) !== -1;
+          contentMatch = r.content && r.content.toLowerCase().indexOf(q) !== -1;
+          keywordMatch = false;
+          if (r.keywords && r.keywords.length > 0) {
+            for (j = 0; j < r.keywords.length; j++) {
+              if (r.keywords[j].toLowerCase().indexOf(q) !== -1) {
+                keywordMatch = true;
+                break;
+              }
+            }
+          }
+          if (!titleMatch && !contentMatch && !keywordMatch) {
+            continue;
+          }
+        }
+
+        rules.push(r);
+      }
+
+      if (rules.length === 0) {
+        container.innerHTML = '<div class="no-results"><div class="no-results-icon">📖</div><div>No rules found.</div></div>';
+        return;
+      }
+
+      // Show result count when searching
+      var html = '';
+      if (sq.length > 0) {
+        html = '<div class="search-results-count">' + rules.length + ' result' + (rules.length !== 1 ? 's' : '') + ' found for "' + sq + '"</div>';
+      }
+
+      for (i = 0; i < rules.length; i++) {
+        var rule = rules[i];
+        var isExpanded = window.expandedRules.has(rule.id) || (sq.length > 0 && rules.length <= 5);
+        var expandedClass = isExpanded ? ' expanded' : '';
+        var titleText = sq.length > 0 ? highlightMatches(rule.title, sq) : rule.title;
+        var contentText = sq.length > 0 ? highlightMatches(rule.content, sq) : rule.content;
+
+        html += '<div class="rule-card' + expandedClass + '">';
+        html += '<div class="rule-header" data-id="' + rule.id + '">';
+        html += '<span class="rule-title">' + titleText + '</span>';
+        html += '<span class="rule-pages">' + formatPages(rule.pages) + '</span>';
+        html += '<span class="rule-toggle">▼</span>';
+        html += '</div>';
+        html += '<div class="rule-content">' + contentText + '</div>';
+        html += '</div>';
+      }
+
+      container.innerHTML = html;
+
+      // Add click handlers for expanding/collapsing
+      var headers = container.querySelectorAll('.rule-header');
+      for (j = 0; j < headers.length; j++) {
+        headers[j].onclick = function() {
+          var id = this.getAttribute('data-id');
+          var card = this.parentElement;
+          if (window.expandedRules.has(id)) {
+            window.expandedRules.delete(id);
+            card.classList.remove('expanded');
+          } else {
+            window.expandedRules.add(id);
+            card.classList.add('expanded');
+          }
+        };
+      }
+    }
+
+    function updateCounts() {
+      var categories = ['all', 'combat', 'conditions', 'spellcasting', 'exploration', 'social', 'equipment', 'classes', 'class-features', 'house-rules'];
+      for (var i = 0; i < categories.length; i++) {
+        var cat = categories[i];
+        var count = cat === 'all' ? RULES_DATA.length : RULES_DATA.filter(function(r) { return r.category === cat; }).length;
+        var el = document.getElementById('count-' + cat);
+        if (el) el.textContent = count;
+      }
+    }
+
+    function updateCategoryHeader() {
+      var header = document.getElementById('category-header');
+      if (window.searchQuery && window.searchQuery.length > 0) {
+        header.textContent = 'Search Results for: "' + window.searchQuery + '"';
+        return;
+      }
+      var names = {
+        'all': 'All Rules',
+        'combat': 'Combat Rules',
+        'conditions': 'Conditions',
+        'spellcasting': 'Spellcasting',
+        'exploration': 'Exploration & Travel',
+        'social': 'Social & Skills',
+        'equipment': 'Equipment',
+        'classes': 'Character Classes',
+        'class-features': 'Class Features',
+        'house-rules': 'House Rules'
+      };
+      header.textContent = names[window.currentCategory] || 'Rules';
+    }
+
+    function doSearch() {
+      var box = document.getElementById('searchBox');
+      if (box) {
+        window.searchQuery = box.value.trim();
+        if (window.searchQuery.length > 0) {
+          // When searching, switch to all categories
+          window.currentCategory = 'all';
+          var items = document.querySelectorAll('.sidebar-item');
+          for (var i = 0; i < items.length; i++) {
+            items[i].classList.remove('active');
+          }
+          var allBtn = document.querySelector('[data-category="all"]');
+          if (allBtn) allBtn.classList.add('active');
+        }
+        updateCategoryHeader();
+        renderRules();
+      }
+    }
+    // Make doSearch globally accessible
+    window.doSearch = doSearch;
+
+    // =====================================================
+    // EVENT HANDLERS
+    // =====================================================
+    function init() {
+      // Sidebar category clicks
+      var sidebarItems = document.querySelectorAll('.sidebar-item');
+      for (var i = 0; i < sidebarItems.length; i++) {
+        (function(item) {
+          item.onclick = function() {
+            var allItems = document.querySelectorAll('.sidebar-item');
+            for (var j = 0; j < allItems.length; j++) {
+              allItems[j].classList.remove('active');
+            }
+            item.classList.add('active');
+            window.currentCategory = item.getAttribute('data-category');
+            // Clear search when switching categories
+            window.searchQuery = '';
+            var box = document.getElementById('searchBox');
+            if (box) box.value = '';
+            updateCategoryHeader();
+            renderRules();
+          };
+        })(sidebarItems[i]);
+      }
+
+      // Search input handler - use addEventListener to not overwrite inline handlers
+      var searchBox = document.getElementById('searchBox');
+      if (searchBox) {
+        searchBox.addEventListener('input', doSearch);
+        searchBox.addEventListener('keyup', function(e) {
+          if (e.key === 'Enter' || e.keyCode === 13) doSearch();
+        });
+      }
+
+      // Initial render
+      updateCounts();
+      updateCategoryHeader();
+      renderRules();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

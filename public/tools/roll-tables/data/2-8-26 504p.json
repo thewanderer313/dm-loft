@@ -1,0 +1,1951 @@
+{
+  "version": 1,
+  "backgroundImage": null,
+  "favorites": [],
+  "categories": [
+    {
+      "id": "loot",
+      "name": "Loot",
+      "tables": [
+        {
+          "id": "loot-pockets",
+          "name": "Pockets of the Dead",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A handful of corroded copper pennies, dated before the war."
+            },
+            {
+              "type": "text",
+              "text": "A crumpled letter, ink long faded, smelling of lavender and rot."
+            },
+            {
+              "type": "text",
+              "text": "Three teeth tied together with black thread."
+            },
+            {
+              "type": "text",
+              "text": "A tarnished locket containing a lock of gray hair."
+            },
+            {
+              "type": "text",
+              "text": "A carved bone whistle that makes no sound when blown."
+            },
+            {
+              "type": "text",
+              "text": "A small jar of honey, still perfectly preserved."
+            },
+            {
+              "type": "text",
+              "text": "A rabbit's foot, far too large to be from any ordinary rabbit."
+            },
+            {
+              "type": "text",
+              "text": "A hand-drawn map to a place that doesn't exist anymore."
+            },
+            {
+              "type": "text",
+              "text": "Seven iron nails wrapped in oilcloth."
+            },
+            {
+              "type": "text",
+              "text": "A pocket watch stopped at 3:33."
+            }
+          ]
+        },
+        {
+          "id": "loot-abandoned",
+          "name": "Abandoned Homestead Finds",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A quilt sewn with patterns that hurt to look at too long."
+            },
+            {
+              "type": "text",
+              "text": "Mason jars filled with murky preserves—something moves inside one."
+            },
+            {
+              "type": "text",
+              "text": "A family Bible with entire generations crossed out in red ink."
+            },
+            {
+              "type": "text",
+              "text": "A rocking chair that creaks even when empty."
+            },
+            {
+              "type": "text",
+              "text": "Bundles of dried herbs hanging from the rafters, some unidentifiable."
+            },
+            {
+              "type": "text",
+              "text": "A shotgun with one shell remaining, rusted shut."
+            },
+            {
+              "type": "text",
+              "text": "A child's doll made of corn husks, dressed in mourning clothes."
+            },
+            {
+              "type": "text",
+              "text": "An iron cookstove still warm to the touch."
+            },
+            {
+              "type": "text",
+              "text": "A stack of yellowed newspapers reporting events yet to happen."
+            },
+            {
+              "type": "text",
+              "text": "A moonshine still, operational, tended by no one."
+            }
+          ]
+        },
+        {
+          "id": "table-1770573427986",
+          "name": "Random Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Potion of Advantage",
+              "body": "When you drink this potion, you gain advantage on one ability check, attack roll, or saving throw of your choice that you make within the next hour.\n\nThis potion takes the form of a sparkling, golden mist that moves and pours like water.\n\nNotes: Advantage: Melee Attacks, Advantage: Ranged Attacks, Advantage: Ability Checks, Advantage: Saving Throws",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Ring of Jumping",
+              "body": "While wearing this ring, you can cast Jump from it, but can target only yourself when you do so.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Eyes of the Eagle",
+              "body": "These crystal lenses fit over the eyes. While wearing them, you have Advantage on Wisdom (Perception) checks that rely on sight. In conditions of clear visibility, you can make out details of even extremely distant creatures and objects as small as 2 feet across.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": "images/Eyes_of_the_Eagle-1770573615463.png"
+            },
+            {
+              "type": "card",
+              "title": "Eyes of Charming",
+              "body": "These crystal lenses fit over the eyes. They have 3 charges. While wearing them, you can expend 1 or more charges to cast Charm Person (save DC 13). For 1 charge, you cast the level 1 version of the spell. You increase the spell’s level by one for each additional charge you expend. The lenses regain all expended charges daily at dawn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": "images/Eyes_of_Charming-1770573719096.png"
+            },
+            {
+              "type": "card",
+              "title": "Immovable Rod",
+              "body": "This iron rod has a button on one end. You can take a Utilize action to press the button, which causes the rod to become magically fixed in place. Until you or another creature takes a Utilize action to push the button again, the rod doesn’t move, even if it defies gravity. The rod can hold up to 8,000 pounds of weight. More weight causes the rod to deactivate and fall. A creature can take a Utilize action to make a DC 30 Strength (Athletics) check, moving the fixed rod up to 10 feet on a successful check.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Keoghtom's Ointment",
+              "body": "This glass jar, 3 inches in diameter, contains 1d4 + 1 doses of a thick mixture that smells faintly of aloe. The jar and its contents weigh 1/2 pound.\n\nAs a Utilize action, you can swallow one dose of the ointment or apply it to a creature within 5 feet of yourself. The creature that receives it regains 2d8 + 2 Hit Points and ceases to have the Poisoned condition.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Mystery Key",
+              "body": "A question mark is worked into the head of this key. The key has a 5 percent chance of unlocking any lock into which it’s inserted. Once it unlocks something, the key disappears.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Nature's Mantle",
+              "body": "This cloak shifts color and texture to blend with the terrain surrounding you. While wearing the cloak, you can use it as a Spellcasting Focus for your Druid and Ranger spells.\n\nWhile you are in an area that is Lightly Obscured, you can Hide as a Bonus Action even if you are being directly observed.\n\nNotes: Druid or Ranger",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Pipe of Smoke Monsters",
+              "body": "While smoking this pipe, you can take a Magic action to exhale a puff of smoke that takes the form of a creature, such as a dragon, a flumph, or a slaad. The form must be small enough to fit in a 1-foot cube and loses its shape after a few seconds, becoming an ordinary puff of smoke.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Periapt of Wound Closure",
+              "body": "While wearing this pendant, you gain the following benefits.\n\nLife Preservation. Whenever you make a Death Saving Throw, you can change a roll of 9 or lower to a 10, turning a failed save into a successful one.\n\nNatural Healing Boost. Whenever you roll a Hit Point Die to regain Hit Points, double the number of Hit Points it restores.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Periapt of Health",
+              "body": "While wearing this pendant, you can take a Magic action to regain 2d4 + 2 Hit Points. Once used, this property can’t be used again until the next dawn.\n\nIn addition, you have Advantage on saving throws to avoid or end the Poisoned condition while you wear this pendant.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Vitality",
+              "body": "When you drink this potion, it removes any Exhaustion levels you have and ends the Poisoned condition on you. For the next 24 hours, you regain the maximum number of Hit Points for any Hit Point Die you spend.\n\nThis potion’s crimson liquid regularly pulses with dull light, calling to mind a heartbeat.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Healing",
+              "body": "You regain Hit Points when you drink this potion. The number of Hit Points depends on the potion’s rarity, as shown in the table below.\n\nWhatever its potency, the potion’s red liquid glimmers when agitated.\n\nPotion\tHP Regained\tRarity\nPotion of Healing\t2d4 + 2\tCommon\nPotion of Healing (Greater)\t4d4 + 4\tUncommon\nPotion of Healing (Superior)\t8d4 + 8\tRare\nPotion of Healing (Supreme)\t10d4 + 20\tVery Rare",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bag of Beans",
+              "body": "This heavy cloth bag contains 3d4 dry beans when found. The bag weighs half a pound regardless of how many beans it contains and becomes a nonmagical item when it no longer contains any beans.\n\nIf you dump one or more beans out of the bag, they explode in a 10-foot-radius Sphere centered on them. All the dumped beans are destroyed in the explosion, and each creature in the Sphere, including you, makes a DC 15 Dexterity saving throw, taking 5d4 Force damage on a failed save or half as much damage on a successful one.\n\nIf you remove a bean from the bag, plant it in dirt or sand, and then water it, the bean disappears as it produces an effect 1 minute later from the ground where it was planted. The DM can choose an effect from the following table or determine it randomly.\n\n1d100\tEffect\n01\t5d4 toadstools sprout. If a creature eats a toadstool, roll any die. On an odd roll, the eater must succeed on a DC 15 Constitution saving throw or take 5d6 Poison damage and have the Poisoned condition for 1 hour. On an even roll, the eater gains 5d6 Temporary Hit Points for 1 hour.\n02–10\tA geyser erupts and spouts water, beer, mayonnaise, tea, vinegar, wine, or oil (DM’s choice) 30 feet into the air for 1d4 minutes.\n11–20\tA Treant sprouts. Roll any die. On an odd roll, the treant is Chaotic Evil. On an even roll, the treant is Chaotic Good.\n21–30\tAn animate but immobile stone statue in your likeness rises and makes verbal threats against you. If you leave it and others come near, it describes you as the most heinous of villains and directs the newcomers to find and attack you. If you are on the same plane of existence as the statue, it knows where you are. The statue becomes inanimate after 24 hours.\n31–40\tA campfire with green flames springs forth and burns for 24 hours or until it is extinguished.\n41–50\tThree Shrieker Fungi sprout.\n51–60\t1d4 + 4 bright-pink toads crawl forth. Whenever a toad is touched, it transforms into a Large or smaller monster of the DM’s choice that acts in accordance with its alignment and nature. The monster remains for 1 minute, then disappears in a puff of bright-pink smoke.\n61–70\tA hungry Bulette burrows up and attacks.\n71–80\tA fruit tree grows. It has 1d10 + 20 fruit, 1d8 of which act as randomly determined potions. The tree vanishes after 1 hour. Picked fruit remains, retaining any magic for 30 days.\n81–90\tA nest of 1d4 + 3 rainbow-colored eggs springs up. Any creature that eats an egg makes a DC 20 Constitution saving throw. On a successful save, a creature permanently increases its lowest ability score by 1, randomly choosing among equally low scores. On a failed save, the creature takes 10d6 Force damage from an internal explosion.\n91–95\tA pyramid with a 60-foot-square base bursts upward. Inside is a burial chamber containing a Mummy, a Mummy Lord, or some other Undead of the DM’s choice. Its sarcophagus contains treasure of the DM’s choice.\n96–00\tA giant beanstalk sprouts, growing to a height of the DM’s choice. The top leads where the DM chooses, such as to a great view, a cloud giant’s castle, or another plane of existence.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bead of Nourishment",
+              "body": "This flavorless, gelatinous bead dissolves on your tongue and provides as much nourishment as 1 day of Rations.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bead of Refreshment",
+              "body": "This flavorless, gelatinous bead dissolves in liquid, transforming up to a pint of the liquid into fresh, cold drinking water. The bead has no effect on magical liquids or harmful substances such as poison.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Blasted Goggles",
+              "body": "These tinker’s goggles have 3 charges. As an action, you can expend 1 charge to shoot a beam of fiery light from the goggles at a creature you can see within 120 feet of yourself. The target must succeed on a DC 15 Dexterity saving throw or take 3d6 fire damage. The goggles regain 1d3 expended charges daily at dawn.\n\nCursed. The goggles are cursed, and becoming attuned to them extends the curse to you. You can’t remove the goggles or end your attunement to them until you are targeted by a Remove Curse spell or similar magic.\n\nWhenever you use the goggles’ fiery beam and the target rolls a 20 on the d20 for the saving throw, the goggles expose you to a flash of violent bright light. As a result, you have the blinded condition for 24 hours.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Boots of Striding and Springing",
+              "body": "While you wear these boots, your Speed becomes 30 feet unless your Speed is higher, and your Speed isn’t reduced by you carrying weight in excess of your carrying capacity or wearing Heavy Armor.\n\nOnce on each of your turns, you can jump up to 30 feet by spending only 10 feet of movement.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bottle of Boundless Coffee",
+              "body": "This metal bottle carries delicious, warm coffee. The bottle comes with a stopper, which is attached to the bottle by a little chain. Even when open, the bottle won't accept any liquid other than the coffee it produces. The coffee inside is always comfortably warm, and none of the heat can be felt through the bottle.\n\nEach time you drink the coffee, roll a d20. On a 1, the bottle refuses to dispense coffee for the next hour. If you pour coffee from the bottle, rather than drinking from it, the coffee vanishes the moment it leaves the bottle.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "npc",
+      "name": "NPC",
+      "tables": [
+        {
+          "id": "npc-strangers",
+          "name": "Strangers on the Road",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A traveling preacher whose shadow moves independently of his body."
+            },
+            {
+              "type": "text",
+              "text": "An old woman selling apples from a cart that leaves no wheel tracks."
+            },
+            {
+              "type": "text",
+              "text": "A census taker asking questions about people who died decades ago."
+            },
+            {
+              "type": "text",
+              "text": "A child walking alone, humming a tune no one taught them."
+            },
+            {
+              "type": "text",
+              "text": "A mail carrier delivering letters to abandoned houses."
+            },
+            {
+              "type": "text",
+              "text": "Twin sisters who finish each other's sentences before they're spoken."
+            },
+            {
+              "type": "text",
+              "text": "A fiddler whose music makes the trees lean closer."
+            },
+            {
+              "type": "text",
+              "text": "A mute beggar whose eyes reflect places you've never been."
+            },
+            {
+              "type": "text",
+              "text": "A tax collector for a county that no longer exists."
+            },
+            {
+              "type": "text",
+              "text": "A woman in a wedding dress, walking toward something only she can see."
+            }
+          ]
+        },
+        {
+          "id": "npc-townsfolk",
+          "name": "Hollow Ridge Townsfolk",
+          "entries": [
+            {
+              "type": "text",
+              "text": "The shopkeeper who weighs everything twice and trusts nothing."
+            },
+            {
+              "type": "text",
+              "text": "The blacksmith whose forge burns cold and blue at midnight."
+            },
+            {
+              "type": "text",
+              "text": "The schoolmarm teaching lessons from books written in no known language."
+            },
+            {
+              "type": "text",
+              "text": "The barber who knows everyone's secrets and pretends otherwise."
+            },
+            {
+              "type": "text",
+              "text": "The undertaker who measures the living with a knowing eye."
+            },
+            {
+              "type": "text",
+              "text": "The midwife who has never lost a mother, though some wish she had."
+            },
+            {
+              "type": "text",
+              "text": "The drunk who speaks prophecy between blackouts."
+            },
+            {
+              "type": "text",
+              "text": "The church organist who only plays songs for the dead."
+            },
+            {
+              "type": "text",
+              "text": "The general store clerk who remembers purchases you haven't made yet."
+            },
+            {
+              "type": "text",
+              "text": "The mayor, elected unanimously, though no one recalls the vote."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "encounter",
+      "name": "Encounter",
+      "tables": [
+        {
+          "id": "encounter-woods",
+          "name": "Deep Woods Encounters",
+          "entries": [
+            {
+              "type": "text",
+              "text": "A clearing where all the trees have grown facing away from the center."
+            },
+            {
+              "type": "text",
+              "text": "The sound of chopping, but no woodsman to be found."
+            },
+            {
+              "type": "text",
+              "text": "A perfectly stacked cairn of stones that wasn't there a moment ago."
+            },
+            {
+              "type": "text",
+              "text": "Animal bones arranged in geometric patterns along the trail."
+            },
+            {
+              "type": "text",
+              "text": "A spring whose water tastes of copper and regret."
+            },
+            {
+              "type": "text",
+              "text": "Bootprints in the mud that end abruptly mid-stride."
+            },
+            {
+              "type": "text",
+              "text": "A hunting blind built high in the trees, watching the trail below."
+            },
+            {
+              "type": "text",
+              "text": "The smell of woodsmoke but no fire visible for miles."
+            },
+            {
+              "type": "text",
+              "text": "A tree scarred with claw marks far too high for any bear."
+            },
+            {
+              "type": "text",
+              "text": "A child's laughter echoing from all directions at once."
+            }
+          ]
+        },
+        {
+          "id": "encounter-night",
+          "name": "Things After Dark",
+          "entries": [
+            {
+              "type": "text",
+              "text": "Lights bobbing through the hollow that aren't lanterns or fireflies."
+            },
+            {
+              "type": "text",
+              "text": "The sensation of being watched from just beyond the firelight."
+            },
+            {
+              "type": "text",
+              "text": "A knock at the door, though you're miles from any dwelling."
+            },
+            {
+              "type": "text",
+              "text": "Your campfire dims as something large passes overhead."
+            },
+            {
+              "type": "text",
+              "text": "Whispers in a language you almost understand."
+            },
+            {
+              "type": "text",
+              "text": "The sound of a congregation singing hymns from an empty church."
+            },
+            {
+              "type": "text",
+              "text": "A figure at the crossroads, standing perfectly still."
+            },
+            {
+              "type": "text",
+              "text": "Your reflection in the water doesn't match your movements."
+            },
+            {
+              "type": "text",
+              "text": "The moon seems wrong tonight—too large, too close, too hungry."
+            },
+            {
+              "type": "text",
+              "text": "Hoofbeats approaching, but the road remains empty."
+            }
+          ]
+        },
+        {
+          "id": "table-1770588201174",
+          "name": "Pall Orchard Dungeon",
+          "entries": []
+        }
+      ]
+    },
+    {
+      "id": "complication",
+      "name": "Complication",
+      "tables": [
+        {
+          "id": "complication-social",
+          "name": "Social Complications",
+          "entries": [
+            {
+              "type": "text",
+              "text": "Someone recognizes you from a place you've never been."
+            },
+            {
+              "type": "text",
+              "text": "An old debt comes due—one you don't remember incurring."
+            },
+            {
+              "type": "text",
+              "text": "The locals go silent the moment they see your face."
+            },
+            {
+              "type": "text",
+              "text": "A child delivers a message meant for someone else, but it's in your handwriting."
+            },
+            {
+              "type": "text",
+              "text": "You've been expected. A room was already prepared."
+            },
+            {
+              "type": "text",
+              "text": "Someone you trust has been spreading lies about your intentions."
+            },
+            {
+              "type": "text",
+              "text": "The town holds a grudge against your family going back generations."
+            },
+            {
+              "type": "text",
+              "text": "A rival arrives, claiming you've stolen something precious."
+            },
+            {
+              "type": "text",
+              "text": "You're offered hospitality that feels more like imprisonment."
+            },
+            {
+              "type": "text",
+              "text": "The person you came to meet died last night—but sent a letter this morning."
+            }
+          ]
+        },
+        {
+          "id": "complication-environment",
+          "name": "Environmental Complications",
+          "entries": [
+            {
+              "type": "text",
+              "text": "The bridge you crossed yesterday is gone, as if it never existed."
+            },
+            {
+              "type": "text",
+              "text": "A fog rolls in that your compass cannot navigate."
+            },
+            {
+              "type": "text",
+              "text": "The road loops back on itself no matter which direction you travel."
+            },
+            {
+              "type": "text",
+              "text": "A sudden storm forces shelter in a place best avoided."
+            },
+            {
+              "type": "text",
+              "text": "The local well has gone dry—or worse, changed color."
+            },
+            {
+              "type": "text",
+              "text": "Landslide blocks the only pass; the long way adds three days."
+            },
+            {
+              "type": "text",
+              "text": "Something has spooked all the animals for miles around."
+            },
+            {
+              "type": "text",
+              "text": "The temperature drops unnaturally as you approach your destination."
+            },
+            {
+              "type": "text",
+              "text": "Your supplies have spoiled overnight, though they were fresh at dusk."
+            },
+            {
+              "type": "text",
+              "text": "The map shows a town here. There is only a foundation and graves."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat-1770570538359",
+      "name": "Player Loot Tables",
+      "tables": [
+        {
+          "id": "id-1770570698998-181h2oasb",
+          "name": "Dustfoot Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Dust of Disappearance",
+              "body": "This powder resembles fine sand. There is enough of it for one use. When you take a Utilize action to throw the dust into the air, you and each creature or object within a 10 foot Emanation originating from you have the Invisible condition for 2d4 minutes. The duration is the same for all subjects, and the dust is consumed when the magic takes effect. Immediately after an affected creature makes an attack roll, deals damage, or casts a spell, the Invisible condition ends for that creature.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Dust of Sneezing and Choking",
+              "body": "Found in a small container, this powder resembles Dust of Disappearance, and Identify reveals it to be such. There is enough of it for one use.\n\nAs a Utilize action, you can throw the dust into the air, forcing yourself and every creature in a 30- foot Emanation originating from you to make a DC 15 Constitution saving throw. Constructs, Elementals, Oozes, Plants, and Undead succeed on the save automatically.\n\nOn a failed save, a creature begins sneezing uncontrollably; it has the Incapacitated condition and is suffocating. The creature repeats the save at the end of each of its turns, ending the effect on itself on a success. The effect also ends on any creature targeted by a Lesser Restoration spell.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Alchemy Jug",
+              "body": "This ceramic jug appears to be able to hold a gallon of liquid and weighs 12 pounds whether full or empty. The jug sloshes when it is shaken, even if the jug is empty.\n\nYou can take a Magic action and name one liquid from the Alchemy Jug Liquids table to cause the jug to produce the chosen liquid. Afterward, you can uncork the jug as a Utilize action and pour that liquid out, up to 2 gallons per minute. The maximum amount of liquid the jug can produce depends on the liquid you named.\n\nOnce the jug starts producing a liquid, it can’t produce a different one, or more of one that has reached its maximum, until the next dawn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": "images/Alchemy_jug-1770573297053.png"
+            },
+            {
+              "type": "card",
+              "title": "Dust of Corrosion",
+              "body": "As an action, you can throw this dust into the air, filling a 10-foot cube that extends out from you. Surfaces and objects made of nonmagical ferrous metal in the area instantly corrode and turn to dust, becoming useless and unsalvageable. Any creature in the area that is made wholly or partly out of ferrous metal must make a DC 13 Constitution saving throw, taking 4d8 necrotic damage on a failed save, or half as much damage on a successful one.\n\nFound in a small packet, this dust is made from finely ground rust monster antennae. There is enough dust in each packet for one use.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Gauntlets of Ogre Power",
+              "body": "Your Strength score is 19 while you wear these gauntlets. They have no effect on you if your Strength is 19 or higher without them.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Instrument of Illusions",
+              "body": "While you are playing this musical instrument, you can take a Magic action to create harmless, illusory visual effects within a 5-foot Emanation originating from the instrument. If you are a Bard, the size of the Emanation increases to 15 feet. Sample visual effects include luminous musical notes, a spectral dancer, butterflies, and gently falling snow. The magical effects have neither substance nor sound, and they are obviously illusory. The effects end when you stop playing.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Instrument of the Bards",
+              "body": "An Instrument of the Bards is superior to an ordinary instrument in every way. Seven types of these instruments exist, each named after a bard college. The Instruments of the Bards table lists the spells common to all instruments, as well as the spells specific to each one and its rarity. A creature that attempts to play the instrument without being attuned to it must succeed on a DC 15 Wisdom saving throw or take 2d4 Psychic damage.\n\nYou can play the instrument to cast one of its spells. Once the instrument has been used to cast a spell, it can’t be used to cast that spell again until the next dawn. The spells use your spellcasting ability and spell save DC.\n\nInstruments of the Bards\nInstrument\tRarity\tSpells\nAll\t—\tFly, Invisibility, Levitate, Protection from Evil and Good, plus the spells listed for the particular instrument\n\nAnstruth harp\tVery Rare\tCure Wounds (level 5), Ice Storm, Wall of Thorns\n\nCanaith mandolin\tRare\tCure Wounds (level 3), Dispel Magic, Protection from Energy (Lightning damage only)\n\nCli lyre\tRare\tStone Shape, Wall of Fire, Wind Wall\n\nDoss lute\tUncommon\tAnimal Friendship, Protection from Energy (Fire damage only), Protection from Poison\n\nFochlucan bandore\tUncommon\tEntangle, Faerie Fire, Shillelagh, Speak with Animals\n\nMac-Fuirmidh cittern\tUncommon\tBarkskin, Cure Wounds, Fog Cloud\n\nOllamh harp\tLegendary\tConfusion, Control Weather, Fire Storm",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Pipes of the Sewers",
+              "body": "While these pipes are on your person, ordinary rats and giant rats are Indifferent toward you and won’t attack you unless you threaten or harm them.\n\nThe pipes have 3 charges and regain 1d3 expended charges daily at dawn. If you play the pipes as a Magic action, you can take a Bonus Action to expend 1 to 3 charges, calling forth one Swarm of Rats with each expended charge if enough rats are within half a mile of you to be called in this fashion (as determined by the DM). If there aren’t enough rats to form a swarm, the charge is wasted. Called swarms move toward the music by the shortest available route but aren’t under your control otherwise.\n\nWhenever a Swarm of Rats that isn’t under another creature’s control comes within 30 feet of you while you are playing the pipes, the swarm makes a DC 15 Wisdom saving throw. On a successful save, the swarm behaves as it normally would and can’t be swayed by the pipes’ music for the next 24 hours. On a failed save, the swarm is swayed by the pipes’ music and becomes Friendly to you and your allies for as long as you continue to play the pipes each round as a Magic action. A Friendly swarm obeys your commands. If you issue no commands to a Friendly swarm, it defends itself but otherwise takes no actions. If a Friendly swarm starts its turn more than 30 feet away from you, your control over that swarm ends, and the swarm behaves as it normally would and can’t be swayed by the pipes’ music for the next 24 hours.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Pipes of Haunting",
+              "body": "These pipes have 3 charges and regain 1d3 expended charges daily at dawn. You can take a Magic action to play them and expend 1 charge to create an eerie, spellbinding tune. Each creature of your choice within 30 feet of you must succeed on a DC 15 Wisdom saving throw or have the Frightened condition for 1 minute. A creature that fails the save repeats it at the end of each of its turns, ending the effect on itself on a success. A creature that succeeds on its save is immune to the effect of these pipes for 24 hours.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Adventurer's Ring",
+              "body": "Lamps are a liability on adventures. Delicate and prone to oil spillage, lamps fill a hand that should otherwise be wielding a weapon or casting a spell. Once you try one of our elegant and practical rings, you’ll never go back to cumbersome flint and fire.\n\nWhile the cover on this ring is open, the ring produces a flame that creates no heat and consumes no fuel. It sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. As a Bonus Action, you can close the cover, smothering the flame, or open it again.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Charlatan's Die",
+              "body": "Whenever you roll this six-sided die, you can control which number it rolls.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Battle Lute",
+              "body": "This reinforced lute is suitable for use as a handheld Musical Instrument or for bashing when the crowd turns sour. Its strings are finely braided wire that run along a sturdy metal neck.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nSlow. If you hit a creature with this weapon and deal damage to it, you can reduce its Speed by 10 feet until the start of your next turn. If the creature is hit more than once by weapons that have this property, the Speed reduction doesn’t exceed 10 feet.\n\nName\tCost\tDamage\tWeight\tProperties\nBattle Lute\t45 GP\t1d6 Bludgeoning\t4 lbs\tSlow, Versatile (1d8)",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bellow Flute",
+              "body": "The traditional Obojiman instrument has gotten a second life as a swift club-like weapon commonly used by traveling performers. It is crafted from a special coral found all across the shallows, which naturally forms with dozens of tiny holes that run throughout the body of the instrumental weapon. When swung it emits a beautiful harmonic sound.\n\nName\tCost\tDamage\tWeight\tProperties\nBellow Flute\t1 GP\t1d6 Bludgeoning\t1/2 lb\tFinesse",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Double-Bladed Scimitar",
+              "body": "The double-bladed scimitar is the signature weapon of Valenar elves. A haft of fine wood supports a long, curving blade on either end. Forged with techniques honed over centuries, these blades are strong, sharp, and remarkably light. Each scimitar is a masterpiece, and as a result the double-bladed scimitar is an expensive weapon (100 gp) — few though ever have the opportunity to purchase one. A Valenar blade in the hands of a non-elf is generally assumed to have been stolen or looted from a fallen foe, and a Valenar elf might feel entitled to demand its return or challenge the bearer to prove they’re worthy to wield it.\n\nSpecial. If you attack with a double-bladed scimitar as part of the Attack action on your turn, you can use a bonus action immediately after to make a melee attack with it. This attack deals 1d4 slashing damage on a hit, instead of 2d4.\n\nName\tCost\tDamage\tWeight\tProperties\nDouble-Bladed Scimitar\t100 GP\t2d4 Slashing\t6 lbs\tSpecial, Two-Handed",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Punching Dagger",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Punching Dagger, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nDefending. A Defending weapon is either made for parrying, has advanced techniques for use in parrying, or both. When wielding a Defending weapon, you may use your Reaction when you are hit by a melee attack roll. Roll 1d4 and add the result to your AC, including against the triggering attack.\n\nName\tCost\tDamage\tWeight\tProperties\nPunching Dagger\t300 GP\t1d4 Piercing\t1 lb\tArmor-Piercing, Finesse, Light, Defending",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Showstopper Strap*",
+              "body": "A brightly stitched instrument strap with hidden leather plates.\nOnce per Long Rest, when an ally within 30 feet takes damage, Dustfoot can use his reaction to grant them temporary hit points equal to his Charisma modifier.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Laughing Buckle*",
+              "body": "A belt buckle shaped like a grinning face, polished smooth.\nWhen Dustfoot succeeds on a Charisma check he gains Advantage on his next Saving Throw.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Encore Cloak*",
+              "body": "A patchwork cloak stitched from old banners and tavern curtains.\nIf Dustfoot reduces a hostile creature to 0HP with a spell or cantrip, he can immediately move up to 10 additional feet without provoking opportunity attacks.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Good Chair*",
+              "body": "A collapsible stool carried in Dustfoot's pack.\nDuring a short rest, if Dustfoot plays music while seated on this stool, one ally regains an additional 1d6 hit points when spending Hit Dice.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bandit-Scarred Bracers*",
+              "body": "Leather bracers bearing shallow blade nicks.\nOnce per Long Rest, when Dustfoot is hit by an attack, he can impose Disadvantage on the next attack made against an ally within 10 feet.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Road-Caller Whistle*",
+              "body": "A bone whistle with a sharp, playful note.\nAs an action, Dustfoot can signal allies. One willing creature within 60 feet can immediately move 5 feet without provoking attacks of opportunity.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Stagehand's Gloves*",
+              "body": "Fingerless gloves stained with rosin and chalk.\nAdds +1 to Strength and Dexterity while worn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Finger-Gun Amplifier Charm*",
+              "body": "A roughly gun-shaped charm on a silver chain. \nWhen Dustfoot casts his Finger Guns cantrip he can add +2 to the damage dealt once per Long Rest.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Broken Banner Pick*",
+              "body": "A guitar pick shaped from a fragment of broken shield.\nOnce per Short Rest, Dustfoot can add his Charisma Modifier to a failed Saving Throw made by himself or an ally within 30 feet.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Soft Note*",
+              "body": "A tuning fork that vibrates with a warm note.\nAs an action, Dustfoot can end one Frightened or Charmed condition affecting a creature that can hear him once per Long Rest.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Encore Coin*",
+              "body": "A copper coin stamped with a stage mask on one side.\nAfter rolling Initiative, Dustfoot can flip the coin. If the stage lands face up he can re-roll initiative (Advantage) or allow a single ally to re-roll (Advantage).",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "id-1770570711213-lmwa51cvq",
+          "name": "Callen Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Dagger of Venom",
+              "body": "You gain a +1 bonus to attack rolls and damage rolls made with this magic weapon. You can take a bonus action to magically coat this blade with poison. The poison remains for 1 minute or until an attack hits a creature. Creatures hit with the poisoned blade must make a DC15 Constitution saving throw or suffer 2s10 poison damage and have to poisoned condition for 1 minute. The weapon can't be used this way again until the next dawn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Manual of Quickness of Action",
+              "body": "This book contains coordination and balance exercises, and its words are charged with magic. If you spend 48 hours over a period of 6 days or fewer studying the book’s contents and practicing its guidelines, your Dexterity increases by 2, to a maximum of 30. The manual then loses its magic but regains it in a century.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Dazzling Weapon",
+              "body": "This magic weapon grants a +1 bonus to attack and damage rolls made with it. While holding it, you can take a Bonus Action to cause it to shed Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. You can extinguish the light as a Bonus Action.\n\nThe weapon has 4 charges. You can take a Reaction immediately after being hit by an attack roll to expend 1 of the weapon’s charges and force the attacker to make a DC 15 Constitution saving throw. On a failed save, the attacker has the Blinded condition until the end of its next turn. The weapon regains 1d4 expended charges daily at dawn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Adventurer's Ring",
+              "body": "Lamps are a liability on adventures. Delicate and prone to oil spillage, lamps fill a hand that should otherwise be wielding a weapon or casting a spell. Once you try one of our elegant and practical rings, you’ll never go back to cumbersome flint and fire.\n\nWhile the cover on this ring is open, the ring produces a flame that creates no heat and consumes no fuel. It sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. As a Bonus Action, you can close the cover, smothering the flame, or open it again.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Dagger of Blindsight",
+              "body": "This rare magic item requires attunement. A creature attuned to it gains blindsight out to a range of 30 feet. The dagger has a saw-toothed edge and a black pearl nested in its pommel.\n\nProficiency with a Dagger allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nNick. When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.\n\nNotes: Sense: Blindsight, Finesse, Light, Thrown, Nick",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Claw",
+              "body": "A claw is a simple, bladed melee weapon worn as a glove that deals 1d6 slashing damage on a hit and has the attached and light properties.\n\nName\tCost\tDamage\tWeight\tProperties\nClaw\t5 GP\t1d6 Slashing\t2 lbs\tAttached, Light",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Parrying Dagger",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Parrying Dagger, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nDisarming. These weapons can catch a foe's weapon, allowing you to remove it from their grasp. When you take the Attack action on your turn and hit with a Disarming weapon, you can use your Bonus Action later on the same turn to disarm the target. Both you and the attacker must make opposed attack rolls, ignoring any sources of Advantage and Disadvantage. If your result is higher and the weapon is something the target can drop, the weapon falls from the target's grasp, landing in its space.\n\nName\tCost\tDamage\tWeight\tProperties\nParrying Dagger\t350 GP\t1d4 Piercing\t1 lb\tFinesse, Light, Thrown (range 20/60), Disarming",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Punching Dagger",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Punching Dagger, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nDefending. A Defending weapon is either made for parrying, has advanced techniques for use in parrying, or both. When wielding a Defending weapon, you may use your Reaction when you are hit by a melee attack roll. Roll 1d4 and add the result to your AC, including against the triggering attack.\n\nName\tCost\tDamage\tWeight\tProperties\nPunching Dagger\t300 GP\t1d4 Piercing\t1 lb\tArmor-Piercing, Finesse, Light, Defending",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Blackash Cloakpin*",
+              "body": "A cloak clasp carved from burned oak, warm to the touch.\nMechanics: While wearing this pin, Callen can take the Hide action as a bonus action once per long rest even if only lightly obscured.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Split-Nail Boots*",
+              "body": "Boots reinforced with thin iron crescents in the heels.\nMechanics: Difficult terrain caused by undergrowth or rubble does not slow movement.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Listener's Thread*",
+              "body": "A spool of near-invisible fiber that hums softly when pulled taut.\nAs an action this thread can be strung across a doorway or path. The next creature to cross it triggers a silent mental alert within 100 feet.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Sheath of Borrowed Silence*",
+              "body": "A leather dagger sheath lined with something soft and dark...\nDrawing or stowing a dagger in this sheath goes entirely unnoticed, even if other are watching your movements directly.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Puck-Bone Charm*",
+              "body": "A finger-length bone carved with spiral notches.\nOnce per long rest the bearer of this bone can gain Advantage on an Intimidation check. On a success, the target also has Disadvantage on its next Wisdom saving throw.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Hag-sewn Talisman*",
+              "body": "A talisman of hair, dark bark, and twine bound in a knot - originally made for Callen by her grandmother, thought to be lost.... until now.\nOnce per long rest, when Callen is targeted by an attack she can impose Disadvantage on that roll as a reaction.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Needle of Last Breath*",
+              "body": "A hollow steel needle capped with wax.\nAs a bonus action attach to a weapon (ranged or martial). The next hit with that weapon deals an extra 1d4 necrotic damage and prevents the target from benefiting from any healing spells or potions until the end of its next turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Gravewind Locket*",
+              "body": "A locket containing pressed leaves from a cemetery fence line. \nOnce per long rest Callen can cast Disguise Self without components.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Knot of the Witness*",
+              "body": "A cord tied with seven deliberate loops.\nIf Callen witnesses a creature drop to 0 HP, she gains Advantage on her next attack roll or ability check. This can only be used once per Long Rest.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "id-1770570720253-6i25a4a5c",
+          "name": "Allonius Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Manual of Gainful Exercise",
+              "body": "This book describes fitness exercises, and its words are charged with magic. If you spend 48 hours over a period of 6 days or fewer studying the book’s contents and practicing its guidelines, your Strength increases by 2, to a maximum of 30. The manual then loses its magic but regains it in a century.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Adventurer's Ring",
+              "body": "Lamps are a liability on adventures. Delicate and prone to oil spillage, lamps fill a hand that should otherwise be wielding a weapon or casting a spell. Once you try one of our elegant and practical rings, you’ll never go back to cumbersome flint and fire.\n\nWhile the cover on this ring is open, the ring produces a flame that creates no heat and consumes no fuel. It sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. As a Bonus Action, you can close the cover, smothering the flame, or open it again.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Armor of the Fallen",
+              "body": "While wearing this armor, you can use it to cast either Speak with Dead or Animate Dead. Once the armor has cast a spell in this way, it can’t cast either spell until the next dawn.\n\nYour soul keeps this armor together. If you die while you are attuned to the armor, the armor is destroyed.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Catchpole",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Catchpole, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nEntangling. When you take the Attack action on your turn and hit with an Entangling weapon, you can use a Bonus Action later on the same turn to entangle the target. The target must succeed on a Dexterity saving throw (DC 10 plus your Proficiency Bonus) or have the Grappled condition until it escapes or until you release the weapon. The target succeeds automatically if it is Huge or larger.\n\nTo escape, the target must use an action to make a Strength (Athletics) or Dexterity (Acrobatics) check against the same DC. On a success, the target no longer has the Grappled condition. While a creature is Grappled by this weapon, you can't use it to attack a different creature.\n\nName\tCost\tDamage\tWeight\tProperties\nCatchpole\t500 GP\t1d6 Piercing\t5 lbs\tHafted, Reach, Two-Handed, Entangling",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Claw",
+              "body": "A claw is a simple, bladed melee weapon worn as a glove that deals 1d6 slashing damage on a hit and has the attached and light properties.\n\nName\tCost\tDamage\tWeight\tProperties\nClaw\t5 GP\t1d6 Slashing\t2 lbs\tAttached, Light",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Punching Dagger",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Punching Dagger, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nDefending. A Defending weapon is either made for parrying, has advanced techniques for use in parrying, or both. When wielding a Defending weapon, you may use your Reaction when you are hit by a melee attack roll. Roll 1d4 and add the result to your AC, including against the triggering attack.\n\nName\tCost\tDamage\tWeight\tProperties\nPunching Dagger\t300 GP\t1d4 Piercing\t1 lb\tArmor-Piercing, Finesse, Light, Defending",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "id-1770570728918-x9p96osau",
+          "name": "Biggus Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Gloves of Thievery",
+              "body": "These gloves are invisible while worn. While wearing them, you gain a +5 bonus to Dexterity (Sleight of Hand) checks and Dexterity checks made to pick locks.\n\nNotes: Bonus: Sleight of Hand",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Adventurer's Ring",
+              "body": "Lamps are a liability on adventures. Delicate and prone to oil spillage, lamps fill a hand that should otherwise be wielding a weapon or casting a spell. Once you try one of our elegant and practical rings, you’ll never go back to cumbersome flint and fire.\n\nWhile the cover on this ring is open, the ring produces a flame that creates no heat and consumes no fuel. It sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. As a Bonus Action, you can close the cover, smothering the flame, or open it again.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Boots of Levitation",
+              "body": "While you wear these boots, you can cast Levitate on yourself.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bracers of Archery",
+              "body": "While wearing these bracers, you have proficiency with the Longbow and Shortbow, and you gain a +2 bonus to damage rolls made with such weapons.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Cloak of Billowing",
+              "body": "While wearing this cloak, you can take a Bonus Action to make it billow dramatically for 1 minute.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Cloak of Displacement",
+              "body": "While you wear this cloak, it magically projects an illusion that makes you appear to be standing in a place near your actual location, causing any creature to have Disadvantage on attack rolls against you. If you take damage, the property ceases to function until the start of your next turn. This property is suppressed while your Speed is 0.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Dagger of Blindsight",
+              "body": "This rare magic item requires attunement. A creature attuned to it gains blindsight out to a range of 30 feet. The dagger has a saw-toothed edge and a black pearl nested in its pommel.\n\nProficiency with a Dagger allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nNick. When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.\n\nNotes: Sense: Blindsight, Finesse, Light, Thrown, Nick",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Claw",
+              "body": "A claw is a simple, bladed melee weapon worn as a glove that deals 1d6 slashing damage on a hit and has the attached and light properties.\n\nName\tCost\tDamage\tWeight\tProperties\nClaw\t5 GP\t1d6 Slashing\t2 lbs\tAttached, Light",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Punching Dagger",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Punching Dagger, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nDefending. A Defending weapon is either made for parrying, has advanced techniques for use in parrying, or both. When wielding a Defending weapon, you may use your Reaction when you are hit by a melee attack roll. Roll 1d4 and add the result to your AC, including against the triggering attack.\n\nName\tCost\tDamage\tWeight\tProperties\nPunching Dagger\t300 GP\t1d4 Piercing\t1 lb\tArmor-Piercing, Finesse, Light, Defending",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Dry Flask*",
+              "body": "A metal flask wrapped in cracked leather. It smells faintly of spirits but holds none.\nOnce per Long Rest, when Biggus fails a saving throw against charm, poison, or frightening, he can reroll the save and take the new result.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Ash-stained cloak*",
+              "body": "A heavy cloak that never seems completely clean.\nWhile wearing the cloak, Biggus gains Advantage on one Stealth check per Short Rest made while remaining motionless.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Cornerstone Boots*",
+              "body": "Boots reinforced with thick soles and dull iron nails.\nFor each round that Biggus stands stationary, all attacks directed at him are made with Disadvantage.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Low-Light Hood*",
+              "body": "A hood sewn to reduce peripheral vision and enhance forward focus. \nWhile wearing this hood Biggus has a greater change of being surprised by ambush attacks from the side. In exchange, he has Advantage on all ranged attacks directly ahead of him.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Long coat pockets*",
+              "body": "Multiple pockets- all weighted.\nBiggus may draw a mundane object of his choice each round as part of his  Action.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Still Hands Wraps*",
+              "body": "Cloth wraps that steady shaking fingers.\nBiggus gains Advantage on one Sleight of Hand or Thieve's Tools check per Long Rest made under stress.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Bitterleaf Tin*",
+              "body": "A small tin of dried leaves.\nAs a Bonus Action once per Long Rest, Biggus can gain Advantage on a Wisdom check or saving throw.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Nightline Thread*",
+              "body": "Black thread wound around a bone spindle.\nWhen Biggus sets a tripwire, snare, or alarm, creatures have Disadvantage on checks to notice it.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Counted Coin*",
+              "body": "A single copper coin kept separate from all others.\nOnce per session, Biggus can reroll a damage die and take the higher result.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Cold Iron Token*",
+              "body": "A heavy iron charm that pulls at the pocket.\nBiggus has Advantage on one saving throw against being Frightened per Long Rest.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Old Match*",
+              "body": "A sulfur match sealed in wax.\nLighting the match as a bonus action sheds dim light in a 5-foot radius for one minute. While lit, Biggus has Advantage on Insight checks made to detect hostile intent.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Unfinished Dose*",
+              "body": "A sealed vial that has never been opened.\nOnce per Long Rest, when Biggus drops below half hit points, he gains temporary hit points equal to his proficiency bonus.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "id-1770570736341-j8pcsxohg",
+          "name": "Kefka Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Giant Slayer",
+              "body": "You gain a +1 bonus to attack rolls and damage rolls made with this magic weapon.\n\nWhen you hit a Giant with this weapon, the Giant takes an extra 2d6 damage of the weapon’s type and must succeed on a DC 15 Strength saving throw or have the Prone condition.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": "images/Giant_Slayer-1770573846574.jpeg"
+            },
+            {
+              "type": "card",
+              "title": "Mantle of Spell Resistance",
+              "body": "You have Advantage on saving throws against spells while you wear this cloak.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Armblade",
+              "body": "An armblade is a magic weapon that attaches to your arm, becoming inseparable from you as long as you're attuned to it. To attune to this item, you must hold it against your forearm for the entire attunement period.\n\nAs a bonus action, you can retract the armblade into your forearm or extend it from there. While it is extended, you can use the weapon as if you were holding it, and you can't use that hand for other purposes.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Dawnbringer",
+              "body": "Lost for ages in the Underdark, Dawnbringer appears to be a gilded longsword hilt. While grasping the hilt, you can use a bonus action to make a blade of pure radiance spring from the hilt, or cause the blade to disappear. Dawnbringer has all the properties of a sun blade.\n\nWhile holding the weapon, you can use an action to touch a creature with the blade and cast lesser restoration on that creature. Once used, this ability can’t be used again until the next dawn.\n\nSentience. Dawnbringer is a sentient neutral good weapon with an Intelligence of 12, a Wisdom of 15, and a Charisma of 14. It has hearing and darkvision out to a range of 120 feet.\n\nThe sword can speak, read, and understand Common, and it can communicate with its wielder telepathically. Its voice is kind and feminine. It knows every language you know while you’re attuned to it.\n\nPersonality. Forged by ancient sun worshipers, Dawnbringer is meant to bring light into darkness and to fight creatures of darkness. It is kind and compassionate to those in need, but fierce and destructive to its enemies.\n\nLong years lost in darkness have made Dawnbringer frightened of both the dark and abandonment. It prefers that its blade always be present and shedding light in areas of darkness, and it strongly resists being parted from its wielder for any length of time.\n\n\nProficiency with a Longsword allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Adventurer's Ring",
+              "body": "Lamps are a liability on adventures. Delicate and prone to oil spillage, lamps fill a hand that should otherwise be wielding a weapon or casting a spell. Once you try one of our elegant and practical rings, you’ll never go back to cumbersome flint and fire.\n\nWhile the cover on this ring is open, the ring produces a flame that creates no heat and consumes no fuel. It sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. As a Bonus Action, you can close the cover, smothering the flame, or open it again.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Boomerang Shield",
+              "body": "You can make a ranged weapon attack with this magic shield. It has a normal range of 20 feet and a long range of 60 feet, and it uses your Strength or Dexterity for the attack roll (your choice). If you’re proficient with shields, you are proficient with attacks made using this shield. On a hit, it deals 1d6 slashing damage. If you throw the shield, it reappears in your hand the instant after it hits or misses a target.\n\nShields require the Utilize action to Don or Doff. You gain the Armor Class benefit of a Shield only if you have training with it.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Claw",
+              "body": "A claw is a simple, bladed melee weapon worn as a glove that deals 1d6 slashing damage on a hit and has the attached and light properties.\n\nName\tCost\tDamage\tWeight\tProperties\nClaw\t5 GP\t1d6 Slashing\t2 lbs\tAttached, Light",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Claymore",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Claymore, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nBrutal. This weapon is designed for maximum damage. Brutal weapons score Critical Hits on a natural roll of 19 or 20. If your Critical Range is already increased, instead increase it by 1 point (such as from 19-20 to 18-20). When you score a Critical Hit with a Brutal weapon against a creature, the weapon deals one additional die of damage.\n\nName\tCost\tDamage\tWeight\tProperties\nClaymore\t500 GP\t2d6 Slashing\t7 lbs\tHeavy, Two-Handed, Brutal",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Greatsword",
+              "body": "Proficiency with a Greatsword allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nGraze. If your attack roll with this weapon misses a creature, you can deal damage to that creature equal to the ability modifier you used to make the attack roll. This damage is the same type dealt by the weapon, and the damage can be increased only by increasing the ability modifier.\n\nName\tCost\tDamage\tWeight\tProperties\nGreatsword\t50 GP\t2d6 Slashing\t6 lbs\tHeavy, Two-Handed, Graze",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Raven-Vigil Mantle*",
+              "body": "A dark mantle threaded with black feathers that never stir in the wind. \nOnce per Long Rest, when Kefka is targeted by an attack, he can impose Disadvantage on that attack as a reaction if he has not moved this turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Blade of Quiet Judgment*",
+              "body": "A ritual-honored edge that hums softly when drawn near the dying.\nOnce per turn, when Kefka hits a creature below half its hit points, he deals an extra 1d6 necrotic damage.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Church-Bound Scabbard*",
+              "body": "A sword sheath marked with old devotional script, deliberately scarred. \nWhile wielding a weapon drawn from this scabbard, Kefka has Advantage on saving throws against being frightened.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Ashen Vow Ring*",
+              "body": "A ring cast from melted holy symbols.\nOnce per Long Rest, when Kefka fails a saving throw, he can reroll it and take the new result as long as he is not in a square immediately adjacent to an ally.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Ravenstep spurs*",
+              "body": "Boot spurs shaped like folded raven wings. \nWhen Kefka reduces a creature to 0 HP, his movement increases by 10 feet until the end of his next turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Shadowbound Pauldron*",
+              "body": "A single shoulder guard that absorbs light.\nOnce per Short Rest, Kefka gains temporary hit points equal to his Charisma modifier when he casts a warlock spell of 1st level or higher.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Black Catechism*",
+              "body": "A small prayer book with several pages torn out.\nAdvantage on Religion or Arcana checks while holding this book.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Feather-Sealed Totem*",
+              "body": "A black feather encased in clear resin.\nAs a Bonus Action once per Long Rest, Kefka can gain Advantage on his next attack roll or impose Disadvantage on the next saving throw made against one of his spells.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Raven Queen's Mark*",
+              "body": "A faint sigil that appears on Kefka's skin when blood is spilled nearby.\nOnce per Long Rest, Kefka can add his Charisma modifier to a damage roll of a spell that deals necrotic or psychic damage.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Funeral Thread Charm*",
+              "body": "Black thread wound around a small iron hook.\nWhen Kefka casts a concentration spell, he has Advantage on the first Constitution saving throw to maintain concentration.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Wingbone Reliquary*",
+              "body": "A hollow bone etched with tally marks.\nWhen a creature Kefka can see fails a death saving throw, Kefka gains Heroic Inspiration.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Mercy Deferred Vial*",
+              "body": "A vial of dark liquid that never completely settles.\nAs a Reaction once per Long Rest, when an enemy regains hit points, Kefka can reduce that healing by 1d8.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Shadowfell Compass*",
+              "body": "A compass that doesn't point north.\nAdvantage on one Survival or Investigation check per Long Rest when tracking NPCs/Monsters.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Raven's Silence Bell*",
+              "body": "A small silver bell with a pure, clean tone.\nRinging the bell as an Action creates a 10 foot radius where creatures cannot cast any spells that have a vocal component  until the start of Kefka's next turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Last Feather*",
+              "body": "A single raven feather that dissolves when used.\nKefka may use this feather to stabilize a creature at 0 HP as a bonus action without touching them.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "table-1770575271976",
+          "name": "Padme Loot",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Potion of Fire Breath",
+              "body": "After drinking this potion, you can take a Bonus Action to exhale fire at a target within 30 feet of yourself. The target makes a DC 13 Dexterity saving throw, taking 4d6 Fire damage on a failed save or half as much damage on a successful one. The effect ends after you exhale the fire three times or when 1 hour has passed.\n\nThis potion’s orange liquid flickers, and smoke fills the top of the container and wafts out whenever it is opened.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Animal Friendship",
+              "body": "When you drink this potion, you can cast the level 3 version of the Animal Friendship spell (save DC 13).\n\nAgitating this potion’s muddy liquid brings little bits into view: a fish scale, a hummingbird feather, a cat claw, or a squirrel hair.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Baleful Talon",
+              "body": "You gain a +1 bonus to attack and damage rolls made with this hooked, obsidian dagger.\n\nWhen you hit a creature with this magic weapon and roll a 19 or 20 on the attack roll, the creature must make a DC 15 Constitution saving throw as the dagger flares with sickly light. The creature takes 6d6 necrotic damage on a failed save, or half as much on a successful one. If this damage reduces the creature to 0 hit points, the creature disintegrates into dust.\n\nProficiency with a Dagger allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nNick. When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Adventurer's Ring",
+              "body": "Lamps are a liability on adventures. Delicate and prone to oil spillage, lamps fill a hand that should otherwise be wielding a weapon or casting a spell. Once you try one of our elegant and practical rings, you’ll never go back to cumbersome flint and fire.\n\nWhile the cover on this ring is open, the ring produces a flame that creates no heat and consumes no fuel. It sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. As a Bonus Action, you can close the cover, smothering the flame, or open it again.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Dagger of Blindsight",
+              "body": "This rare magic item requires attunement. A creature attuned to it gains blindsight out to a range of 30 feet. The dagger has a saw-toothed edge and a black pearl nested in its pommel.\n\nProficiency with a Dagger allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nNick. When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.\n\nNotes: Sense: Blindsight, Finesse, Light, Thrown, Nick",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Claw",
+              "body": "A claw is a simple, bladed melee weapon worn as a glove that deals 1d6 slashing damage on a hit and has the attached and light properties.\n\nName\tCost\tDamage\tWeight\tProperties\nClaw\t5 GP\t1d6 Slashing\t2 lbs\tAttached, Light",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Composite Shortbow",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Composite Shortbow, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nStrong-Draw. A weapon with the Strong-Draw quality requires great strength to use. You have Disadvantage on attack rolls with a Strong-Draw weapon unless your Strength is 13 or higher. You add both your Strength and Dexterity modifiers to damage with a Strong-Draw weapon.\n\nName\tCost\tDamage\tWeight\tProperties\nComposite Shortbow\t400 GP\t1d6 Piercing\t2 lbs\tAmmunition, Two-Handed, Strong-Draw",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Haytwine Bracers*",
+              "body": "Leather bracers bound with old baling twine.\nOnce per Long Rest, when Padme performs a healing spell she can restore an additional 1d6 hit points to a target.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Wingshield Buckler*",
+              "body": "A small, lightweight shield shaped to fit beneath a wing.\nWhen Padme uses her Help action to protect an ally, that ally gains an additional +2 AC until the start of Padme's next turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Field-Blessed Satchel*",
+              "body": "A satchel that smells faintly of grain and clean earth.\nOnce per Long Rest this satchel automatically refills itself with 2 common healing potions. No more than 2 potions can be held in the satchel at any one time.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Sun-Turned Boots*",
+              "body": "Soft boots equally at home on farm paths and temple floors.\nPadme ignored difficult terrain as long as she is walking in sunlight.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Scarecrow Stitched Cloak*",
+              "body": "A patchwork cloak sewn from old work shirts.\nWhile Padme is adjacent to an ally who is frightened, that ally has Advantage on their next saving throw against fear.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Pitchfork Pendant*",
+              "body": "A small iron charm shaped like a three-tined fork.\nOnce per Long Rest, when Padme misses an attack, she can impose Disadvantage on the opponent's next attack roll.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "The Clean Handkerchief*",
+              "body": "Always folded. Always ready.\nPadme can stabilize a creature as a bonus action once per Long Rest.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Last Second Bandage*",
+              "body": "A tightly rolled strip of linen.\nAs a Reaction, Padme can reduce the damage taken by an ally within 30 feet by 1d8. The bandage is destroyed after being used.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Farmhand's Oath Token*",
+              "body": "A wooden token carved with plow lines. \nWhile carrying this token, Padme has Advantage on one Animal Handling check per Long Rest.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Mercy First, Questions Later*",
+              "body": "A blue-striped ribbon tied around a bird foot.\nOnce per Long Rest, when Padme heals an enemy or neutral creature, she gains Heroic Inspiration.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat-1770573930238",
+      "name": "Boss victory",
+      "tables": [
+        {
+          "id": "table-1770573935079",
+          "name": "Hags",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Hag Eye",
+              "body": "A Hag Eye has 3 charges. While wearing or holding this item, you can expend 1 charge to cast Darkvision (targeting yourself only) or See Invisibility. The Hag Eye regains all expended charges daily at dawn.\n\nCoven Sensor. The Hag Eye is usually entrusted to a hag’s minion for safekeeping and transport. As a Magic action, a hag who belongs to the coven that created the Hag Eye can see what the Hag Eye sees if the hag and the Hag Eye are on the same plane of existence. This effect lasts as long as the hag maintains Concentration. Multiple hags in the coven can see through the Hag Eye simultaneously.\n\nCreating a Hag Eye. Only a hag coven can craft this item, which is made from a real eye coated in varnish and often fitted to a pendant or another wearable item. A hag coven can have only one Hag Eye at a time, and creating a new one requires all three members of the coven to perform a special rite. This rite takes 1 hour, and the hags can’t perform it if one or more of them has the Incapacitated condition. If the hags take any other actions during this rite, the rite fails and ends.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Necklace of Fireballs",
+              "body": "This necklace has 1d6 + 3 beads hanging from it. You can take a Magic action to detach a bead and throw it up to 60 feet away. When it reaches the end of its trajectory, the bead detonates as a level 3 Fireball (save DC 15).\n\nYou can hurl multiple beads, or even the whole necklace, at one time. When you do so, increase the damage of the Fireball by 1d6 for each bead after the first (maximum 12d6).",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Baba Yaga's Dancing Broom",
+              "body": "The archfey Baba Yaga crafted many of these magic brooms. No two appear exactly alike. While holding the broom, you can take a Magic action to transform it into an Animated Broom under your control. The broom then moves into an unoccupied space as close to you as possible. The broom acts immediately after you on your Initiative count and remains animate until you take a Bonus Action and use a command word to render it inanimate.\n\nOn your turn, you can mentally command the animated broom if it is within 30 feet of you and you don’t have the Incapacitated condition (no action required). You decide what action the broom takes and where it moves during its next turn, or you can issue it a general command, such as to attack your enemies or guard a location.\n\nIf the broom is reduced to 0 Hit Points, it shatters and is destroyed. If the broom reverts to its inanimate form before losing all its Hit Points it regains all of them.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Baba Yaga's Mortar and Pestle",
+              "body": "The creations of the immortal hag Baba Yaga defy the laws of mortal magic. Among the notorious implements that cement her legend on countless worlds are the artifacts that propel her through the planes: Baba Yaga's Mortar and Pestle. These signature tools of Baba Yaga are a single artifact for purposes of attunement. Should the two objects become separated, the pestle appears next to the mortar at the next dawn.\n\nRandom Properties. This artifact has the following random properties, which you can determine by rolling on the tables in the \"Artifacts\" section of the Dungeon Master's Guide:\n\n2 minor beneficial properties\n1 major beneficial property\n1 minor detrimental property\nProperties of the Mortar. The mortar is a Tiny wooden bowl. However, the mortar increases in size to accommodate anything you place inside, expanding—if there's enough space—up to Large size, meaning it can hold even a Large creature.\n\nProperties of the Pestle. The pestle is a 6-inch-long, worn wooden tool. Once during your turn while you are holding the pestle, you can extend it into a quarterstaff or shrink it back into a pestle (no action required). As a quarterstaff, the pestle is a magic weapon that grants a +3 bonus to attack and damage rolls made with it.\n\nThe pestle has 12 charges. When you hit with a melee attack using the pestle, you can expend up to 3 of its charges to deal an extra 1d8 force damage for each charge expended. The pestle regains all expended charges daily at dawn.\n\nPerfect Tools. While holding the mortar and pestle, you can use your action to say the name of any nonmagical plant, mineral, or fluid and an amount of the material worth 10 gp or less. The mortar instantly fills with the desired amount of that material. Once you use this action, you can't do so again until you finish a short or long rest.\n\nYou can also use the artifact as alchemist's supplies, brewer's supplies, cook's utensils, an herbalism kit, and a poisoner's kit. You have advantage on any check you make using the artifact as one of these tools.\n\nPrimal Parts. As an action while the pestle and the mortar is within 5 feet of you, you can command the pestle to grind. For the next minute, or until you use your action to verbally command it to stop, the pestle moves on its own, grinding the contents of the mortar into a mush or fine powder that's equally useful for cooking or alchemy. At the start of each of your turns, whatever is in the mortar takes 4d10 force damage. If this reduces the target's hit points to 0, the target is reduced to powder, pulp, or paste, as appropriate. Only magic items are unaffected. If you wish, when the pestle stops, you can have the mortar separate its contents-like powdered bone, crushed herbs, pulped organs-into separate piles.\n\nTraverse the Night. If you are holding the pestle while you are inside the mortar, you can use your action to verbally command the mortar to travel to a specific place or creature. You don't need to know where your destination is, but it must be a specific destination-not just the nearest river or a red dragon's lair. If the stated destination is within 1,000 miles of you, the mortar lifts into the air and vanishes. You and any creatures in the mortar travel through a dreamlike sky, with hazy reflections of the world passing by below. Creatures might see images of you streaking through the sky between your point of origin and the destination. You arrive at the location 1 hour later or, if it is night, 1 minute later.\n\nBones Know Their Home. When you command the mortar to travel, you can instead throw out the dust or paste of something ground by the mortar and name a location on a different plane of existence or a different world on the Material Plane. If that material came from a creature native to the named plane or world, the mortar travels through an empty night sky to an unoccupied space at that destination, arriving in 1 minute.\n\nDestroying the Mortar and Pestle. The mortar and pestle are destroyed if they are crushed underfoot by the Dancing Hut of Baba Yaga or by Baba Yaga herself.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Cauldron of Rebirth",
+              "body": "This Tiny pot bears relief scenes of heroes on its cast-iron sides.\n\nYou can use the cauldron as a Spellcasting Focus for your spells, and it functions as a suitable component for the Scrying spell.\n\nBrew Potion. When you finish a Long Rest, you can use the cauldron to create a Potion of Healing (greater), which takes 1 minute. The potion lasts for 24 hours, then loses its magic if not consumed.\n\nRaise Dead. As a Magic action, you can cause the cauldron to grow large enough for a Medium creature to crouch within. You can revert the cauldron to its normal size as a Magic action, harmlessly shunting anything that can’t fit inside to the nearest unoccupied space.\n\nIf you place the corpse of a Humanoid into the cauldron and cover the corpse with 200 pounds of salt (which costs 10 GP) for at least 8 hours, the salt is consumed and the creature returns to life as if by Raise Dead at the next dawn. Once used, this property can’t be used again for 7 days.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "table-1770574331751",
+          "name": "Cryptids",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Lantern of Revealing",
+              "body": "While lit, this hooded lantern burns for 6 hours on 1 pint of oil, shedding Bright Light in a 30-foot radius and Dim Light for an additional 30 feet. Invisible creatures and objects are visible as long as they are in the lantern’s Bright Light. You can take a Utilize action to lower the hood, reducing the lantern’s light to Dim Light in a 5-foot radius.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "table-1770577705402",
+          "name": "Pall Druid",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Gravebound Blade*",
+              "body": "A dagger whose edge weeps pale sap.\n+1 Dagger. On a hit, the target takes and additional 1d4 necrotic damage. \nCorruption: Each time this bonus damage triggers, the wielder takes 1 necrotic damage that cannot be reduced.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "White-Bark Shield*",
+              "body": "A shield grown form layered bark and bone.\nCombat: +1 AC shield.\nEffect: As  a reaction, once per Short Rest, impose Disadvantage on an attack against and ally within 5 feet.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Root-Snare Fetish*",
+              "body": "A charm made from knotted roots and teeth.\nCombat: As a bonus action, once per Long Rest, restrain a creature within 10 feet Strength save DC18 to end.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Gravefire Flask*",
+              "body": "A stoppered bottle of cold, pale flame.\nCombat: Thrown weapon. On impact, explodes in a 5 foot radius for 2d6 necrotic damage. No saving throw.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Orchard Fang Totem*",
+              "body": "A talisman carved from an animal skull.\nOnce per combat, when you hit a creature that is restrained or prone, deal an additional 1d8 damage.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Coffin-Nail Quiver*",
+              "body": "Arrows tipped with blackened iron.\nCombat: Ammunition - deals +1d6 piercing damage to creatures below half hit points.\nCorruption: On a natural 1 attack roll, the bowstring snaps violently, dealing 1d4 damage to the wielder.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Sapblood Salve*",
+              "body": "A sticky, milky paste.\nCombat: As a bonus action, coat a weapon. The next hit deals +2d6 poison damage. \nCorruption: The wielder is poisoned until the end of their next turn.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Grave-Tether Chain*",
+              "body": "A short length of iron chain with burial tags.\nCombat: As an action, attempt to pull a creature within 15 feet to within striking distance and attack (STR roll contest).\nCorruption: If pull-strike fails, the wielder is knocked prone.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Whisperroot Bomb*",
+              "body": "A root wrapped in cloth and wax.\nCombat: Detonates in a 10-foot emanation. Creatures in the blast radius take 2d4 psychic damage in addition to 1d12 force damage.\nCorruption: All allies in the same combat session hear dissonant whispers and accusations and suffer 1d4 psychic damage, regardless of whether they were caught in the blast.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Pall Mark Brand*",
+              "body": "A magically heated iron symbol.\nReusable item.\nCombat: Branding yourself as an action grants +2 damage to all attacks until the end of combat session.\nCorruption: After combat is concluded the bearer of the brand suffers one level of exhaustion. \nBrands may be stacked or given to allies or other willing creatures.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cat-1770575379151",
+      "name": "Potions/Poisons",
+      "tables": [
+        {
+          "id": "table-1770575395847",
+          "name": "Potions (good)",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Potion of Animal Friendship",
+              "body": "When you drink this potion, you can cast the level 3 version of the Animal Friendship spell (save DC 13).\n\nAgitating this potion’s muddy liquid brings little bits into view: a fish scale, a hummingbird feather, a cat claw, or a squirrel hair.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Pugilism",
+              "body": "After you drink this potion, each Unarmed Strike you make deals an extra 1d6 Force damage on a hit. This effect lasts 10 minutes.\n\nThis potion is a thick green fluid that tastes like spinach.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Philter of Love",
+              "body": "The next time you see a creature within 10 minutes after drinking this philter, you are charmed by that creature and have the Charmed condition for 1 hour.\n\nThis rose-hued, effervescent liquid contains one easy-to-miss bubble shaped like a heart.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Advantage",
+              "body": "When you drink this potion, you gain advantage on one ability check, attack roll, or saving throw of your choice that you make within the next hour.\n\nThis potion takes the form of a sparkling, golden mist that moves and pours like water.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Climbing",
+              "body": "When you drink this potion, you gain a Climb Speed equal to your Speed for 1 hour. During this time, you have Advantage on Strength (Athletics) checks to climb.\n\nThis potion is separated into brown, silver, and gray layers resembling bands of stone. Shaking the bottle fails to mix the colors.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Diminution",
+              "body": "When you drink this potion, you gain the “reduce” effect of the Enlarge/Reduce spell for 1d4 hours (no Concentration required).\n\nThe red in the potion’s liquid continuously contracts to a tiny bead and then expands to color the clear liquid around it. Shaking the bottle fails to interrupt this process.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Growth",
+              "body": "When you drink this potion, you gain the “enlarge” effect of the Enlarge/Reduce spell for 10 minutes (no Concentration required).\n\nThe red in the potion’s liquid continuously expands from a tiny bead to color the clear liquid around it and then contracts. Shaking the bottle fails to interrupt this process.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Poison",
+              "body": "This concoction looks, smells, and tastes like a Potion of Healing or another beneficial potion. However, it is actually poison masked by illusion magic. Identify reveals its true nature.\n\nIf you drink this potion, you take 4d6 Poison damage and must succeed on a DC 13 Constitution saving throw or have the Poisoned condition for 1 hour.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Resistance",
+              "body": "When you drink this potion, you have Resistance to one type of damage for 1 hour. The DM chooses the type or determines it randomly by rolling on the following table.\n\nd10\tDamage Type\n1\tAcid\n2\tCold\n3\tFire\n4\tForce\n5\tLightning\n6\tNecrotic\n7\tPoison\n8\tPsychic\n9\tRadiant\n10\tThunder",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Speed",
+              "body": "When you drink this potion, you gain the effect of the Haste spell for 1 minute (no Concentration required) without suffering the wave of lethargy that typically occurs when the effect ends.\n\nThis potion’s yellow fluid is streaked with black and swirls on its own.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Potion of Vitality",
+              "body": "When you drink this potion, it removes any Exhaustion levels you have and ends the Poisoned condition on you. For the next 24 hours, you regain the maximum number of Hit Points for any Hit Point Die you spend.\n\nThis potion’s crimson liquid regularly pulses with dull light, calling to mind a heartbeat.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "table-1770575402742",
+          "name": "Poisons",
+          "entries": []
+        }
+      ]
+    },
+    {
+      "id": "cat-1770578071708",
+      "name": "Weapons",
+      "tables": [
+        {
+          "id": "table-1770578079644",
+          "name": "Ranged",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Boomerang",
+              "body": "The boomerang is a ranged weapon, and any creature proficient with the javelin is also proficient with this weapon.\n\nOn a miss, a boomerang returns to the thrower's hand.",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        },
+        {
+          "id": "table-1770578555183",
+          "name": "Martial",
+          "entries": [
+            {
+              "type": "card",
+              "title": "Fighting Chain, Hook",
+              "body": "Mastery of Advanced Weapons requires military training and skill. To use any of the special properties or the Weapon Mastery properties of the Fighting Chain, Hook, you must take the Advanced Weapon Proficiency feat.\n\nThis weapon has the following Mastery Property. To use this property, you must have a feature that lets you use it.\n\nEntangling. When you take the Attack action on your turn and hit with an Entangling weapon, you can use a Bonus Action later on the same turn to entangle the target. The target must succeed on a Dexterity saving throw (DC 10 plus your Proficiency Bonus) or have the Grappled condition until it escapes or until you release the weapon. The target succeeds automatically if it is Huge or larger.\nTo escape, the target must use an action to make a Strength (Athletics) or Dexterity (Acrobatics) check against the same DC. On a success, the target no longer has the Grappled condition. While a creature is Grappled by this weapon, you can't use it to attack a different creature.\n\nName\tCost\tDamage\tWeight\tProperties\nFighting Chain, Hook\t500 GP\t1d4 Bludgeoning\t3 lbs\tDamage, Double, Finesse, Reach, Two-Handed, Entangling",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            },
+            {
+              "type": "card",
+              "title": "Greatsword",
+              "body": "Proficiency with a Greatsword allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\nThis weapon has the following mastery property. To use this property, you must have a feature that lets you use it.\n\nGraze. If your attack roll with this weapon misses a creature, you can deal damage to that creature equal to the ability modifier you used to make the attack roll. This damage is the same type dealt by the weapon, and the damage can be increased only by increasing the ability modifier.\n\nName\tCost\tDamage\tWeight\tProperties\nGreatsword\t50 GP\t2d6 Slashing\t6 lbs\tHeavy, Two-Handed, Graze",
+              "effects": "",
+              "tags": [],
+              "followUpTables": [],
+              "image": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

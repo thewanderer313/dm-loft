@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>/* dm-loft:localStorage-namespace */
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var c = p.get('campaign');
+  if (!c) return;
+  var ns = 'dmloft:' + c + ':';
+  var ls = window.localStorage;
+  var origGet = ls.getItem.bind(ls),
+      origSet = ls.setItem.bind(ls),
+      origRemove = ls.removeItem.bind(ls);
+  ls.getItem    = function (k) { return origGet(ns + k); };
+  ls.setItem    = function (k, v) { return origSet(ns + k, v); };
+  ls.removeItem = function (k) { return origRemove(ns + k); };
+})();
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Battle Map</title>
+  <style>
+    :root {
+      --bg-primary: #0f1510;
+      --bg-secondary: #161f1b;
+      --bg-tertiary: #1c2723;
+      --bg-card: #212d28;
+      --border-color: #2a3832;
+      --border-light: #3a4a42;
+      --border-strong: #4a5a52;
+      --text-primary: #e4ebe4;
+      --text-secondary: #9aaa9a;
+      --text-muted: #5a6a5a;
+      --accent: #4a7c59;
+      --accent-hover: #5a9469;
+      --accent-glow: rgba(74, 124, 89, 0.25);
+      --danger: #8b3a3a;
+      --warning: #8b7355;
+      --success: #4a7c59;
+      --player-color: #5a9a5a;
+      --monster-color: #d47844;
+      --npc-color: #6a89b0;
+      --active-turn: #ffd700;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      background: var(--bg-secondary);
+      border-bottom: 2px solid var(--border-strong);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-right: 0.75rem;
+      border-right: 1px solid var(--border-color);
+    }
+
+    .toolbar-group:last-child {
+      border-right: none;
+    }
+
+    .toolbar-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    button:hover {
+      background: var(--bg-card);
+      border-color: var(--border-light);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.8rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Canvas Container */
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-primary);
+    }
+
+    #battleCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: grab;
+    }
+
+    #battleCanvas.dragging {
+      cursor: grabbing;
+    }
+
+    #battleCanvas.moving-token {
+      cursor: move;
+    }
+
+    /* Drop zone overlay */
+    .drop-zone {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(74, 124, 89, 0.15);
+      border: 3px dashed var(--accent);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .drop-zone.active {
+      display: flex;
+    }
+
+    .drop-zone-text {
+      background: var(--bg-secondary);
+      padding: 1.5rem 2.5rem;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 0.4rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .zoom-display {
+      background: var(--bg-tertiary);
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+
+    /* No Map Placeholder */
+    .no-map-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .no-map-placeholder .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .no-map-placeholder h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .no-map-placeholder p {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Token Info Panel */
+    .token-info-panel {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 250px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 1rem;
+      display: none;
+      z-index: 20;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .token-info-panel.visible {
+      display: block;
+    }
+
+    .token-info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .token-info-name {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .token-info-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .token-info-close:hover {
+      color: var(--text-primary);
+    }
+
+    .token-info-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .token-stat {
+      background: var(--bg-tertiary);
+      padding: 0.5rem;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .token-stat-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .token-stat-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .token-stat-value.healthy { color: var(--success); }
+    .token-stat-value.bloodied { color: var(--warning); }
+    .token-stat-value.critical { color: var(--danger); }
+
+    /* Tooltips */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: rgba(20, 30, 25, 0.98);
+      color: var(--text-primary);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s, transform 0.15s;
+      border: 1px solid var(--border-light);
+    }
+
+    [data-tooltip]:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* Tutorial overlay */
+    .tutorial-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tutorial-overlay.active {
+      display: flex;
+    }
+
+    .tutorial-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 28px 36px;
+      max-width: 480px;
+      text-align: center;
+    }
+
+    .tutorial-card h2 {
+      color: var(--accent);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .tutorial-card p {
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .tutorial-tips {
+      text-align: left;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tutorial-tips li {
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      padding: 0.35rem 0;
+      list-style: none;
+    }
+
+    .tutorial-tips li::before {
+      content: '→ ';
+      color: var(--accent);
+    }
+
+    .tutorial-btns {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* Staging Area Sidebar */
+    .staging-sidebar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 200px;
+      background: var(--bg-secondary);
+      border-right: 2px solid var(--border-strong);
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+      transition: transform 0.2s ease;
+    }
+
+    .staging-sidebar.collapsed {
+      transform: translateX(-180px);
+    }
+
+    .staging-header {
+      padding: 0.6rem 0.75rem;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .staging-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .staging-toggle {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+
+    .staging-toggle:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .staging-sidebar.collapsed .staging-toggle {
+      transform: rotate(180deg);
+    }
+
+    .staging-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem;
+    }
+
+    .staging-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 0.5rem;
+      border-bottom: 1px dashed var(--border-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .staging-empty {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 1.5rem 0.5rem;
+      font-style: italic;
+    }
+
+    .staging-token {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      margin-bottom: 0.35rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: grab;
+      transition: all 0.15s ease;
+    }
+
+    .staging-token:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    .staging-token.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .staging-token-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: white;
+      font-weight: bold;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .staging-token-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .staging-token-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .staging-token-name {
+      font-size: 0.8rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-primary);
+    }
+
+    .staging-token-type {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: capitalize;
+    }
+
+    .staging-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- Tutorial Overlay -->
+  <div class="tutorial-overlay" id="tutorialOverlay">
+    <div class="tutorial-card">
+      <h2>🗺️ Battle Map</h2>
+      <p>View your combat encounters on an interactive tactical map.</p>
+      <ul class="tutorial-tips">
+        <li><strong>Load a map</strong> using the button or drag-drop an image</li>
+        <li><strong>Pan</strong> by clicking and dragging the map</li>
+        <li><strong>Zoom</strong> with the scroll wheel</li>
+        <li><strong>Toggle grid</strong> with the Grid button or press G</li>
+        <li><strong>Tokens</strong> sync automatically from Combat Tracker</li>
+        <li><strong>Drag tokens</strong> to reposition them on the map</li>
+      </ul>
+      <div class="tutorial-btns">
+        <button class="primary" onclick="closeTutorial()">Got it!</button>
+        <button onclick="closeTutorialDontShow()">Don't show again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-group">
+      <button id="btnLoadMap" class="primary" data-tooltip="Load map image (or drag-drop)">
+        📁 Load Map
+      </button>
+      <button id="btnClearMap" data-tooltip="Remove current map image">
+        🗑️ Clear
+      </button>
+      <input type="file" id="mapFileInput" accept="image/*">
+    </div>
+
+    <div class="toolbar-group">
+      <button id="btnGrid" class="active" data-tooltip="Show/hide grid overlay [G]">
+        ⊞ Grid
+      </button>
+      <span class="toolbar-label">Size:</span>
+      <span data-tooltip="Grid cell size in pixels (70px = 5ft)">
+        <input type="number" id="gridSizeInput" value="70" min="20" max="200" step="10">
+      </span>
+      <span class="toolbar-label">px</span>
+    </div>
+
+    <div class="toolbar-group">
+      <button id="btnZoomIn" data-tooltip="Zoom in (or scroll wheel up)">➕</button>
+      <button id="btnZoomOut" data-tooltip="Zoom out (or scroll wheel down)">➖</button>
+      <button id="btnFitView" data-tooltip="Fit entire map in view [F]">⛶ Fit</button>
+      <button id="btnResetView" data-tooltip="Reset zoom to 100%">1:1</button>
+    </div>
+
+    <div class="toolbar-group">
+      <button id="btnHelp" data-tooltip="Show tutorial and keyboard shortcuts">❓</button>
+    </div>
+  </div>
+
+  <!-- Canvas Container -->
+  <div class="canvas-container" id="canvasContainer">
+    <canvas id="battleCanvas"></canvas>
+
+    <!-- Staging Area Sidebar -->
+    <div class="staging-sidebar" id="stagingSidebar">
+      <div class="staging-header">
+        <span class="staging-title">Staging</span>
+        <button class="staging-toggle" onclick="toggleStagingSidebar()" data-tooltip="Toggle staging area">◀</button>
+      </div>
+      <div class="staging-content" id="stagingContent">
+        <div class="staging-hint">Drag tokens to map to place them</div>
+        <div class="staging-tokens" id="stagingTokenList">
+          <div class="staging-empty">No tokens to place</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-zone-text">Drop map image here</div>
+    </div>
+
+    <div class="no-map-placeholder" id="noMapPlaceholder">
+      <div class="icon">🗺️</div>
+      <h2>No Map Loaded</h2>
+      <p>Click "Load Map" or drag and drop an image to get started</p>
+    </div>
+
+    <!-- Token Info Panel -->
+    <div class="token-info-panel" id="tokenInfoPanel">
+      <div class="token-info-header">
+        <span class="token-info-name" id="tokenInfoName">Token Name</span>
+        <button class="token-info-close" onclick="closeTokenInfo()">×</button>
+      </div>
+      <div class="token-info-stats">
+        <div class="token-stat">
+          <div class="token-stat-label">AC</div>
+          <div class="token-stat-value" id="tokenInfoAC">--</div>
+        </div>
+        <div class="token-stat">
+          <div class="token-stat-label">HP</div>
+          <div class="token-stat-value" id="tokenInfoHP">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-item">
+      <span id="tokenCount" data-tooltip="Tokens placed on map vs total from Combat Tracker">0 tokens</span>
+      <span>|</span>
+      <span id="gridStatus" data-tooltip="Grid cell size and equivalent distance">Grid: 70px (5ft)</span>
+    </div>
+    <div class="status-item">
+      <span data-tooltip="Use scroll wheel to zoom">Zoom:</span>
+      <span class="zoom-display" id="zoomDisplay" data-tooltip="Current map zoom level">100%</span>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // STATE
+    // ============================================
+    const STORAGE_KEY = 'oakhart-battlemap';
+
+    let canvas, ctx;
+    let mapImage = null;
+    let mapImageData = null; // Base64 for persistence
+
+    let viewState = {
+      offsetX: 0,
+      offsetY: 0,
+      scale: 1
+    };
+
+    let gridSettings = {
+      enabled: true,
+      cellSize: 70,
+      color: 'rgba(255, 255, 255, 0.25)'
+    };
+
+    let tokenSettings = {
+      size: 50,
+      showNames: true,
+      showHP: true
+    };
+
+    // Token size configurations (D&D standard)
+    const TOKEN_SIZES = {
+      medium: { cells: 1, label: 'Medium' },
+      large: { cells: 2, label: 'Large' },
+      huge: { cells: 3, label: 'Huge' },
+      gargantuan: { cells: 4, label: 'Gargantuan' }
+    };
+
+    // Default colors by combatant type
+    const DEFAULT_COLORS = {
+      player: '#5a9a5a',
+      monster: '#d47844',
+      npc: '#6a89b0',
+      companion: '#8a6ab0'
+    };
+
+    // Tokens synced from Combat Tracker
+    let tokens = [];          // Placed tokens (on the map)
+    let stagedTokens = [];    // Unplaced tokens (in staging area)
+    let activeTokenIndex = -1;
+
+    // Staging area state
+    let stagingSidebarCollapsed = false;
+    let draggedStagingTokenId = null;
+
+    // Token image cache for performance
+    const tokenImageCache = {};
+
+    // Interaction state
+    let isDragging = false;
+    let isMovingToken = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragToken = null;
+    let selectedToken = null;
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    function init() {
+      canvas = document.getElementById('battleCanvas');
+      ctx = canvas.getContext('2d');
+
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      initEventListeners();
+      load();
+      render();
+      checkShowTutorial();
+
+      // Request combatants from Combat Tracker on load
+      requestCombatants();
+    }
+
+    function resizeCanvas() {
+      const container = document.getElementById('canvasContainer');
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      render();
+    }
+
+    function initEventListeners() {
+      // Canvas mouse events
+      canvas.addEventListener('mousedown', handleMouseDown);
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseup', handleMouseUp);
+      canvas.addEventListener('mouseleave', handleMouseUp);
+      canvas.addEventListener('wheel', handleWheel, { passive: false });
+      canvas.addEventListener('dblclick', handleDoubleClick);
+
+      // Toolbar buttons
+      document.getElementById('btnLoadMap').addEventListener('click', () => {
+        document.getElementById('mapFileInput').click();
+      });
+      document.getElementById('mapFileInput').addEventListener('change', handleMapFileSelect);
+      document.getElementById('btnClearMap').addEventListener('click', clearMap);
+      document.getElementById('btnGrid').addEventListener('click', toggleGrid);
+      document.getElementById('gridSizeInput').addEventListener('change', handleGridSizeChange);
+      document.getElementById('btnZoomIn').addEventListener('click', () => zoom(1.25));
+      document.getElementById('btnZoomOut').addEventListener('click', () => zoom(0.8));
+      document.getElementById('btnFitView').addEventListener('click', fitToView);
+      document.getElementById('btnResetView').addEventListener('click', resetView);
+      document.getElementById('btnHelp').addEventListener('click', showTutorial);
+
+      // Drag and drop
+      const container = document.getElementById('canvasContainer');
+      container.addEventListener('dragover', handleDragOver);
+      container.addEventListener('dragleave', handleDragLeave);
+      container.addEventListener('drop', handleDrop);
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', handleKeyDown);
+
+      // Cross-tab communication
+      window.addEventListener('message', handleMessage);
+    }
+
+    // ============================================
+    // RENDERING
+    // ============================================
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw map background
+      if (mapImage) {
+        drawMap();
+        document.getElementById('noMapPlaceholder').style.display = 'none';
+      } else {
+        document.getElementById('noMapPlaceholder').style.display = 'block';
+      }
+
+      // Draw grid overlay
+      if (gridSettings.enabled && mapImage) {
+        drawGrid();
+      }
+
+      // Draw tokens
+      drawTokens();
+
+      // Update status bar
+      updateStatus();
+    }
+
+    function drawMap() {
+      ctx.save();
+      ctx.translate(viewState.offsetX, viewState.offsetY);
+      ctx.scale(viewState.scale, viewState.scale);
+      ctx.drawImage(mapImage, 0, 0);
+      ctx.restore();
+    }
+
+    function drawGrid() {
+      const cellSize = gridSettings.cellSize;
+      const scaledCellSize = cellSize * viewState.scale;
+
+      // Calculate visible grid bounds
+      const startX = Math.floor(-viewState.offsetX / scaledCellSize) * scaledCellSize + viewState.offsetX;
+      const startY = Math.floor(-viewState.offsetY / scaledCellSize) * scaledCellSize + viewState.offsetY;
+
+      ctx.save();
+      ctx.strokeStyle = gridSettings.color;
+      ctx.lineWidth = 1;
+
+      // Vertical lines
+      for (let x = startX; x < canvas.width; x += scaledCellSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      // Horizontal lines
+      for (let y = startY; y < canvas.height; y += scaledCellSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawTokens() {
+      tokens.forEach((token, index) => {
+        if (token.mapPosition && token.mapPosition.x !== null) {
+          const isActive = index === activeTokenIndex;
+          const isSelected = selectedToken && selectedToken.id === token.id;
+          drawToken(token, isActive, isSelected);
+        }
+      });
+    }
+
+    function drawToken(token, isActive, isSelected) {
+      const screen = worldToScreen(token.mapPosition.x, token.mapPosition.y);
+      const appearance = token.tokenAppearance || {};
+
+      // Calculate size based on D&D creature size
+      const sizeConfig = TOKEN_SIZES[appearance.size || 'medium'];
+      const baseSizePx = gridSettings.cellSize * sizeConfig.cells;
+      const size = baseSizePx * viewState.scale;
+      const halfSize = size / 2;
+
+      // Get token color (custom or type-based)
+      const color = appearance.color || DEFAULT_COLORS[token.type] || DEFAULT_COLORS.monster;
+
+      // Check if token has custom image
+      const hasImage = appearance.image;
+
+      ctx.save();
+
+      // Draw token base
+      if (hasImage) {
+        // Draw image token
+        drawImageToken(screen, halfSize, appearance.image, token.id, isActive, isSelected);
+      } else {
+        // Draw colored circle token
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, halfSize, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Border
+        ctx.lineWidth = isActive ? 4 : 2;
+        ctx.strokeStyle = isActive ? '#ffd700' : (isSelected ? '#ffffff' : 'rgba(0,0,0,0.5)');
+        ctx.stroke();
+
+        // Draw initials in center (if no HP shown)
+        if (!tokenSettings.showHP || !token.maxHp || viewState.scale <= 0.5) {
+          const initials = (token.name || 'XX').substring(0, 2).toUpperCase();
+          ctx.fillStyle = 'white';
+          ctx.font = `bold ${Math.max(12, halfSize * 0.6)}px sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(initials, screen.x, screen.y);
+        }
+      }
+
+      // Active turn glow
+      if (isActive) {
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, halfSize + 6, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+      }
+
+      // Dead indicator
+      if (token.isDead || (token.currentHp !== undefined && token.currentHp <= 0)) {
+        ctx.beginPath();
+        ctx.moveTo(screen.x - halfSize * 0.5, screen.y - halfSize * 0.5);
+        ctx.lineTo(screen.x + halfSize * 0.5, screen.y + halfSize * 0.5);
+        ctx.moveTo(screen.x + halfSize * 0.5, screen.y - halfSize * 0.5);
+        ctx.lineTo(screen.x - halfSize * 0.5, screen.y + halfSize * 0.5);
+        ctx.strokeStyle = '#ff0000';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+
+      // Name label (check per-token showLabel setting)
+      const showLabel = appearance.showLabel !== false;
+      if (showLabel && tokenSettings.showNames && viewState.scale > 0.4) {
+        ctx.font = `${Math.max(10, 12 * viewState.scale)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const name = token.name.length > 12 ? token.name.substring(0, 10) + '...' : token.name;
+
+        // Text shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillText(name, screen.x + 1, screen.y + halfSize + 5);
+
+        // Text
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(name, screen.x, screen.y + halfSize + 4);
+      }
+
+      // HP display
+      if (tokenSettings.showHP && token.maxHp && viewState.scale > 0.5) {
+        const hp = token.currentHp !== undefined ? token.currentHp : token.maxHp;
+        const hpText = `${hp}/${token.maxHp}`;
+
+        ctx.font = `bold ${Math.max(8, 10 * viewState.scale)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // HP color
+        const hpPercent = hp / token.maxHp;
+        if (hpPercent > 0.5) ctx.fillStyle = '#90EE90';
+        else if (hpPercent > 0.25) ctx.fillStyle = '#FFD700';
+        else ctx.fillStyle = '#FF6B6B';
+
+        ctx.fillText(hpText, screen.x, screen.y);
+      }
+
+      ctx.restore();
+    }
+
+    function drawImageToken(screen, halfSize, imageSrc, tokenId, isActive, isSelected) {
+      // Get or create cached image
+      let img = tokenImageCache[tokenId];
+      if (!img || img.src !== imageSrc) {
+        img = new Image();
+        img.src = imageSrc;
+        tokenImageCache[tokenId] = img;
+      }
+
+      // Draw circular clipped image
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(screen.x, screen.y, halfSize, 0, Math.PI * 2);
+      ctx.clip();
+
+      if (img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, screen.x - halfSize, screen.y - halfSize, halfSize * 2, halfSize * 2);
+      } else {
+        // Fallback while loading
+        ctx.fillStyle = '#444';
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      // Draw border (outside of clip)
+      ctx.beginPath();
+      ctx.arc(screen.x, screen.y, halfSize, 0, Math.PI * 2);
+      ctx.lineWidth = isActive ? 4 : 2;
+      ctx.strokeStyle = isActive ? '#ffd700' : (isSelected ? '#ffffff' : 'rgba(0,0,0,0.5)');
+      ctx.stroke();
+    }
+
+    // ============================================
+    // COORDINATE TRANSFORMS
+    // ============================================
+    function screenToWorld(screenX, screenY) {
+      return {
+        x: (screenX - viewState.offsetX) / viewState.scale,
+        y: (screenY - viewState.offsetY) / viewState.scale
+      };
+    }
+
+    function worldToScreen(worldX, worldY) {
+      return {
+        x: worldX * viewState.scale + viewState.offsetX,
+        y: worldY * viewState.scale + viewState.offsetY
+      };
+    }
+
+    // ============================================
+    // MOUSE HANDLING
+    // ============================================
+    function handleMouseDown(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      // Check if clicking on a token
+      const clickedToken = findTokenAt(mouseX, mouseY);
+
+      if (clickedToken) {
+        // Start moving token
+        isMovingToken = true;
+        dragToken = clickedToken;
+        dragStartX = mouseX;
+        dragStartY = mouseY;
+        canvas.classList.add('moving-token');
+        selectToken(clickedToken);
+      } else {
+        // Start panning
+        isDragging = true;
+        dragStartX = mouseX - viewState.offsetX;
+        dragStartY = mouseY - viewState.offsetY;
+        canvas.classList.add('dragging');
+        closeTokenInfo();
+      }
+    }
+
+    function handleMouseMove(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      if (isMovingToken && dragToken) {
+        // Move token
+        const world = screenToWorld(mouseX, mouseY);
+        dragToken.mapPosition.x = world.x;
+        dragToken.mapPosition.y = world.y;
+        render();
+      } else if (isDragging) {
+        // Pan map
+        viewState.offsetX = mouseX - dragStartX;
+        viewState.offsetY = mouseY - dragStartY;
+        render();
+      } else {
+        // Update cursor based on hover
+        const hoverToken = findTokenAt(mouseX, mouseY);
+        canvas.style.cursor = hoverToken ? 'pointer' : 'grab';
+      }
+    }
+
+    function handleMouseUp(e) {
+      if (isMovingToken && dragToken) {
+        // Notify Combat Tracker of position change
+        notifyPositionChange(dragToken.id, dragToken.mapPosition.x, dragToken.mapPosition.y);
+        save();
+      }
+
+      isDragging = false;
+      isMovingToken = false;
+      dragToken = null;
+      canvas.classList.remove('dragging', 'moving-token');
+      canvas.style.cursor = 'grab';
+    }
+
+    function handleDoubleClick(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      const clickedToken = findTokenAt(mouseX, mouseY);
+      if (clickedToken) {
+        // Could open detailed view or send to combat tracker
+        selectToken(clickedToken);
+      }
+    }
+
+    function handleWheel(e) {
+      e.preventDefault();
+
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      // Zoom centered on mouse position
+      const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+      const newScale = Math.max(0.1, Math.min(5, viewState.scale * zoomFactor));
+
+      // Adjust offset to zoom toward mouse position
+      const scaleChange = newScale / viewState.scale;
+      viewState.offsetX = mouseX - (mouseX - viewState.offsetX) * scaleChange;
+      viewState.offsetY = mouseY - (mouseY - viewState.offsetY) * scaleChange;
+      viewState.scale = newScale;
+
+      render();
+      save();
+    }
+
+    // ============================================
+    // TOKEN MANAGEMENT
+    // ============================================
+    function findTokenAt(screenX, screenY) {
+      // Check in reverse order (top tokens first)
+      for (let i = tokens.length - 1; i >= 0; i--) {
+        const token = tokens[i];
+        if (token.mapPosition && token.mapPosition.x !== null) {
+          // Calculate hit radius based on token's size
+          const appearance = token.tokenAppearance || {};
+          const sizeConfig = TOKEN_SIZES[appearance.size || 'medium'];
+          const baseSizePx = gridSettings.cellSize * sizeConfig.cells;
+          const hitRadius = (baseSizePx * viewState.scale) / 2;
+
+          const screen = worldToScreen(token.mapPosition.x, token.mapPosition.y);
+          const dx = screenX - screen.x;
+          const dy = screenY - screen.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist <= hitRadius) {
+            return token;
+          }
+        }
+      }
+      return null;
+    }
+
+    function selectToken(token) {
+      selectedToken = token;
+      showTokenInfo(token);
+      render();
+    }
+
+    function showTokenInfo(token) {
+      document.getElementById('tokenInfoName').textContent = token.name;
+      document.getElementById('tokenInfoAC').textContent = token.ac || '--';
+
+      const hpEl = document.getElementById('tokenInfoHP');
+      if (token.maxHp) {
+        const hp = token.currentHp !== undefined ? token.currentHp : token.maxHp;
+        hpEl.textContent = `${hp}/${token.maxHp}`;
+
+        const hpPercent = hp / token.maxHp;
+        hpEl.className = 'token-stat-value';
+        if (hpPercent > 0.5) hpEl.classList.add('healthy');
+        else if (hpPercent > 0.25) hpEl.classList.add('bloodied');
+        else hpEl.classList.add('critical');
+      } else {
+        hpEl.textContent = '--';
+        hpEl.className = 'token-stat-value';
+      }
+
+      document.getElementById('tokenInfoPanel').classList.add('visible');
+    }
+
+    function closeTokenInfo() {
+      selectedToken = null;
+      document.getElementById('tokenInfoPanel').classList.remove('visible');
+      render();
+    }
+
+    // ============================================
+    // MAP LOADING
+    // ============================================
+    function handleMapFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        loadMapFromFile(file);
+      }
+    }
+
+    function loadMapFromFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        mapImageData = e.target.result;
+        loadMapFromDataUrl(mapImageData);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadMapFromDataUrl(dataUrl) {
+      const img = new Image();
+      img.onload = () => {
+        mapImage = img;
+        mapImageData = dataUrl;
+        fitToView();
+        save();
+        render();
+      };
+      img.src = dataUrl;
+    }
+
+    function clearMap() {
+      mapImage = null;
+      mapImageData = null;
+      viewState = { offsetX: 0, offsetY: 0, scale: 1 };
+      save();
+      render();
+    }
+
+    // ============================================
+    // DRAG AND DROP
+    // ============================================
+    function handleDragOver(e) {
+      e.preventDefault();
+
+      // Check if this is a staging token drag
+      if (draggedStagingTokenId) {
+        e.dataTransfer.dropEffect = 'move';
+        // Don't show drop zone for token drops
+      } else {
+        e.dataTransfer.dropEffect = 'copy';
+        document.getElementById('dropZone').classList.add('active');
+      }
+    }
+
+    function handleDragLeave(e) {
+      document.getElementById('dropZone').classList.remove('active');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('dropZone').classList.remove('active');
+
+      // Check if this is a token from staging
+      if (draggedStagingTokenId) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const world = screenToWorld(mouseX, mouseY);
+
+        placeTokenFromStaging(draggedStagingTokenId, world.x, world.y);
+        draggedStagingTokenId = null;
+        return;
+      }
+
+      // Otherwise handle as file drop (map image)
+      const files = e.dataTransfer.files;
+      if (files.length > 0 && files[0].type.startsWith('image/')) {
+        loadMapFromFile(files[0]);
+      }
+    }
+
+    // ============================================
+    // VIEW CONTROLS
+    // ============================================
+    function zoom(factor) {
+      const newScale = Math.max(0.1, Math.min(5, viewState.scale * factor));
+
+      // Zoom toward center
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const scaleChange = newScale / viewState.scale;
+
+      viewState.offsetX = centerX - (centerX - viewState.offsetX) * scaleChange;
+      viewState.offsetY = centerY - (centerY - viewState.offsetY) * scaleChange;
+      viewState.scale = newScale;
+
+      render();
+      save();
+    }
+
+    function fitToView() {
+      if (!mapImage) return;
+
+      const padding = 40;
+      const scaleX = (canvas.width - padding * 2) / mapImage.width;
+      const scaleY = (canvas.height - padding * 2) / mapImage.height;
+      viewState.scale = Math.min(scaleX, scaleY, 1);
+
+      // Center the map
+      viewState.offsetX = (canvas.width - mapImage.width * viewState.scale) / 2;
+      viewState.offsetY = (canvas.height - mapImage.height * viewState.scale) / 2;
+
+      render();
+      save();
+    }
+
+    function resetView() {
+      viewState.scale = 1;
+      viewState.offsetX = 0;
+      viewState.offsetY = 0;
+      render();
+      save();
+    }
+
+    // ============================================
+    // GRID CONTROLS
+    // ============================================
+    function toggleGrid() {
+      gridSettings.enabled = !gridSettings.enabled;
+      document.getElementById('btnGrid').classList.toggle('active', gridSettings.enabled);
+      render();
+      save();
+    }
+
+    function handleGridSizeChange(e) {
+      const size = parseInt(e.target.value) || 70;
+      gridSettings.cellSize = Math.max(20, Math.min(200, size));
+      e.target.value = gridSettings.cellSize;
+      render();
+      save();
+    }
+
+    // ============================================
+    // KEYBOARD SHORTCUTS
+    // ============================================
+    function handleKeyDown(e) {
+      // Skip if typing in input
+      if (e.target.tagName === 'INPUT') return;
+
+      switch (e.key.toLowerCase()) {
+        case 'g':
+          e.preventDefault();
+          toggleGrid();
+          break;
+        case 'f':
+          e.preventDefault();
+          fitToView();
+          break;
+        case 'escape':
+          closeTokenInfo();
+          break;
+      }
+    }
+
+    // ============================================
+    // CROSS-TAB COMMUNICATION
+    // ============================================
+    function handleMessage(event) {
+      if (!event.data || !event.data.type) return;
+
+      switch (event.data.type) {
+        case 'combatantsUpdate':
+          syncTokens(event.data.combatants, event.data.activeIndex);
+          break;
+      }
+    }
+
+    function syncTokens(combatants, activeIndex) {
+      // Preserve existing positions for tokens that were already placed
+      const positionMap = {};
+      tokens.forEach(t => {
+        if (t.mapPosition && t.mapPosition.x !== null) {
+          positionMap[t.id] = t.mapPosition;
+        }
+      });
+
+      // Also check staged tokens for any that were placed
+      stagedTokens.forEach(t => {
+        if (t.mapPosition && t.mapPosition.x !== null) {
+          positionMap[t.id] = t.mapPosition;
+        }
+      });
+
+      // Split into placed and staged
+      const placed = [];
+      const staged = [];
+
+      combatants.forEach((c, index) => {
+        const existing = positionMap[c.id];
+        const token = {
+          ...c,
+          mapPosition: c.mapPosition || existing || { x: null, y: null, visible: true }
+        };
+
+        if (token.mapPosition.x !== null && token.mapPosition.y !== null) {
+          placed.push(token);
+        } else {
+          staged.push(token);
+        }
+      });
+
+      tokens = placed;
+      stagedTokens = staged;
+      activeTokenIndex = activeIndex;
+
+      updateStagingArea();
+      updateStatus();
+      render();
+    }
+
+    // ============================================
+    // STAGING AREA
+    // ============================================
+    function toggleStagingSidebar() {
+      stagingSidebarCollapsed = !stagingSidebarCollapsed;
+      document.getElementById('stagingSidebar').classList.toggle('collapsed', stagingSidebarCollapsed);
+    }
+
+    function updateStagingArea() {
+      const container = document.getElementById('stagingTokenList');
+      if (!container) return;
+
+      if (stagedTokens.length === 0) {
+        container.innerHTML = '<div class="staging-empty">All tokens placed</div>';
+        return;
+      }
+
+      let html = '';
+      stagedTokens.forEach((token, idx) => {
+        const appearance = token.tokenAppearance || {};
+        const color = appearance.color || DEFAULT_COLORS[token.type] || DEFAULT_COLORS.monster;
+        const initials = (token.name || 'XX').substring(0, 2).toUpperCase();
+        const hasImage = appearance.image;
+        const sizeLabel = TOKEN_SIZES[appearance.size || 'medium']?.label || 'Medium';
+
+        html += `<div class="staging-token"
+                      draggable="true"
+                      data-token-id="${token.id}"
+                      onmousedown="handleStagingMouseDown(event, '${token.id}')"
+                      ondragstart="handleStagingDragStart(event, '${token.id}')"
+                      ondragend="handleStagingDragEnd(event)">
+          <div class="staging-token-icon" style="background: ${hasImage ? 'transparent' : color};">
+            ${hasImage ? `<img src="${appearance.image}" alt="">` : initials}
+          </div>
+          <div class="staging-token-info">
+            <div class="staging-token-name">${token.name || 'Unknown'}</div>
+            <div class="staging-token-type">${token.type} · ${sizeLabel}</div>
+          </div>
+        </div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function handleStagingMouseDown(e, tokenId) {
+      // Prepare for drag
+      draggedStagingTokenId = tokenId;
+    }
+
+    function handleStagingDragStart(e, tokenId) {
+      draggedStagingTokenId = tokenId;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', tokenId);
+      e.target.classList.add('dragging');
+    }
+
+    function handleStagingDragEnd(e) {
+      e.target.classList.remove('dragging');
+      draggedStagingTokenId = null;
+    }
+
+    function placeTokenFromStaging(tokenId, worldX, worldY) {
+      // Find token in staged list
+      const tokenIdx = stagedTokens.findIndex(t => t.id === tokenId);
+      if (tokenIdx < 0) return;
+
+      // Remove from staged
+      const token = stagedTokens.splice(tokenIdx, 1)[0];
+
+      // Snap to grid based on token size
+      const size = token.tokenAppearance?.size || 'medium';
+      const snapped = snapToGrid(worldX, worldY, size);
+
+      // Update position
+      token.mapPosition.x = snapped.x;
+      token.mapPosition.y = snapped.y;
+
+      // Add to placed tokens
+      tokens.push(token);
+
+      // Notify Combat Tracker
+      notifyPositionChange(token.id, token.mapPosition.x, token.mapPosition.y);
+
+      // Update UI
+      updateStagingArea();
+      updateStatus();
+      save();
+      render();
+    }
+
+    function snapToGrid(worldX, worldY, size) {
+      const cellSize = gridSettings.cellSize;
+      const cells = TOKEN_SIZES[size]?.cells || 1;
+
+      // For multi-cell tokens, snap to grid intersection and center on the cell block
+      const halfBlockSize = (cells * cellSize) / 2;
+
+      // Snap to nearest grid line
+      const gridX = Math.round(worldX / cellSize) * cellSize;
+      const gridY = Math.round(worldY / cellSize) * cellSize;
+
+      // For medium (1x1), center in cell
+      // For larger, position so token covers cells from grid intersection
+      if (cells === 1) {
+        return {
+          x: gridX + cellSize / 2,
+          y: gridY + cellSize / 2
+        };
+      } else {
+        return {
+          x: gridX + halfBlockSize,
+          y: gridY + halfBlockSize
+        };
+      }
+    }
+
+    function getTypeColor(type) {
+      return DEFAULT_COLORS[type] || DEFAULT_COLORS.monster;
+    }
+
+    function requestCombatants() {
+      window.parent.postMessage({ type: 'requestCombatants' }, '*');
+    }
+
+    function notifyPositionChange(combatantId, x, y) {
+      window.parent.postMessage({
+        type: 'tokenPositionUpdate',
+        combatantId: combatantId,
+        position: { x: x, y: y }
+      }, '*');
+    }
+
+    // ============================================
+    // STATUS BAR
+    // ============================================
+    function updateStatus() {
+      const totalTokens = tokens.length + stagedTokens.length;
+      const placedCount = tokens.length;
+      document.getElementById('tokenCount').textContent =
+        `${placedCount}/${totalTokens} tokens placed`;
+
+      const feetPerCell = Math.round(gridSettings.cellSize / 14); // ~70px = 5ft
+      document.getElementById('gridStatus').textContent =
+        `Grid: ${gridSettings.cellSize}px (${feetPerCell * 5}ft)`;
+
+      document.getElementById('zoomDisplay').textContent =
+        `${Math.round(viewState.scale * 100)}%`;
+    }
+
+    // ============================================
+    // PERSISTENCE
+    // ============================================
+    function save() {
+      try {
+        const data = {
+          schemaVersion: 1,
+          mapImage: mapImageData,
+          viewState: viewState,
+          gridSettings: gridSettings,
+          tokenSettings: tokenSettings
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.warn('Failed to save battle map state:', e);
+      }
+    }
+
+    function load() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const data = JSON.parse(saved);
+
+          if (data.viewState) viewState = data.viewState;
+          if (data.gridSettings) gridSettings = { ...gridSettings, ...data.gridSettings };
+          if (data.tokenSettings) tokenSettings = { ...tokenSettings, ...data.tokenSettings };
+
+          // Update UI
+          document.getElementById('btnGrid').classList.toggle('active', gridSettings.enabled);
+          document.getElementById('gridSizeInput').value = gridSettings.cellSize;
+
+          // Load map image
+          if (data.mapImage) {
+            loadMapFromDataUrl(data.mapImage);
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to load battle map state:', e);
+      }
+    }
+
+    // ============================================
+    // TUTORIAL
+    // ============================================
+    function closeTutorial() {
+      document.getElementById('tutorialOverlay').classList.remove('active');
+    }
+
+    function closeTutorialDontShow() {
+      closeTutorial();
+      try {
+        localStorage.setItem('battlemapTutorialSeen', 'true');
+      } catch (e) {}
+    }
+
+    function showTutorial() {
+      document.getElementById('tutorialOverlay').classList.add('active');
+    }
+
+    function checkShowTutorial() {
+      try {
+        if (!localStorage.getItem('battlemapTutorialSeen')) {
+          showTutorial();
+        }
+      } catch (e) {}
+    }
+
+    // ============================================
+    // START
+    // ============================================
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

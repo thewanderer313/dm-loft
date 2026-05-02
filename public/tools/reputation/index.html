@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>/* dm-loft:localStorage-namespace */
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var c = p.get('campaign');
+  if (!c) return;
+  var ns = 'dmloft:' + c + ':';
+  var ls = window.localStorage;
+  var origGet = ls.getItem.bind(ls),
+      origSet = ls.setItem.bind(ls),
+      origRemove = ls.removeItem.bind(ls);
+  ls.getItem    = function (k) { return origGet(ns + k); };
+  ls.setItem    = function (k, v) { return origSet(ns + k, v); };
+  ls.removeItem = function (k) { return origRemove(ns + k); };
+})();
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oakhart Reputation Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(51, 65, 85, 0.95) 50%, rgba(30, 41, 59, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1518562923427-c4c7000e4e98?w=1920&q=80') center/cover fixed;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #fbbf24, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-blue { background: #2563eb; }
+        .btn-blue:hover:not(:disabled) { background: #1d4ed8; }
+        .btn-green { background: #16a34a; }
+        .btn-green:hover:not(:disabled) { background: #15803d; }
+        .btn-purple { background: #9333ea; }
+        .btn-purple:hover:not(:disabled) { background: #7e22ce; }
+        .btn-red { background: #dc2626; }
+        .btn-red:hover:not(:disabled) { background: #b91c1c; }
+        
+        .info-panel {
+            background: #1e293b;
+            border: 2px solid #9333ea;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .info-panel.show { display: block; }
+        
+        .info-title {
+            font-size: 1.5rem;
+            color: #a78bfa;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .info-section h4 {
+            color: #fbbf24;
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .info-section ul {
+            list-style: none;
+            color: #cbd5e1;
+            font-size: 0.875rem;
+        }
+        
+        .info-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .settlements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .settlement-card {
+            background: #1e293b;
+            border-radius: 0.5rem;
+            border: 2px solid;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .settlement-card:hover {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .settlement-card.selected {
+            box-shadow: 0 0 0 4px white;
+        }
+        
+        .settlement-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .icon {
+            font-size: 2rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .settlement-info {
+            flex: 1;
+        }
+        
+        .settlement-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .settlement-desc {
+            font-size: 0.875rem;
+            color: #e2e8f0;
+        }
+        
+        .settlement-body {
+            padding: 1.5rem;
+        }
+        
+        .reputation-section {
+            margin-bottom: 1rem;
+        }
+        
+        .reputation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reputation-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        
+        .reputation-level {
+            font-size: 1.125rem;
+            font-weight: bold;
+        }
+        
+        .reputation-bar-container {
+            width: 100%;
+            height: 1rem;
+            background: #334155;
+            border-radius: 9999px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .reputation-bar {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .reputation-score {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .reputation-desc {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+        
+        .traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .trait {
+            padding: 0.25rem 0.5rem;
+            background: #334155;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .panel {
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        
+        .panel-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #334155;
+            border: 1px solid #475569;
+            border-radius: 0.25rem;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .form-textarea {
+            min-height: 6rem;
+            resize: vertical;
+        }
+        
+        .selected-settlement {
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .history-log {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            background: #334155;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            border-left: 4px solid #475569;
+            margin-bottom: 0.75rem;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+        }
+        
+        .history-settlement {
+            font-weight: bold;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+        }
+        
+        .history-change {
+            font-weight: bold;
+        }
+        
+        .history-change.positive { color: #4ade80; }
+        .history-change.negative { color: #f87171; }
+        
+        .history-reason {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            margin-bottom: 0.25rem;
+        }
+        
+        .history-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #94a3b8;
+            padding: 3rem 0;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Oakhart Campaign</h1>
+            <p class="subtitle">Reputation Tracker</p>
+            <div class="button-group">
+                <button class="btn btn-blue" onclick="app.exportData()">
+                    ⬇ Export Campaign
+                </button>
+                <label class="btn btn-green" for="import-file">
+                    ⬆ Import Campaign
+                </label>
+                <input type="file" id="import-file" accept=".json" onchange="app.importData(event)">
+                <button class="btn btn-purple" onclick="app.toggleInfo()">
+                    ℹ Guide
+                </button>
+            </div>
+        </div>
+
+        <div id="info-panel" class="info-panel">
+            <h3 class="info-title">Dungeon Master's Guide</h3>
+            <div class="info-grid">
+                <div class="info-section">
+                    <h4>Quick Actions</h4>
+                    <ul>
+                        <li>• Use +5/-5 buttons for minor deeds or slights</li>
+                        <li>• Use +15/-15 for significant events</li>
+                        <li>• Custom adjustments for major story moments</li>
+                        <li>• Hover over reputation bars for detailed info</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <h4>Settlement Personalities</h4>
+                    <ul>
+                        <li>• <strong>Boone's Rest:</strong> Values honor and helping neighbors</li>
+                        <li>• <strong>Low Gap:</strong> Respects strength and self-sufficiency</li>
+                        <li>• <strong>Duskmere:</strong> Appreciates respect for nature and secrets</li>
+                        <li>• <strong>Briar's Notch:</strong> Values loyalty and keeping mouths shut</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="settlements" class="settlements-grid"></div>
+
+        <div class="bottom-grid">
+            <div class="panel">
+                <h3 class="panel-title">Custom Adjustment</h3>
+                <div id="custom-panel"></div>
+            </div>
+
+            <div class="panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 class="panel-title" style="margin: 0;">Recent History</h3>
+                    <button id="clear-history-btn" class="btn btn-red btn-small" style="display: none;" onclick="app.clearHistory()">
+                        Clear History
+                    </button>
+                </div>
+                <div id="history-log" class="history-log"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            settlements: [
+                {
+                    id: 'boones',
+                    name: "Boone's Rest",
+                    icon: '⛰️',
+                    description: "A quaint mountain town nestled in the Appalachians",
+                    color: '#047857',
+                    headerColor: '#047857',
+                    borderColor: '#10b981',
+                    traits: ["Hospitable", "Traditional", "Close-knit"]
+                },
+                {
+                    id: 'lowgap',
+                    name: "Low Gap",
+                    icon: '⛏️',
+                    description: "An abandoned mining town with fiercely independent survivors",
+                    color: '#475569',
+                    headerColor: '#334155',
+                    borderColor: '#94a3b8',
+                    traits: ["Suspicious", "Self-reliant", "Hardened"]
+                },
+                {
+                    id: 'duskmere',
+                    name: "Duskmere",
+                    icon: '💧',
+                    description: "A swamp community of witches and herbalists",
+                    color: '#6b21a8',
+                    headerColor: '#6b21a8',
+                    borderColor: '#a78bfa',
+                    traits: ["Mystical", "Secretive", "Pragmatic"]
+                },
+                {
+                    id: 'briars',
+                    name: "Briar's Notch",
+                    icon: '🌙',
+                    description: "Moonshiners operating in the hidden hollows",
+                    color: '#b45309',
+                    headerColor: '#b45309',
+                    borderColor: '#fbbf24',
+                    traits: ["Cunning", "Lawless", "Loyal to their own"]
+                }
+            ],
+
+            reputationLevels: [
+                { min: -100, max: -51, name: "Hostile", desc: "Will attack on sight or refuse all interaction", color: "#dc2626" },
+                { min: -50, max: -21, name: "Unfriendly", desc: "Openly distrustful, may spread rumors or charge inflated prices", color: "#ea580c" },
+                { min: -20, max: -1, name: "Wary", desc: "Cautious and distant, minimal cooperation", color: "#ca8a04" },
+                { min: 0, max: 20, name: "Neutral", desc: "Basic civility, standard business transactions", color: "#9ca3af" },
+                { min: 21, max: 50, name: "Friendly", desc: "Welcoming, willing to help with minor requests", color: "#60a5fa" },
+                { min: 51, max: 80, name: "Allied", desc: "Strong support, discounts, share information freely", color: "#4ade80" },
+                { min: 81, max: 100, name: "Revered", desc: "Heroes of the settlement, maximum aid and protection", color: "#a78bfa" }
+            ],
+
+            reputations: {},
+            history: [],
+            selectedSettlement: null,
+
+            init() {
+                this.loadData();
+                this.render();
+            },
+
+            loadData() {
+                try {
+                    const savedReps = localStorage.getItem('oakhart_reputations');
+                    const savedHistory = localStorage.getItem('oakhart_history');
+                    
+                    if (savedReps) {
+                        this.reputations = JSON.parse(savedReps);
+                    } else {
+                        this.settlements.forEach(s => this.reputations[s.id] = 0);
+                    }
+                    
+                    if (savedHistory) {
+                        this.history = JSON.parse(savedHistory);
+                    }
+                } catch (e) {
+                    // localStorage not available, use defaults
+                    this.settlements.forEach(s => this.reputations[s.id] = 0);
+                    this.history = [];
+                }
+            },
+
+            saveData() {
+                try {
+                    localStorage.setItem('oakhart_reputations', JSON.stringify(this.reputations));
+                    localStorage.setItem('oakhart_history', JSON.stringify(this.history));
+                } catch (e) {
+                    // localStorage not available in artifact preview
+                    console.log('Data saved in memory only');
+                }
+            },
+
+            getReputationLevel(score) {
+                return this.reputationLevels.find(level => score >= level.min && score <= level.max);
+            },
+
+            adjustReputation(settlementId, amount, reason) {
+                const newScore = Math.max(-100, Math.min(100, this.reputations[settlementId] + amount));
+                const settlement = this.settlements.find(s => s.id === settlementId);
+                
+                this.history.unshift({
+                    timestamp: new Date().toISOString(),
+                    settlement: settlement.name,
+                    change: amount,
+                    reason: reason,
+                    newScore: newScore
+                });
+                
+                if (this.history.length > 50) this.history = this.history.slice(0, 50);
+                
+                this.reputations[settlementId] = newScore;
+                this.saveData();
+                this.render();
+            },
+
+            selectSettlement(settlementId) {
+                this.selectedSettlement = this.settlements.find(s => s.id === settlementId);
+                this.render();
+            },
+
+            renderSettlements() {
+                const container = document.getElementById('settlements');
+                container.innerHTML = '';
+                
+                this.settlements.forEach(settlement => {
+                    const score = this.reputations[settlement.id];
+                    const level = this.getReputationLevel(score);
+                    const percentage = ((score + 100) / 200) * 100;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'settlement-card' + (this.selectedSettlement?.id === settlement.id ? ' selected' : '');
+                    card.style.borderColor = settlement.borderColor;
+                    card.onclick = () => this.selectSettlement(settlement.id);
+                    
+                    card.innerHTML = `
+                        <div class="settlement-header" style="background-color: ${settlement.headerColor};">
+                            <div class="icon">${settlement.icon}</div>
+                            <div class="settlement-info">
+                                <div class="settlement-name">${settlement.name}</div>
+                                <div class="settlement-desc">${settlement.description}</div>
+                            </div>
+                            <div class="icon" style="opacity: 0.5;">👥</div>
+                        </div>
+                        <div class="settlement-body">
+                            <div class="reputation-section">
+                                <div class="reputation-header">
+                                    <span class="reputation-label">Reputation</span>
+                                    <span class="reputation-level" style="color: ${level.color};">${level.name}</span>
+                                </div>
+                                <div class="reputation-bar-container">
+                                    <div class="reputation-bar" style="width: ${percentage}%; background-color: ${settlement.color};"></div>
+                                    <div class="reputation-score">${score}</div>
+                                </div>
+                                <p class="reputation-desc">${level.desc}</p>
+                            </div>
+                            <div class="traits">
+                                ${settlement.traits.map(trait => `<span class="trait">${trait}</span>`).join('')}
+                            </div>
+                            <div class="quick-actions">
+                                <button class="action-btn" style="background: #15803d;" onclick="event.stopPropagation(); app.adjustReputation('${settlement.id}', 5, 'Minor good deed');">
+                                    + 5
+                                </button>
+                                <button class="action-btn" style="background: #16a34a;" onclick="event.stopPropagation(); app.adjustReputation('${settlement.id}', 15, 'Significant aid');">
+                                    + 15
+                                </button>
+                                <button class="action-btn" style="background: #b91c1c;" onclick="event.stopPropagation(); app.adjustReputation('${settlement.id}', -5, 'Minor offense');">
+                                    − 5
+                                </button>
+                                <button class="action-btn" style="background: #dc2626;" onclick="event.stopPropagation(); app.adjustReputation('${settlement.id}', -15, 'Significant harm');">
+                                    − 15
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            },
+
+            renderCustomPanel() {
+                const container = document.getElementById('custom-panel');
+                
+                if (!this.selectedSettlement) {
+                    container.innerHTML = '<p class="empty-state">Click on a settlement card to make custom adjustments</p>';
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">Selected Settlement</label>
+                        <div class="selected-settlement" style="background-color: ${this.selectedSettlement.headerColor};">
+                            <span class="icon">${this.selectedSettlement.icon}</span>
+                            <span>${this.selectedSettlement.name}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reputation Change (-100 to +100)</label>
+                        <input type="text" id="custom-amount" class="form-input" placeholder="e.g., 25 or -30" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Event Description</label>
+                        <textarea id="custom-note" class="form-textarea" placeholder="What did the party do?" autocomplete="off"></textarea>
+                    </div>
+                    <button class="btn btn-green" style="width: 100%; padding: 0.75rem; justify-content: center;" onclick="app.applyCustom()">
+                        Apply Change
+                    </button>
+                `;
+                
+                // Set focus to the input after rendering
+                setTimeout(() => {
+                    const input = document.getElementById('custom-amount');
+                    if (input) input.focus();
+                }, 0);
+            },
+
+            renderHistory() {
+                const container = document.getElementById('history-log');
+                const clearBtn = document.getElementById('clear-history-btn');
+                
+                if (this.history.length === 0) {
+                    container.innerHTML = '<p class="empty-state">No reputation changes yet</p>';
+                    clearBtn.style.display = 'none';
+                    return;
+                }
+                
+                clearBtn.style.display = 'block';
+                
+                container.innerHTML = this.history.map(entry => `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <span class="history-settlement">${entry.settlement}</span>
+                            <span class="history-change ${entry.change > 0 ? 'positive' : 'negative'}">
+                                ${entry.change > 0 ? '+' : ''}${entry.change}
+                            </span>
+                        </div>
+                        <p class="history-reason">${entry.reason}</p>
+                        <div class="history-footer">
+                            <span>${new Date(entry.timestamp).toLocaleString()}</span>
+                            <span>New Score: ${entry.newScore}</span>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            applyCustom() {
+                const amountInput = document.getElementById('custom-amount');
+                const noteInput = document.getElementById('custom-note');
+                
+                if (!amountInput || !noteInput) {
+                    alert('Error: Form elements not found');
+                    return;
+                }
+                
+                const amount = parseInt(amountInput.value);
+                const note = noteInput.value.trim();
+                
+                if (isNaN(amount)) {
+                    alert('Please enter a valid reputation change amount.');
+                    return;
+                }
+                
+                if (!note) {
+                    alert('Please enter an event description.');
+                    return;
+                }
+                
+                if (!this.selectedSettlement) {
+                    alert('Please select a settlement first.');
+                    return;
+                }
+                
+                this.adjustReputation(this.selectedSettlement.id, amount, note);
+                amountInput.value = '';
+                noteInput.value = '';
+            },
+
+            toggleInfo() {
+                const panel = document.getElementById('info-panel');
+                panel.classList.toggle('show');
+            },
+
+            exportData() {
+                const data = {
+                    reputations: this.reputations,
+                    history: this.history,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `oakhart_campaign_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            },
+
+            importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.reputations) this.reputations = data.reputations;
+                        if (data.history) this.history = data.history;
+                        this.saveData();
+                        this.render();
+                        alert('Campaign imported successfully!');
+                    } catch (err) {
+                        alert('Error importing file. Please ensure it is a valid Oakhart save file.');
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = '';
+            },
+
+            clearHistory() {
+                if (confirm('Clear all history? This cannot be undone.')) {
+                    this.history = [];
+                    this.saveData();
+                    this.render();
+                }
+            },
+
+            render() {
+                this.renderSettlements();
+                this.renderCustomPanel();
+                this.renderHistory();
+            }
+        };
+
+        // Initialize the app when the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
