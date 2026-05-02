@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Shell } from "@/components/Shell";
 import { getServerSupabase } from "@/lib/supabase/server";
 import { renameCampaign, deleteCampaign } from "./actions";
+import { DeleteCampaignButton } from "@/components/DeleteCampaignButton";
 
 export default async function EditCampaignPage({
   params,
@@ -40,27 +41,14 @@ export default async function EditCampaignPage({
           </button>
         </form>
 
-        <DeleteForm action={deleteBound} name={c.name} />
+        <div className="mt-6">
+          <DeleteCampaignButton campaignName={c.name} action={deleteBound} />
+        </div>
 
         {sp.error && (
           <p className="text-red-400 text-sm mt-3">{decodeURIComponent(sp.error)}</p>
         )}
       </div>
     </Shell>
-  );
-}
-
-// Client component for the delete confirm — onClick can't live on a server component.
-function DeleteForm({ action, name }: { action: () => Promise<void>; name: string }) {
-  return (
-    <form action={action} className="mt-6">
-      <button
-        type="submit"
-        className="text-red-400 text-sm hover:underline"
-        formNoValidate
-      >
-        Delete this campaign
-      </button>
-    </form>
   );
 }
