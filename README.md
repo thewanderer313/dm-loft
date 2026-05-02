@@ -12,3 +12,13 @@ Web hub for D&D DM tools. Vercel + Supabase + Next.js 15.
 
 ## Spec
 See `docs/design.md` (mirror of the canonical spec).
+
+## For DMs
+
+This is a personal hub for D&D tools — sign in with Google or email, create a
+campaign, and launch the tracker you need. Every campaign has its own state,
+so you can keep your Oakhart epic going while running a one-shot on the side.
+
+To add a new tool: drop a single-file HTML into `public/tools/<id>/index.html`
+(running `npm run tools:port` will patch it for you), then add an entry to
+`lib/tools.ts`. The dashboard picks it up on next reload.
