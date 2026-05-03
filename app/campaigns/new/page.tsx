@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Shell } from "@/components/Shell";
-import { TomePage, Eyebrow, GildedRule, Illum } from "@/components/TomePage";
+import { TomePage, GildedRule } from "@/components/TomePage";
+import { NewCampaignForm } from "@/components/NewCampaignForm";
 import { createCampaign } from "./actions";
 
 export default async function NewCampaignPage({
@@ -9,85 +9,51 @@ export default async function NewCampaignPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const sp = await searchParams;
+  const errorMessage = sp.error ? decodeURIComponent(sp.error) : undefined;
+
   return (
     <Shell>
-      <TomePage chapter="DM Loft · Of New Tales" folio="·">
-        <div className="max-w-xl mx-auto pt-4">
-          <div className="flex items-start gap-5 mb-8">
-            <Illum>I</Illum>
-            <div>
-              <Eyebrow>Inscribe a New Campaign</Eyebrow>
-              <h1
-                className="text-4xl mt-1"
-                style={{
-                  fontFamily: "var(--tome-display)",
-                  color: "var(--tome-ink)",
-                  fontWeight: 600,
-                }}
-              >
-                A Fresh Page
-              </h1>
-              <p
-                className="text-sm italic mt-2"
-                style={{ color: "var(--tome-ink-soft)" }}
-              >
-                Name thy world, then sketch its shape in a few short words.
-              </p>
-            </div>
+      <TomePage chapter="DM Loft · A New Chronicle" folio="i.°">
+        <div className="flex flex-col">
+          <div
+            className="italic uppercase text-[13px]"
+            style={{
+              fontFamily: "var(--tome-display)",
+              letterSpacing: "0.22em",
+              color: "var(--tome-gold)",
+            }}
+          >
+            Cap. ° &middot; Of Beginnings
+          </div>
+          <h1
+            className="mt-1"
+            style={{
+              fontFamily: "var(--tome-display)",
+              fontWeight: 600,
+              fontSize: "clamp(40px, 6vw, 60px)",
+              lineHeight: 0.95,
+              color: "var(--tome-ink)",
+            }}
+          >
+            A <em style={{ color: "var(--tome-oxblood)" }}>new</em> chronicle
+          </h1>
+          <p
+            className="italic mt-1"
+            style={{
+              fontFamily: "var(--tome-body)",
+              fontSize: 16,
+              color: "var(--tome-ink-soft)",
+              maxWidth: 720,
+            }}
+          >
+            inscribe the title, the argument, and the manner of play. all may be amended hereafter.
+          </p>
+
+          <div className="my-5">
+            <GildedRule />
           </div>
 
-          <GildedRule className="mb-8" />
-
-          <form action={createCampaign} className="flex flex-col gap-5">
-            <label className="block">
-              <span
-                className="block text-[11px] italic uppercase tracking-[0.2em] mb-1"
-                style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
-              >
-                Name
-              </span>
-              <input name="name" required className="tome-input" placeholder="The Hollow Crown" />
-            </label>
-
-            <label className="block">
-              <span
-                className="block text-[11px] italic uppercase tracking-[0.2em] mb-1"
-                style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
-              >
-                Description
-                <span className="not-italic normal-case tracking-normal ml-2 opacity-70">(optional)</span>
-              </span>
-              <textarea
-                name="description"
-                rows={4}
-                className="tome-input"
-                style={{ resize: "vertical" }}
-                placeholder="A salt-stained kingdom where coin and crown have grown estranged…"
-              />
-            </label>
-
-            <div className="flex items-center justify-between mt-3">
-              <Link
-                href="/campaigns"
-                className="text-xs italic uppercase tracking-[0.18em]"
-                style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
-              >
-                ← back to library
-              </Link>
-              <button type="submit" className="tome-btn tome-btn-primary">
-                Inscribe
-              </button>
-            </div>
-
-            {sp.error && (
-              <p
-                className="text-sm italic mt-2"
-                style={{ color: "var(--tome-oxblood)" }}
-              >
-                {decodeURIComponent(sp.error)}
-              </p>
-            )}
-          </form>
+          <NewCampaignForm action={createCampaign} errorMessage={errorMessage} />
         </div>
       </TomePage>
     </Shell>

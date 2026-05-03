@@ -24,112 +24,108 @@ export function Sigil({
 }) {
   const s = size;
   const c = s / 2;
-  const base = {
+  const common = {
+    stroke: color,
+    strokeWidth,
+    fill: "none" as const,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+  const svg = {
     width: s,
     height: s,
     viewBox: `0 0 ${s} ${s}`,
-    fill: "none" as const,
-    stroke: color,
-    strokeWidth,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
   };
 
   switch (kind) {
     case "sword":
       return (
-        <svg {...base}>
-          <line x1={c} y1={s * 0.1} x2={c} y2={s * 0.7} />
-          <line x1={s * 0.3} y1={s * 0.7} x2={s * 0.7} y2={s * 0.7} />
-          <line x1={c} y1={s * 0.7} x2={c} y2={s * 0.92} />
-          <circle cx={c} cy={s * 0.95} r={s * 0.04} />
+        <svg {...svg}>
+          <line x1={s * 0.15} y1={s * 0.15} x2={s * 0.85} y2={s * 0.85} {...common} />
+          <circle cx={s * 0.15} cy={s * 0.15} r={s * 0.05} {...common} />
+          <line x1={s * 0.30} y1={s * 0.70} x2={s * 0.70} y2={s * 0.30} {...common} />
         </svg>
       );
     case "moon":
       return (
-        <svg {...base}>
-          <circle cx={c} cy={c} r={s * 0.4} />
+        <svg {...svg}>
           <path
-            d={`M ${c + s * 0.05} ${c - s * 0.35} A ${s * 0.4} ${s * 0.4} 0 1 0 ${c + s * 0.05} ${c + s * 0.35} A ${s * 0.28} ${s * 0.4} 0 1 1 ${c + s * 0.05} ${c - s * 0.35} Z`}
-            fill={color}
+            d={`M ${s * 0.7} ${s * 0.18} A ${s * 0.36} ${s * 0.36} 0 1 0 ${s * 0.7} ${s * 0.82} A ${s * 0.27} ${s * 0.36} 0 1 1 ${s * 0.7} ${s * 0.18} Z`}
+            {...common}
           />
-        </svg>
-      );
-    case "crown":
-      return (
-        <svg {...base}>
-          <path
-            d={`M ${s * 0.15} ${s * 0.7} L ${s * 0.2} ${s * 0.35} L ${s * 0.35} ${s * 0.55} L ${c} ${s * 0.25} L ${s * 0.65} ${s * 0.55} L ${s * 0.8} ${s * 0.35} L ${s * 0.85} ${s * 0.7} Z`}
-          />
-          <line x1={s * 0.18} y1={s * 0.78} x2={s * 0.82} y2={s * 0.78} />
-        </svg>
-      );
-    case "hex":
-      return (
-        <svg {...base}>
-          <polygon
-            points={`${c},${s * 0.12} ${s * 0.88},${s * 0.32} ${s * 0.88},${s * 0.68} ${c},${s * 0.88} ${s * 0.12},${s * 0.68} ${s * 0.12},${s * 0.32}`}
-          />
-          <circle cx={c} cy={c} r={s * 0.18} />
-        </svg>
-      );
-    case "die":
-      return (
-        <svg {...base}>
-          <polygon
-            points={`${c},${s * 0.1} ${s * 0.88},${c} ${c},${s * 0.9} ${s * 0.12},${c}`}
-          />
-          <line x1={c} y1={s * 0.1} x2={c} y2={s * 0.9} />
-          <line x1={s * 0.12} y1={c} x2={s * 0.88} y2={c} />
-          <text
-            x={c}
-            y={c + s * 0.04}
-            textAnchor="middle"
-            fontSize={s * 0.22}
-            fill={color}
-            stroke="none"
-            fontFamily="serif"
-            fontStyle="italic"
-          >
-            xx
-          </text>
-        </svg>
-      );
-    case "book":
-      return (
-        <svg {...base}>
-          <path
-            d={`M ${s * 0.15} ${s * 0.25} L ${s * 0.15} ${s * 0.82} L ${c} ${s * 0.72} L ${s * 0.85} ${s * 0.82} L ${s * 0.85} ${s * 0.25} L ${c} ${s * 0.18} Z`}
-          />
-          <line x1={c} y1={s * 0.18} x2={c} y2={s * 0.72} />
-        </svg>
-      );
-    case "ornament":
-      return (
-        <svg {...base}>
-          <circle cx={c} cy={c} r={s * 0.12} />
-          <path d={`M ${c} ${s * 0.1} L ${c} ${s * 0.3}`} />
-          <path d={`M ${c} ${s * 0.7} L ${c} ${s * 0.9}`} />
-          <path d={`M ${s * 0.1} ${c} L ${s * 0.3} ${c}`} />
-          <path d={`M ${s * 0.7} ${c} L ${s * 0.9} ${c}`} />
-        </svg>
-      );
-    case "eye":
-      return (
-        <svg {...base}>
-          <path
-            d={`M ${s * 0.1} ${c} Q ${c} ${s * 0.2}, ${s * 0.9} ${c} Q ${c} ${s * 0.8}, ${s * 0.1} ${c} Z`}
-          />
-          <circle cx={c} cy={c} r={s * 0.18} />
-          <circle cx={c} cy={c} r={s * 0.06} fill={color} />
         </svg>
       );
     case "star":
       return (
-        <svg {...base}>
-          <polygon
-            points={`${c},${s * 0.12} ${c + s * 0.1},${c - s * 0.1} ${s * 0.88},${c} ${c + s * 0.1},${c + s * 0.1} ${c},${s * 0.88} ${c - s * 0.1},${c + s * 0.1} ${s * 0.12},${c} ${c - s * 0.1},${c - s * 0.1}`}
+        <svg {...svg}>
+          <circle cx={c} cy={c} r={s * 0.34} {...common} />
+          <line x1={c} y1={s * 0.05} x2={c} y2={s * 0.95} {...common} />
+          <line x1={s * 0.05} y1={c} x2={s * 0.95} y2={c} {...common} />
+          <line x1={s * 0.20} y1={s * 0.20} x2={s * 0.80} y2={s * 0.80} {...common} />
+          <line x1={s * 0.20} y1={s * 0.80} x2={s * 0.80} y2={s * 0.20} {...common} />
+        </svg>
+      );
+    case "crown":
+      return (
+        <svg {...svg}>
+          <path
+            d={`M ${s * 0.15} ${s * 0.7} L ${s * 0.20} ${s * 0.30} L ${s * 0.35} ${s * 0.55} L ${s * 0.50} ${s * 0.22} L ${s * 0.65} ${s * 0.55} L ${s * 0.80} ${s * 0.30} L ${s * 0.85} ${s * 0.7} Z`}
+            {...common}
           />
+          <line x1={s * 0.15} y1={s * 0.78} x2={s * 0.85} y2={s * 0.78} {...common} />
+        </svg>
+      );
+    case "hex":
+      return (
+        <svg {...svg}>
+          <path
+            d={`M ${c} ${s * 0.10} L ${s * 0.85} ${s * 0.32} L ${s * 0.85} ${s * 0.68} L ${c} ${s * 0.90} L ${s * 0.15} ${s * 0.68} L ${s * 0.15} ${s * 0.32} Z`}
+            {...common}
+          />
+          <circle cx={c} cy={c} r={s * 0.08} {...common} />
+        </svg>
+      );
+    case "die":
+      return (
+        <svg {...svg}>
+          <path
+            d={`M ${c} ${s * 0.10} L ${s * 0.88} ${s * 0.36} L ${s * 0.74} ${s * 0.86} L ${s * 0.26} ${s * 0.86} L ${s * 0.12} ${s * 0.36} Z`}
+            {...common}
+          />
+          <path
+            d={`M ${c} ${s * 0.10} L ${s * 0.26} ${s * 0.86} M ${c} ${s * 0.10} L ${s * 0.74} ${s * 0.86} M ${s * 0.12} ${s * 0.36} L ${s * 0.88} ${s * 0.36}`}
+            {...common}
+          />
+        </svg>
+      );
+    case "book":
+      return (
+        <svg {...svg}>
+          <path
+            d={`M ${s * 0.10} ${s * 0.20} L ${c} ${s * 0.30} L ${s * 0.90} ${s * 0.20} L ${s * 0.90} ${s * 0.80} L ${c} ${s * 0.85} L ${s * 0.10} ${s * 0.80} Z`}
+            {...common}
+          />
+          <line x1={c} y1={s * 0.30} x2={c} y2={s * 0.85} {...common} />
+        </svg>
+      );
+    case "eye":
+      return (
+        <svg {...svg}>
+          <path
+            d={`M ${s * 0.10} ${c} Q ${c} ${s * 0.20}, ${s * 0.90} ${c} Q ${c} ${s * 0.80}, ${s * 0.10} ${c} Z`}
+            {...common}
+          />
+          <circle cx={c} cy={c} r={s * 0.12} {...common} />
+        </svg>
+      );
+    case "ornament":
+      return (
+        <svg {...svg}>
+          <path
+            d={`M ${c} ${s * 0.20} Q ${s * 0.65} ${c}, ${c} ${s * 0.80} Q ${s * 0.35} ${c}, ${c} ${s * 0.20} Z`}
+            {...common}
+          />
+          <circle cx={c} cy={c} r={s * 0.05} fill={color} stroke="none" />
         </svg>
       );
   }

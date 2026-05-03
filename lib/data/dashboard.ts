@@ -15,7 +15,7 @@ export async function getCampaignForDashboard(id: string) {
   const supabase = await getServerSupabase();
   const { data } = await supabase
     .from("campaigns")
-    .select("id,name,last_tool_id,last_opened_at")
+    .select("id,name,description,last_tool_id,last_opened_at")
     .eq("id", id)
     .maybeSingle();
   return data;

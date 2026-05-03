@@ -8,35 +8,37 @@ export function Shell({
   rightSlot?: React.ReactNode;
 }) {
   return (
-    <div className="tome-page min-h-screen flex flex-col">
-      <header
-        className="flex items-center justify-between px-5 py-3 border-b"
-        style={{ borderColor: "var(--tome-rule)" }}
-      >
+    <div className="tome-page relative min-h-screen">
+      {children}
+      <div className="fixed bottom-4 right-6 z-20 flex items-center gap-4 pointer-events-none">
+        {rightSlot && <div className="pointer-events-auto">{rightSlot}</div>}
         <Link
           href="/"
-          className="text-xl tracking-wide"
+          className="pointer-events-auto italic uppercase"
           style={{
             fontFamily: "var(--tome-display)",
-            color: "var(--tome-oxblood)",
-            fontWeight: 600,
-            letterSpacing: "0.04em",
+            fontSize: 10,
+            color: "var(--tome-ink-faint)",
+            letterSpacing: "0.18em",
+            textDecoration: "none",
           }}
         >
           DM Loft
         </Link>
-        <div className="flex items-center gap-4">
-          {rightSlot}
-          <Link
-            href="/settings"
-            className="text-xs italic uppercase tracking-[0.18em]"
-            style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
-          >
-            settings
-          </Link>
-        </div>
-      </header>
-      <main className="flex-1">{children}</main>
+        <Link
+          href="/settings"
+          className="pointer-events-auto italic uppercase"
+          style={{
+            fontFamily: "var(--tome-display)",
+            fontSize: 10,
+            color: "var(--tome-ink-faint)",
+            letterSpacing: "0.18em",
+            textDecoration: "none",
+          }}
+        >
+          settings
+        </Link>
+      </div>
     </div>
   );
 }

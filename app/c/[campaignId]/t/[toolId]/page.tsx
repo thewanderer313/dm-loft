@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Shell } from "@/components/Shell";
 import { Sigil } from "@/components/Sigil";
+import { romanize } from "@/components/TomePage";
 import { getServerSupabase } from "@/lib/supabase/server";
-import { getTool } from "@/lib/tools";
+import { getTool, getToolIndex } from "@/lib/tools";
 import { recordLastOpened } from "./actions";
 
 export default async function ToolPage({
@@ -26,48 +26,73 @@ export default async function ToolPage({
   recordLastOpened(campaignId, toolId).catch(() => {});
 
   const src = `/tools/${tool.id}/index.html?campaign=${encodeURIComponent(campaignId)}`;
+  const cap = `Cap. ${romanize(getToolIndex(tool.id) + 1).toUpperCase()}`;
 
   return (
-    <Shell
-      rightSlot={
+    <div className="tome-page min-h-screen flex flex-col">
+      <div
+        className="flex items-center gap-4 px-5 py-3 flex-wrap"
+        style={{ borderBottom: "1px solid var(--tome-rule)" }}
+      >
         <Link
           href={`/c/${campaignId}`}
-          className="text-xs italic uppercase tracking-[0.18em] flex items-center gap-2"
-          style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+          className="italic uppercase flex items-center gap-2 shrink-0"
+          style={{
+            fontFamily: "var(--tome-display)",
+            fontSize: 11,
+            letterSpacing: "0.18em",
+            color: "var(--tome-ink-faint)",
+          }}
         >
           ← {campaign.name}
         </Link>
-      }
-    >
-      <div className="px-5 py-3 flex items-center gap-3 border-b" style={{ borderColor: "var(--tome-rule-soft)" }}>
+        <span style={{ color: "var(--tome-rule)" }} aria-hidden>·</span>
         <span style={{ color: "var(--tome-oxblood)" }} aria-hidden>
-          <Sigil kind={tool.sigil} size={22} strokeWidth={1.4} />
+          <Sigil kind={tool.sigil} size={20} strokeWidth={1.4} />
         </span>
         <span
-          className="text-lg"
+          className="italic"
           style={{
             fontFamily: "var(--tome-display)",
-            color: "var(--tome-ink)",
+            fontSize: 11,
+            color: "var(--tome-gold)",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+          }}
+        >
+          {cap}
+        </span>
+        <span
+          style={{
+            fontFamily: "var(--tome-display)",
             fontWeight: 600,
-            letterSpacing: "0.02em",
+            fontSize: 18,
+            color: "var(--tome-ink)",
+            letterSpacing: "0.01em",
           }}
         >
           {tool.name}
         </span>
         <span
-          className="text-[11px] italic uppercase tracking-[0.18em] ml-2"
-          style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+          className="italic uppercase"
+          style={{
+            fontFamily: "var(--tome-display)",
+            fontSize: 10,
+            color: "var(--tome-ink-faint)",
+            letterSpacing: "0.18em",
+          }}
         >
-          · {tool.blurb}
+          &middot; {tool.blurb}
         </span>
       </div>
-      <div className="h-[calc(100vh-49px-49px)]">
+      <div className="flex-1">
         <iframe
           src={src}
           title={tool.name}
           className="w-full h-full border-0 bg-white"
+          style={{ minHeight: "calc(100vh - 49px)" }}
         />
       </div>
-    </Shell>
+    </div>
   );
 }
