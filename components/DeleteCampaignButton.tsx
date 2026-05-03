@@ -18,7 +18,15 @@ export function DeleteCampaignButton({
     >
       <button
         type="submit"
-        className="text-red-400 text-sm hover:underline"
+        className="text-sm italic underline-offset-2 hover:underline"
+        style={{
+          fontFamily: "var(--tome-display)",
+          color: "var(--tome-oxblood)",
+          background: "transparent",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+        }}
       >
         Delete this campaign
       </button>

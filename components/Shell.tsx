@@ -8,14 +8,30 @@ export function Shell({
   rightSlot?: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-lantern-bg">
-      <header className="flex items-center justify-between px-5 py-3 border-b border-lantern-border bg-lantern-grad">
-        <Link href="/" className="text-lantern-gold text-xl font-serif">
+    <div className="tome-page min-h-screen flex flex-col">
+      <header
+        className="flex items-center justify-between px-5 py-3 border-b"
+        style={{ borderColor: "var(--tome-rule)" }}
+      >
+        <Link
+          href="/"
+          className="text-xl tracking-wide"
+          style={{
+            fontFamily: "var(--tome-display)",
+            color: "var(--tome-oxblood)",
+            fontWeight: 600,
+            letterSpacing: "0.04em",
+          }}
+        >
           DM Loft
         </Link>
         <div className="flex items-center gap-4">
           {rightSlot}
-          <Link href="/settings" className="text-lantern-muted text-xs hover:text-lantern-gold">
+          <Link
+            href="/settings"
+            className="text-xs italic uppercase tracking-[0.18em]"
+            style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+          >
             settings
           </Link>
         </div>

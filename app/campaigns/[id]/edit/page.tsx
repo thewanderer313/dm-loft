@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Shell } from "@/components/Shell";
+import { TomePage, Eyebrow, GildedRule, Illum } from "@/components/TomePage";
 import { getServerSupabase } from "@/lib/supabase/server";
 import { renameCampaign, deleteCampaign } from "./actions";
 import { DeleteCampaignButton } from "@/components/DeleteCampaignButton";
@@ -23,32 +25,90 @@ export default async function EditCampaignPage({
 
   const renameBound = renameCampaign.bind(null, id);
   const deleteBound = deleteCampaign.bind(null, id);
+  const initial = c.name.trim().charAt(0).toUpperCase() || "·";
 
   return (
     <Shell>
-      <div className="max-w-md mx-auto p-6">
-        <h1 className="text-lantern-gold text-2xl mb-4">Edit campaign</h1>
-        <form action={renameBound} className="flex flex-col gap-2">
-          <label className="text-lantern-dim text-sm">Name</label>
-          <input name="name" defaultValue={c.name} required
-                 className="px-2 py-1 bg-lantern-panel2 border border-lantern-border text-lantern-dim" />
-          <label className="text-lantern-dim text-sm mt-2">Description</label>
-          <textarea name="description" rows={3} defaultValue={c.description ?? ""}
-                    className="px-2 py-1 bg-lantern-panel2 border border-lantern-border text-lantern-dim" />
-          <button type="submit"
-                  className="py-2 mt-3 bg-lantern-gold text-lantern-bg">
-            Save
-          </button>
-        </form>
+      <TomePage chapter="DM Loft · Errata & Amendments" folio="·">
+        <div className="max-w-xl mx-auto pt-4">
+          <div className="flex items-start gap-5 mb-8">
+            <Illum>{initial}</Illum>
+            <div>
+              <Eyebrow>Amend a Campaign</Eyebrow>
+              <h1
+                className="text-4xl mt-1"
+                style={{
+                  fontFamily: "var(--tome-display)",
+                  color: "var(--tome-ink)",
+                  fontWeight: 600,
+                }}
+              >
+                {c.name}
+              </h1>
+            </div>
+          </div>
 
-        <div className="mt-6">
-          <DeleteCampaignButton campaignName={c.name} action={deleteBound} />
+          <GildedRule className="mb-8" />
+
+          <form action={renameBound} className="flex flex-col gap-5">
+            <label className="block">
+              <span
+                className="block text-[11px] italic uppercase tracking-[0.2em] mb-1"
+                style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+              >
+                Name
+              </span>
+              <input name="name" defaultValue={c.name} required className="tome-input" />
+            </label>
+
+            <label className="block">
+              <span
+                className="block text-[11px] italic uppercase tracking-[0.2em] mb-1"
+                style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+              >
+                Description
+              </span>
+              <textarea
+                name="description"
+                rows={4}
+                defaultValue={c.description ?? ""}
+                className="tome-input"
+                style={{ resize: "vertical" }}
+              />
+            </label>
+
+            <div className="flex items-center justify-between mt-3">
+              <Link
+                href="/campaigns"
+                className="text-xs italic uppercase tracking-[0.18em]"
+                style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+              >
+                ← back to library
+              </Link>
+              <button type="submit" className="tome-btn tome-btn-primary">
+                Save changes
+              </button>
+            </div>
+          </form>
+
+          <div
+            className="mt-12 pt-6 border-t"
+            style={{ borderColor: "var(--tome-rule-soft)" }}
+          >
+            <Eyebrow className="mb-3" >Excise this campaign</Eyebrow>
+            <DeleteCampaignButton campaignName={c.name} action={deleteBound} />
+          </div>
+
+          {sp.error && (
+            <p
+              className="text-sm italic mt-4"
+              style={{ color: "var(--tome-oxblood)" }}
+            >
+              {decodeURIComponent(sp.error)}
+            </p>
+          )}
         </div>
-
-        {sp.error && (
-          <p className="text-red-400 text-sm mt-3">{decodeURIComponent(sp.error)}</p>
-        )}
-      </div>
+      </TomePage>
     </Shell>
   );
 }

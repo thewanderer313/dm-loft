@@ -1,5 +1,5 @@
 import { signInWithEmail, signUpWithEmail, signInWithGoogle } from "./actions";
-import { Shell } from "@/components/Shell";
+import { TomePage, Eyebrow, GildedRule, Illum } from "@/components/TomePage";
 
 export default async function LoginPage({
   searchParams,
@@ -8,42 +8,96 @@ export default async function LoginPage({
 }) {
   const sp = await searchParams;
   return (
-    <Shell>
-      <div className="max-w-sm mx-auto mt-16 p-6 bg-lantern-panel border border-lantern-border">
-        <h1 className="text-lantern-gold text-2xl mb-4">Sign in</h1>
-
-        <form action={signInWithGoogle}>
-          <button
-            type="submit"
-            className="w-full py-2 mb-4 bg-lantern-panel2 border border-lantern-border text-lantern-gold hover:bg-lantern-border"
+    <TomePage chapter="DM Loft · Of Beginnings" folio="i">
+      <div className="max-w-md mx-auto pt-10">
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <Illum>S</Illum>
+          <Eyebrow>Welcome, traveller</Eyebrow>
+          <h1
+            className="text-4xl text-center"
+            style={{
+              fontFamily: "var(--tome-display)",
+              color: "var(--tome-ink)",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+            }}
           >
+            Sign in to the Loft
+          </h1>
+          <GildedRule />
+        </div>
+
+        <form action={signInWithGoogle} className="mb-6">
+          <button type="submit" className="tome-btn w-full">
             Continue with Google
           </button>
         </form>
 
-        <div className="text-lantern-muted text-xs uppercase tracking-widest text-center mb-3">
-          or email
+        <div className="flex items-center gap-3 my-6" aria-hidden>
+          <div className="flex-1 h-px" style={{ background: "var(--tome-rule)" }} />
+          <span
+            className="text-[11px] italic uppercase tracking-[0.22em]"
+            style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+          >
+            or by hand
+          </span>
+          <div className="flex-1 h-px" style={{ background: "var(--tome-rule)" }} />
         </div>
 
-        <form className="flex flex-col gap-2">
-          <input name="email" type="email" required placeholder="email"
-                 className="px-2 py-1 bg-lantern-panel2 border border-lantern-border text-lantern-dim" />
-          <input name="password" type="password" required placeholder="password"
-                 className="px-2 py-1 bg-lantern-panel2 border border-lantern-border text-lantern-dim" />
-          <button type="submit" formAction={signInWithEmail}
-                  className="py-2 mt-1 bg-lantern-gold text-lantern-bg hover:opacity-90">
+        <form className="flex flex-col gap-5">
+          <label className="block">
+            <span
+              className="block text-[11px] italic uppercase tracking-[0.2em] mb-1"
+              style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+            >
+              Email
+            </span>
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="you@realm.example"
+              className="tome-input"
+            />
+          </label>
+          <label className="block">
+            <span
+              className="block text-[11px] italic uppercase tracking-[0.2em] mb-1"
+              style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-faint)" }}
+            >
+              Password
+            </span>
+            <input
+              name="password"
+              type="password"
+              required
+              placeholder="••••••••"
+              className="tome-input"
+            />
+          </label>
+
+          <button type="submit" formAction={signInWithEmail} className="tome-btn tome-btn-primary mt-2">
             Sign in
           </button>
-          <button type="submit" formAction={signUpWithEmail}
-                  className="py-2 text-lantern-dim text-sm hover:text-lantern-gold">
-            Create account instead →
+          <button
+            type="submit"
+            formAction={signUpWithEmail}
+            className="text-sm italic"
+            style={{ fontFamily: "var(--tome-display)", color: "var(--tome-ink-soft)" }}
+          >
+            Create an account instead →
           </button>
         </form>
 
         {sp.error && (
-          <p className="mt-3 text-red-400 text-sm">{decodeURIComponent(sp.error)}</p>
+          <p
+            className="mt-5 text-sm italic"
+            style={{ color: "var(--tome-oxblood)", fontFamily: "var(--tome-body)" }}
+          >
+            {decodeURIComponent(sp.error)}
+          </p>
         )}
       </div>
-    </Shell>
+    </TomePage>
   );
 }

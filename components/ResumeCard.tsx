@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTool } from "@/lib/tools";
+import { Sigil } from "@/components/Sigil";
 
 export function ResumeCard({
   campaignId,
@@ -19,14 +20,44 @@ export function ResumeCard({
   return (
     <Link
       href={`/c/${campaignId}/t/${tool.id}`}
-      className="block bg-lantern-panel border-l-4 border-lantern-gold border-y border-r border-y-lantern-border border-r-lantern-border p-4 mb-4 hover:bg-lantern-panel2 transition-colors"
+      className="block tome-card p-5 mb-8 flex items-center gap-4 transition-colors"
+      style={{ borderLeft: "4px solid var(--tome-oxblood)" }}
     >
-      <div className="text-lantern-muted text-xs uppercase tracking-widest">Resume</div>
-      <div className="text-lantern-gold text-lg mt-1">↩ {tool.name}</div>
-      <div className="text-lantern-muted text-xs mt-1">
-        {campaignName}
-        {lastOpenedAt && ` · last opened ${new Date(lastOpenedAt).toLocaleString()}`}
+      <span style={{ color: "var(--tome-oxblood)" }} aria-hidden>
+        <Sigil kind={tool.sigil} size={42} strokeWidth={1.4} />
+      </span>
+      <div className="flex-1 min-w-0">
+        <div
+          className="text-[11px] italic uppercase tracking-[0.22em]"
+          style={{ fontFamily: "var(--tome-display)", color: "var(--tome-gold)" }}
+        >
+          Resume thy work
+        </div>
+        <div
+          className="text-2xl mt-0.5 truncate"
+          style={{
+            fontFamily: "var(--tome-display)",
+            color: "var(--tome-ink)",
+            fontWeight: 600,
+          }}
+        >
+          {tool.name}
+        </div>
+        <div
+          className="text-xs italic mt-0.5 truncate"
+          style={{ color: "var(--tome-ink-soft)" }}
+        >
+          {campaignName}
+          {lastOpenedAt && ` · last opened ${new Date(lastOpenedAt).toLocaleString()}`}
+        </div>
       </div>
+      <span
+        className="hidden sm:block text-2xl shrink-0"
+        style={{ color: "var(--tome-gold)", fontFamily: "var(--tome-display)" }}
+        aria-hidden
+      >
+        ↩
+      </span>
     </Link>
   );
 }

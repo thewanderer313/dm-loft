@@ -1,19 +1,170 @@
 @import "tailwindcss";
 
-@theme {
-  --color-lantern-bg:     #1a1a2a;
-  --color-lantern-panel:  #20202c;
-  --color-lantern-panel2: #14141d;
-  --color-lantern-border: #3a3520;
-  --color-lantern-gold:   #f5d68a;
-  --color-lantern-dim:    #b8a880;
-  --color-lantern-muted:  #786850;
-  --color-lantern-olive:  #3a3520;
+/* Google Fonts loaded via <link> in app/layout.tsx for correct ordering. */
 
-  --font-serif: Georgia, serif;
+/* ───────── DM Loft · Tome tokens ─────────
+   Light = "Vellum", dark = "Ink" via [data-theme="ink"] on <html>. */
 
-  --background-image-lantern-grad: linear-gradient(135deg, #1a1a2a, #3a3520);
+:root {
+  --tome-paper:        #f4ecd8;
+  --tome-paper-edge:   #ebdfc0;
+  --tome-paper-dark:   #d9c89a;
+  --tome-ink:          #1f1a14;
+  --tome-ink-soft:     #4a3f2f;
+  --tome-ink-faint:    #8a7a5e;
+  --tome-oxblood:      #6b1c1c;
+  --tome-oxblood-deep: #4a1414;
+  --tome-gold:         #a47720;
+  --tome-gold-light:   #c69a3a;
+  --tome-rule:         #c9b88a;
+  --tome-rule-soft:    #e3d6b3;
+
+  --tome-display: "Cormorant Garamond", "EB Garamond", "Spectral", Georgia, serif;
+  --tome-body:    "EB Garamond", Georgia, serif;
+  --tome-mono:    "JetBrains Mono", ui-monospace, monospace;
 }
 
-html, body { background: #1a1a2a; color: #d8d8d8; }
-body { font-family: Georgia, serif; }
+[data-theme="ink"] {
+  --tome-paper:        #1a1410;
+  --tome-paper-edge:   #221a14;
+  --tome-paper-dark:   #2a2018;
+  --tome-ink:          #f0e6cc;
+  --tome-ink-soft:     #c9b88a;
+  --tome-ink-faint:    #8a7a5e;
+  --tome-oxblood:      #c44a4a;
+  --tome-oxblood-deep: #8a2828;
+  --tome-gold:         #d4a850;
+  --tome-gold-light:   #e8c870;
+  --tome-rule:         #5a4a30;
+  --tome-rule-soft:    #3a2e1e;
+}
+
+/* Expose tokens to Tailwind 4 utility generator. `inline` keeps the var()
+   reference so theme switching at runtime continues to work. */
+@theme inline {
+  --color-tome-paper:        var(--tome-paper);
+  --color-tome-paper-edge:   var(--tome-paper-edge);
+  --color-tome-paper-dark:   var(--tome-paper-dark);
+  --color-tome-ink:          var(--tome-ink);
+  --color-tome-ink-soft:     var(--tome-ink-soft);
+  --color-tome-ink-faint:    var(--tome-ink-faint);
+  --color-tome-oxblood:      var(--tome-oxblood);
+  --color-tome-oxblood-deep: var(--tome-oxblood-deep);
+  --color-tome-gold:         var(--tome-gold);
+  --color-tome-gold-light:   var(--tome-gold-light);
+  --color-tome-rule:         var(--tome-rule);
+  --color-tome-rule-soft:    var(--tome-rule-soft);
+
+  --font-display: var(--tome-display);
+  --font-body:    var(--tome-body);
+  --font-mono:    var(--tome-mono);
+}
+
+html, body {
+  background: var(--tome-paper);
+  color: var(--tome-ink);
+}
+body { font-family: var(--tome-body); }
+
+/* ───────── Page chrome helpers ───────── */
+.tome-page {
+  background: var(--tome-paper);
+  color: var(--tome-ink);
+  font-family: var(--tome-body);
+}
+.tome-display { font-family: var(--tome-display); }
+.tome-mono    { font-family: var(--tome-mono); }
+
+.tome-dropcap::first-letter {
+  float: left;
+  font-family: var(--tome-display);
+  font-weight: 700;
+  font-size: 4.2em;
+  line-height: 0.85;
+  padding: 0.05em 0.12em 0 0;
+  color: var(--tome-oxblood);
+}
+
+.tome-rule-gilded {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--tome-gold);
+}
+.tome-rule-gilded::before,
+.tome-rule-gilded::after {
+  content: "";
+  flex: 1;
+  height: 3px;
+  border-top: 1px solid var(--tome-gold);
+  border-bottom: 1px solid var(--tome-gold);
+}
+
+.tome-btn {
+  font-family: var(--tome-display);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border: 1px solid var(--tome-ink);
+  background: transparent;
+  color: var(--tome-ink);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+.tome-btn:hover { background: var(--tome-ink); color: var(--tome-paper); }
+
+.tome-btn-primary {
+  background: var(--tome-oxblood);
+  color: var(--tome-paper);
+  border: 1px solid var(--tome-oxblood);
+}
+.tome-btn-primary:hover {
+  background: var(--tome-oxblood-deep);
+  color: var(--tome-paper);
+  border-color: var(--tome-oxblood-deep);
+}
+
+.tome-illum {
+  width: 72px; height: 72px;
+  background: var(--tome-oxblood);
+  color: var(--tome-paper);
+  display: grid; place-items: center;
+  font-family: var(--tome-display);
+  font-weight: 700;
+  font-size: 56px;
+  border: 1px solid var(--tome-gold);
+  box-shadow: 0 0 0 3px var(--tome-paper), 0 0 0 4px var(--tome-gold);
+}
+
+.tome-eyebrow {
+  font-family: var(--tome-display);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tome-gold);
+}
+
+.tome-input {
+  font-family: var(--tome-body);
+  font-size: 15px;
+  background: transparent;
+  color: var(--tome-ink);
+  border: none;
+  border-bottom: 1px solid var(--tome-rule);
+  padding: 6px 2px;
+  outline: none;
+  width: 100%;
+}
+.tome-input::placeholder { color: var(--tome-ink-faint); font-style: italic; }
+.tome-input:focus { border-bottom-color: var(--tome-gold); }
+
+.tome-card {
+  background: var(--tome-paper-edge);
+  border: 1px solid var(--tome-rule);
+}
+
+.tome-scroll::-webkit-scrollbar { display: none; }
+.tome-scroll { scrollbar-width: none; }
