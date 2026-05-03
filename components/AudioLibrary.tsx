@@ -52,9 +52,11 @@ async function getDurationSec(file: File): Promise<number | null> {
 export function AudioLibrary({
   campaignId,
   initialTracks,
+  currentUserId,
 }: {
   campaignId: string;
   initialTracks: TrackWithUrl[];
+  currentUserId: string | null;
 }) {
   const router = useRouter();
   const [tracks, setTracks] = React.useState(initialTracks);
@@ -170,7 +172,7 @@ export function AudioLibrary({
       const dur = await getDurationSec(file);
       const id = crypto.randomUUID();
       const ext = (file.name.split(".").pop() || "mp3").toLowerCase();
-      const storagePath = `${campaignId}/${id}.${ext}`;
+      const storagePath = `${id}.${ext}`;
 
       const { error: upErr } = await supabase.storage
         .from("tracks")
@@ -186,7 +188,6 @@ export function AudioLibrary({
 
       const { error: insertErr } = await supabase.from("tracks").insert({
         id,
-        campaign_id: campaignId,
         dm_id: dmId,
         title: titleFromFile,
         tags: [],
@@ -197,7 +198,7 @@ export function AudioLibrary({
       });
       if (insertErr) {
         await supabase.storage.from("tracks").remove([storagePath]);
-        throw new Error(`Database insert failed (campaign ${campaignId}, dm ${dmId}): ${insertErr.message}`);
+        throw new Error(`Database insert failed (dm ${dmId}): ${insertErr.message}`);
       }
 
       const { data: signed } = await supabase.storage
@@ -207,7 +208,6 @@ export function AudioLibrary({
       setTracks(prev => [
         {
           id,
-          campaign_id: campaignId,
           dm_id: dmId,
           title: titleFromFile,
           tags: [],
@@ -399,6 +399,7 @@ export function AudioLibrary({
                 filtered.map(t => {
                   const isCurrent = currentId === t.id;
                   const isEditing = editingId === t.id;
+                  const isMine = currentUserId !== null && t.dm_id === currentUserId;
                   return (
                     <li
                       key={t.id}
@@ -524,6 +525,21 @@ export function AudioLibrary({
                               >
                                 {formatDuration(t.duration_sec)}
                               </span>
+                              {isMine && (
+                                <span
+                                  className="italic uppercase"
+                                  style={{
+                                    fontFamily: "var(--tome-display)",
+                                    fontSize: 10,
+                                    letterSpacing: "0.08em",
+                                    color: "var(--tome-paper)",
+                                    background: "var(--tome-oxblood)",
+                                    padding: "1px 6px",
+                                  }}
+                                >
+                                  thy contribution
+                                </span>
+                              )}
                               {t.tags.map(tg => (
                                 <span
                                   key={tg}
@@ -544,7 +560,7 @@ export function AudioLibrary({
                           </>
                         )}
                       </div>
-                      {!isEditing && (
+                      {!isEditing && isMine && (
                         <div className="flex gap-2">
                           <button
                             type="button"
@@ -580,6 +596,7 @@ export function AudioLibrary({
                           </button>
                         </div>
                       )}
+                      {!isEditing && !isMine && <div />}
                     </li>
                   );
                 })

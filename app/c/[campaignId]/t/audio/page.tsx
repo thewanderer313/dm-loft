@@ -4,7 +4,7 @@ import { Sigil } from "@/components/Sigil";
 import { romanize } from "@/components/TomePage";
 import { getServerSupabase } from "@/lib/supabase/server";
 import { getTool, getToolIndex } from "@/lib/tools";
-import { listTracksForCampaign } from "@/lib/data/tracks";
+import { listAllTracks } from "@/lib/data/tracks";
 import { recordLastOpened } from "../[toolId]/actions";
 import { AudioLibrary } from "@/components/AudioLibrary";
 
@@ -25,7 +25,11 @@ export default async function AudioToolPage({
     .maybeSingle();
   if (!campaign) notFound();
 
-  const tracks = await listTracksForCampaign(campaignId);
+  const [tracks, { data: userResp }] = await Promise.all([
+    listAllTracks(),
+    supabase.auth.getUser(),
+  ]);
+  const currentUserId = userResp.user?.id ?? null;
   recordLastOpened(campaignId, "audio").catch(() => {});
 
   const cap = `Cap. ${romanize(getToolIndex("audio") + 1).toUpperCase()}`;
@@ -87,7 +91,11 @@ export default async function AudioToolPage({
           &middot; {tool.blurb}
         </span>
       </div>
-      <AudioLibrary campaignId={campaignId} initialTracks={tracks} />
+      <AudioLibrary
+        campaignId={campaignId}
+        initialTracks={tracks}
+        currentUserId={currentUserId}
+      />
     </div>
   );
 }

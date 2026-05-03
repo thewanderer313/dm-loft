@@ -2,7 +2,6 @@ import { getServerSupabase } from "@/lib/supabase/server";
 
 export type Track = {
   id: string;
-  campaign_id: string;
   dm_id: string;
   title: string;
   tags: string[];
@@ -17,16 +16,13 @@ export type TrackWithUrl = Track & { url: string };
 
 const SIGNED_URL_TTL_SEC = 60 * 60 * 8;
 
-export async function listTracksForCampaign(
-  campaignId: string
-): Promise<TrackWithUrl[]> {
+export async function listAllTracks(): Promise<TrackWithUrl[]> {
   const supabase = await getServerSupabase();
   const { data, error } = await supabase
     .from("tracks")
     .select(
-      "id,campaign_id,dm_id,title,tags,storage_path,duration_sec,mime_type,size_bytes,created_at"
+      "id,dm_id,title,tags,storage_path,duration_sec,mime_type,size_bytes,created_at"
     )
-    .eq("campaign_id", campaignId)
     .order("created_at", { ascending: false });
 
   if (error) throw error;

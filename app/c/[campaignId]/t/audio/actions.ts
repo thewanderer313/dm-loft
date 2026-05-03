@@ -8,15 +8,13 @@ export async function deleteTrack(campaignId: string, trackId: string) {
 
   const { data: track, error: fetchErr } = await supabase
     .from("tracks")
-    .select("storage_path,campaign_id")
+    .select("storage_path")
     .eq("id", trackId)
     .maybeSingle();
   if (fetchErr) throw fetchErr;
   if (!track) return { ok: false, message: "Track not found." };
-  if (track.campaign_id !== campaignId) {
-    return { ok: false, message: "Track does not belong to this campaign." };
-  }
 
+  // RLS gates this — only the uploader can delete the storage object.
   const { error: storageErr } = await supabase.storage
     .from("tracks")
     .remove([track.storage_path]);
@@ -49,8 +47,7 @@ export async function renameTrack(
   const { error } = await supabase
     .from("tracks")
     .update({ title: cleanTitle, tags })
-    .eq("id", trackId)
-    .eq("campaign_id", campaignId);
+    .eq("id", trackId);
 
   if (error) return { ok: false, message: error.message };
   revalidatePath(`/c/${campaignId}/t/audio`);

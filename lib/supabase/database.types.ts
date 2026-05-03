@@ -67,7 +67,6 @@ export type Database = {
       }
       tracks: {
         Row: {
-          campaign_id: string
           created_at: string
           dm_id: string
           duration_sec: number | null
@@ -79,7 +78,6 @@ export type Database = {
           title: string
         }
         Insert: {
-          campaign_id: string
           created_at?: string
           dm_id: string
           duration_sec?: number | null
@@ -91,7 +89,6 @@ export type Database = {
           title: string
         }
         Update: {
-          campaign_id?: string
           created_at?: string
           dm_id?: string
           duration_sec?: number | null
@@ -102,15 +99,7 @@ export type Database = {
           tags?: string[]
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "tracks_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {

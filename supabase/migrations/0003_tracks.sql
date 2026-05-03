@@ -32,17 +32,17 @@ insert into storage.buckets (id, name, public)
 values ('tracks', 'tracks', false)
 on conflict (id) do nothing;
 
--- Read: any object in the `tracks` bucket whose first path segment is a
--- campaign owned by the requester.
+-- Read: any object in the `tracks` bucket whose first path segment is the
+-- id of a campaign owned by the requester. We compute foldername outside
+-- the subquery to avoid the bare `name` resolving to campaigns.name.
+
 drop policy if exists "DMs read their campaign tracks" on storage.objects;
 create policy "DMs read their campaign tracks"
   on storage.objects for select
   using (
     bucket_id = 'tracks'
-    and exists (
-      select 1 from public.campaigns c
-      where c.dm_id = auth.uid()
-        and c.id::text = (storage.foldername(name))[1]
+    and (storage.foldername(name))[1] in (
+      select id::text from public.campaigns where dm_id = auth.uid()
     )
   );
 
@@ -51,10 +51,8 @@ create policy "DMs upload to their campaign"
   on storage.objects for insert
   with check (
     bucket_id = 'tracks'
-    and exists (
-      select 1 from public.campaigns c
-      where c.dm_id = auth.uid()
-        and c.id::text = (storage.foldername(name))[1]
+    and (storage.foldername(name))[1] in (
+      select id::text from public.campaigns where dm_id = auth.uid()
     )
   );
 
@@ -63,10 +61,8 @@ create policy "DMs update their campaign tracks"
   on storage.objects for update
   using (
     bucket_id = 'tracks'
-    and exists (
-      select 1 from public.campaigns c
-      where c.dm_id = auth.uid()
-        and c.id::text = (storage.foldername(name))[1]
+    and (storage.foldername(name))[1] in (
+      select id::text from public.campaigns where dm_id = auth.uid()
     )
   );
 
@@ -75,9 +71,7 @@ create policy "DMs delete their campaign tracks"
   on storage.objects for delete
   using (
     bucket_id = 'tracks'
-    and exists (
-      select 1 from public.campaigns c
-      where c.dm_id = auth.uid()
-        and c.id::text = (storage.foldername(name))[1]
+    and (storage.foldername(name))[1] in (
+      select id::text from public.campaigns where dm_id = auth.uid()
     )
   );
