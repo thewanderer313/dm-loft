@@ -178,7 +178,9 @@ export function AudioLibrary({
           contentType: file.type || "audio/mpeg",
           upsert: false,
         });
-      if (upErr) throw upErr;
+      if (upErr) {
+        throw new Error(`Storage upload failed (path "${storagePath}"): ${upErr.message}`);
+      }
 
       const titleFromFile = file.name.replace(/\.[^.]+$/, "");
 
@@ -195,7 +197,7 @@ export function AudioLibrary({
       });
       if (insertErr) {
         await supabase.storage.from("tracks").remove([storagePath]);
-        throw insertErr;
+        throw new Error(`Database insert failed (campaign ${campaignId}, dm ${dmId}): ${insertErr.message}`);
       }
 
       const { data: signed } = await supabase.storage
