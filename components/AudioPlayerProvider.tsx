@@ -41,6 +41,8 @@ function formatDuration(sec: number | null | undefined): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+const COLLAPSED_KEY = "dm-loft:audio-bar-collapsed";
+
 export function AudioPlayerProvider({ children }: { children: React.ReactNode }) {
   const [current, setCurrent] = React.useState<PlayableTrack | null>(null);
   const [queue, setQueue] = React.useState<PlayableTrack[]>([]);
@@ -48,7 +50,33 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
   const [progress, setProgress] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
   const [volume, setVolumeState] = React.useState(0.8);
+  const [collapsed, setCollapsed] = React.useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  // Hydrate the collapsed preference from localStorage on mount. We do this
+  // after mount (rather than via lazy useState) so server-rendered HTML
+  // matches the client's first paint.
+  React.useEffect(() => {
+    try {
+      const v = window.localStorage.getItem(COLLAPSED_KEY);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (v === "1") setCollapsed(true);
+    } catch {
+      /* localStorage unavailable */
+    }
+  }, []);
+
+  const toggleCollapsed = React.useCallback(() => {
+    setCollapsed(prev => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(COLLAPSED_KEY, next ? "1" : "0");
+      } catch {
+        /* localStorage unavailable */
+      }
+      return next;
+    });
+  }, []);
 
   const play = React.useCallback((track: PlayableTrack, q?: PlayableTrack[]) => {
     if (q && q.length > 0) {
@@ -110,12 +138,15 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
   }, [current]);
 
   // Reserve room at the bottom of every scroll surface for the player bar.
+  // The collapsed chip is a small floating element at bottom-right that
+  // doesn't need a bottom-of-page reservation, so we only set the class
+  // when the full bar is visible.
   React.useEffect(() => {
     if (typeof document === "undefined") return;
-    if (current) document.body.classList.add("with-audio-bar");
+    if (current && !collapsed) document.body.classList.add("with-audio-bar");
     else document.body.classList.remove("with-audio-bar");
     return () => document.body.classList.remove("with-audio-bar");
-  }, [current]);
+  }, [current, collapsed]);
 
   // Global keyboard shortcuts. Skip when typing into a form field.
   React.useEffect(() => {
@@ -178,7 +209,7 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
         }}
         preload="none"
       />
-      {current && (
+      {current && !collapsed && (
         <PersistentPlayerBar
           current={current}
           isPlaying={isPlaying}
@@ -191,7 +222,16 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
           onSeek={seek}
           onVolume={setVolume}
           onClose={stop}
+          onCollapse={toggleCollapsed}
           formatDuration={formatDuration}
+        />
+      )}
+      {current && collapsed && (
+        <CollapsedPlayerChip
+          current={current}
+          isPlaying={isPlaying}
+          onToggle={toggle}
+          onExpand={toggleCollapsed}
         />
       )}
     </AudioPlayerCtx.Provider>
@@ -210,6 +250,7 @@ function PersistentPlayerBar({
   onSeek,
   onVolume,
   onClose,
+  onCollapse,
   formatDuration,
 }: {
   current: PlayableTrack;
@@ -223,6 +264,7 @@ function PersistentPlayerBar({
   onSeek: (sec: number) => void;
   onVolume: (v: number) => void;
   onClose: () => void;
+  onCollapse: () => void;
   formatDuration: (sec: number | null | undefined) => string;
 }) {
   return (
@@ -374,6 +416,25 @@ function PersistentPlayerBar({
 
         <button
           type="button"
+          onClick={onCollapse}
+          className="cursor-pointer"
+          style={{
+            fontFamily: "var(--tome-display)",
+            fontSize: 14,
+            color: "var(--tome-ink-faint)",
+            background: "transparent",
+            border: "1px solid var(--tome-rule)",
+            padding: "6px 10px",
+            lineHeight: 1,
+          }}
+          aria-label="Minimise player"
+          title="Minimise — keep playing, free up the bottom of the page"
+        >
+          —
+        </button>
+
+        <button
+          type="button"
           onClick={onClose}
           className="cursor-pointer italic uppercase"
           style={{
@@ -391,6 +452,89 @@ function PersistentPlayerBar({
           ✕
         </button>
       </div>
+    </div>
+  );
+}
+
+function CollapsedPlayerChip({
+  current,
+  isPlaying,
+  onToggle,
+  onExpand,
+}: {
+  current: PlayableTrack;
+  isPlaying: boolean;
+  onToggle: () => void;
+  onExpand: () => void;
+}) {
+  return (
+    <div
+      className="fixed z-40 flex items-center gap-2"
+      style={{
+        right: 16,
+        bottom: 16,
+        background: "rgba(26,20,16,0.96)",
+        border: "1px solid var(--tome-gold)",
+        backdropFilter: "blur(8px)",
+        padding: "6px 8px",
+        maxWidth: 280,
+      }}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        className="cursor-pointer shrink-0"
+        style={{
+          width: 32,
+          height: 32,
+          background: isPlaying ? "var(--tome-oxblood)" : "transparent",
+          color: isPlaying ? "var(--tome-paper)" : "var(--tome-ink)",
+          border: "1px solid var(--tome-oxblood)",
+          fontFamily: "var(--tome-display)",
+        }}
+        aria-label={isPlaying ? "Pause" : "Play"}
+        title={isPlaying ? "Pause" : "Play"}
+      >
+        {isPlaying ? "❚❚" : "▶"}
+      </button>
+      <button
+        type="button"
+        onClick={onExpand}
+        className="cursor-pointer flex flex-col items-start min-w-0 truncate text-left"
+        style={{
+          background: "transparent",
+          border: "none",
+          padding: 0,
+          maxWidth: 200,
+        }}
+        title="Expand player"
+        aria-label="Expand player"
+      >
+        <span
+          className="italic uppercase"
+          style={{
+            fontFamily: "var(--tome-display)",
+            fontSize: 9,
+            letterSpacing: "0.2em",
+            color: "var(--tome-gold)",
+            lineHeight: 1.1,
+          }}
+        >
+          now playing
+        </span>
+        <span
+          className="truncate w-full"
+          style={{
+            fontFamily: "var(--tome-display)",
+            fontWeight: 600,
+            fontSize: 14,
+            color: "var(--tome-ink)",
+            lineHeight: 1.15,
+          }}
+        >
+          {current.title}
+        </span>
+      </button>
     </div>
   );
 }
