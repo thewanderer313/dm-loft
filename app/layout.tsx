@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AudioPlayerProvider } from "@/components/AudioPlayerProvider";
 
 export const metadata: Metadata = {
   title: "DM Loft",
@@ -25,7 +26,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={FONTS_HREF} />
       </head>
-      <body className="antialiased tome-page">{children}</body>
+      <body className="antialiased tome-page">
+        <AudioPlayerProvider>{children}</AudioPlayerProvider>
+      </body>
     </html>
   );
 }

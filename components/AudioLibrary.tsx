@@ -6,6 +6,11 @@ import { Sigil } from "@/components/Sigil";
 import { getBrowserSupabase } from "@/lib/supabase/browser";
 import type { TrackWithUrl } from "@/lib/data/tracks";
 import { deleteTrack, renameTrack } from "@/app/c/[campaignId]/t/audio/actions";
+import { useAudioPlayer, type PlayableTrack } from "@/components/AudioPlayerProvider";
+
+function toPlayable(t: TrackWithUrl): PlayableTrack {
+  return { id: t.id, title: t.title, url: t.url, duration_sec: t.duration_sec };
+}
 
 const MAX_FILE_BYTES = 50 * 1024 * 1024; // 50 MB
 const SIGNED_URL_TTL = 60 * 60 * 8;
@@ -59,18 +64,16 @@ export function AudioLibrary({
   currentUserId: string | null;
 }) {
   const router = useRouter();
+  const player = useAudioPlayer();
   const [tracks, setTracks] = React.useState(initialTracks);
   const [query, setQuery] = React.useState("");
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
   const [upload, setUpload] = React.useState<UploadState>({ kind: "idle" });
-  const [currentId, setCurrentId] = React.useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [progress, setProgress] = React.useState(0);
-  const [duration, setDuration] = React.useState(0);
-  const [volume, setVolume] = React.useState(0.8);
   const [editingId, setEditingId] = React.useState<string | null>(null);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const currentId = player.current?.id ?? null;
+  const isPlaying = player.isPlaying;
 
   const allTags = React.useMemo(() => {
     const s = new Set<string>();
@@ -89,55 +92,20 @@ export function AudioLibrary({
     });
   }, [tracks, query, selectedTags]);
 
-  const current = tracks.find(t => t.id === currentId) ?? null;
-
-  const playTrack = React.useCallback((t: TrackWithUrl) => {
-    if (!audioRef.current) return;
-    if (currentId === t.id) {
-      if (audioRef.current.paused) audioRef.current.play();
-      else audioRef.current.pause();
-      return;
-    }
-    setCurrentId(t.id);
-  }, [currentId]);
-
-  const playNext = React.useCallback((dir: 1 | -1) => {
-    if (filtered.length === 0) return;
-    const idx = filtered.findIndex(t => t.id === currentId);
-    const next = filtered[(idx + dir + filtered.length) % filtered.length];
-    if (next) setCurrentId(next.id);
-  }, [filtered, currentId]);
-
-  // Mount the new src and play whenever currentId changes.
-  React.useEffect(() => {
-    const el = audioRef.current;
-    if (!el || !current) return;
-    el.src = current.url;
-    el.volume = volume;
-    void el.play().catch(() => {});
-  }, [current, volume]);
-
-  // Keyboard shortcuts.
-  React.useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.code === "Space") {
-        e.preventDefault();
-        if (audioRef.current) {
-          if (audioRef.current.paused) audioRef.current.play();
-          else audioRef.current.pause();
-        }
-      } else if (e.code === "ArrowRight" && e.shiftKey) {
-        e.preventDefault();
-        playNext(1);
-      } else if (e.code === "ArrowLeft" && e.shiftKey) {
-        e.preventDefault();
-        playNext(-1);
+  const playTrack = React.useCallback(
+    (t: TrackWithUrl) => {
+      // Tapping the row that's already playing toggles play/pause; otherwise
+      // hand the (track, queue) to the persistent player so playback continues
+      // when the user navigates away.
+      if (currentId === t.id) {
+        player.toggle();
+        return;
       }
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [playNext]);
+      const queue = filtered.map(toPlayable);
+      player.play(toPlayable(t), queue);
+    },
+    [currentId, filtered, player]
+  );
 
   async function handleFiles(files: FileList | File[]) {
     const list = Array.from(files);
@@ -235,8 +203,7 @@ export function AudioLibrary({
   async function handleDelete(t: TrackWithUrl) {
     if (!confirm(`Delete "${t.title}"? This cannot be undone.`)) return;
     if (currentId === t.id) {
-      audioRef.current?.pause();
-      setCurrentId(null);
+      player.stop();
     }
     const res = await deleteTrack(campaignId, t.id);
     if (!res.ok) {
@@ -606,190 +573,6 @@ export function AudioLibrary({
         )}
       </div>
 
-      <audio
-        ref={audioRef}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onEnded={() => setIsPlaying(false)}
-        onTimeUpdate={() => {
-          if (audioRef.current) setProgress(audioRef.current.currentTime);
-        }}
-        onLoadedMetadata={() => {
-          if (audioRef.current) setDuration(audioRef.current.duration || 0);
-        }}
-        preload="none"
-      />
-
-      {current && (
-        <div
-          className="fixed left-0 right-0 bottom-0 z-30"
-          style={{
-            background: "rgba(26,20,16,0.96)",
-            borderTop: "1px solid var(--tome-gold)",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          <div className="max-w-6xl mx-auto flex items-center gap-4 px-5 py-3 flex-wrap">
-            <span style={{ color: "var(--tome-oxblood)" }} aria-hidden>
-              <Sigil kind="note" size={28} strokeWidth={1.4} />
-            </span>
-            <div className="flex flex-col min-w-0" style={{ flex: "1 1 200px" }}>
-              <span
-                className="italic uppercase"
-                style={{
-                  fontFamily: "var(--tome-display)",
-                  fontSize: 12,
-                  color: "var(--tome-gold)",
-                  letterSpacing: "0.18em",
-                }}
-              >
-                now playing
-              </span>
-              <span
-                className="truncate"
-                style={{
-                  fontFamily: "var(--tome-display)",
-                  fontWeight: 600,
-                  fontSize: 18,
-                  color: "var(--tome-ink)",
-                }}
-              >
-                {current.title}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => playNext(-1)}
-                className="cursor-pointer"
-                style={{
-                  fontFamily: "var(--tome-display)",
-                  fontSize: 16,
-                  width: 32,
-                  height: 32,
-                  background: "transparent",
-                  color: "var(--tome-ink)",
-                  border: "1px solid var(--tome-rule)",
-                }}
-                aria-label="Previous"
-              >
-                ⏮
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (!audioRef.current) return;
-                  if (audioRef.current.paused) audioRef.current.play();
-                  else audioRef.current.pause();
-                }}
-                className="cursor-pointer"
-                style={{
-                  width: 40,
-                  height: 40,
-                  background: isPlaying ? "var(--tome-oxblood)" : "transparent",
-                  color: isPlaying ? "var(--tome-paper)" : "var(--tome-ink)",
-                  border: "1px solid var(--tome-oxblood)",
-                  fontFamily: "var(--tome-display)",
-                }}
-                aria-label={isPlaying ? "Pause" : "Play"}
-              >
-                {isPlaying ? "❚❚" : "▶"}
-              </button>
-              <button
-                type="button"
-                onClick={() => playNext(1)}
-                className="cursor-pointer"
-                style={{
-                  fontFamily: "var(--tome-display)",
-                  fontSize: 16,
-                  width: 32,
-                  height: 32,
-                  background: "transparent",
-                  color: "var(--tome-ink)",
-                  border: "1px solid var(--tome-rule)",
-                }}
-                aria-label="Next"
-              >
-                ⏭
-              </button>
-            </div>
-
-            <div
-              className="flex items-center gap-2"
-              style={{ flex: "1 1 240px", minWidth: 200 }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--tome-mono)",
-                  fontSize: 13,
-                  color: "var(--tome-ink-faint)",
-                  width: 42,
-                  textAlign: "right",
-                }}
-              >
-                {formatDuration(progress)}
-              </span>
-              <input
-                type="range"
-                min={0}
-                max={duration || 0}
-                step={0.5}
-                value={progress}
-                onChange={e => {
-                  const v = Number(e.target.value);
-                  if (audioRef.current) audioRef.current.currentTime = v;
-                  setProgress(v);
-                }}
-                style={{
-                  flex: 1,
-                  accentColor: "var(--tome-oxblood)",
-                }}
-              />
-              <span
-                style={{
-                  fontFamily: "var(--tome-mono)",
-                  fontSize: 13,
-                  color: "var(--tome-ink-faint)",
-                  width: 42,
-                }}
-              >
-                {formatDuration(duration)}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span
-                className="italic uppercase"
-                style={{
-                  fontFamily: "var(--tome-display)",
-                  fontSize: 12,
-                  color: "var(--tome-ink-faint)",
-                  letterSpacing: "0.18em",
-                }}
-              >
-                vol
-              </span>
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={volume}
-                onChange={e => {
-                  const v = Number(e.target.value);
-                  setVolume(v);
-                  if (audioRef.current) audioRef.current.volume = v;
-                }}
-                style={{
-                  width: 80,
-                  accentColor: "var(--tome-gold)",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

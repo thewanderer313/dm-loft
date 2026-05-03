@@ -173,3 +173,7 @@ body {
 
 .tome-scroll::-webkit-scrollbar { display: none; }
 .tome-scroll { scrollbar-width: none; }
+
+/* When the persistent audio bar is mounted, reserve room at the bottom so
+   iframe tools and long pages don't end up under the bar. */
+body.with-audio-bar { padding-bottom: 84px; }
