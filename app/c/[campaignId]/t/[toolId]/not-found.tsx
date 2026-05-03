@@ -5,7 +5,7 @@ import { TomePage, GildedRule } from "@/components/TomePage";
 export default function ToolNotFound() {
   return (
     <Shell>
-      <TomePage chapter="DM Loft · Lost Pages" folio="·">
+      <TomePage chapter="Lost Pages" folio="·">
         <div className="max-w-md mx-auto pt-10 text-center">
           <div
             className="italic uppercase text-[13px]"

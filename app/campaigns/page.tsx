@@ -30,7 +30,7 @@ export default async function CampaignsPage() {
 
   return (
     <Shell>
-      <TomePage chapter="DM Loft · Index of Campaigns" folio="ii">
+      <TomePage chapter="Index of Campaigns" folio="ii">
         <div className="flex flex-col">
           <div className="flex items-end justify-between gap-6 flex-wrap">
             <div className="min-w-0">
@@ -100,7 +100,7 @@ export default async function CampaignsPage() {
               gap: 14,
               fontFamily: "var(--tome-display)",
               fontStyle: "italic",
-              fontSize: 11,
+              fontSize: 13,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
               color: "var(--tome-ink-faint)",
@@ -178,7 +178,7 @@ export default async function CampaignsPage() {
                           className="italic uppercase"
                           style={{
                             fontFamily: "var(--tome-display)",
-                            fontSize: 11,
+                            fontSize: 13,
                             color: "var(--tome-gold)",
                             letterSpacing: "0.16em",
                           }}
@@ -273,7 +273,7 @@ export default async function CampaignsPage() {
             <div
               style={{
                 fontFamily: "var(--tome-mono)",
-                fontSize: 10,
+                fontSize: 12,
                 color: "var(--tome-ink-faint)",
                 letterSpacing: "0.14em",
               }}

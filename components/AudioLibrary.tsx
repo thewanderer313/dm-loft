@@ -469,7 +469,7 @@ export function AudioLibrary({
                                 style={{
                                   fontFamily: "var(--tome-display)",
                                   fontStyle: "italic",
-                                  fontSize: 11,
+                                  fontSize: 13,
                                   letterSpacing: "0.1em",
                                   textTransform: "uppercase",
                                   padding: "4px 10px",
@@ -487,7 +487,7 @@ export function AudioLibrary({
                                 style={{
                                   fontFamily: "var(--tome-display)",
                                   fontStyle: "italic",
-                                  fontSize: 11,
+                                  fontSize: 13,
                                   letterSpacing: "0.1em",
                                   textTransform: "uppercase",
                                   padding: "4px 10px",
@@ -530,7 +530,7 @@ export function AudioLibrary({
                                   className="italic uppercase"
                                   style={{
                                     fontFamily: "var(--tome-display)",
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     letterSpacing: "0.08em",
                                     color: "var(--tome-paper)",
                                     background: "var(--tome-oxblood)",
@@ -546,7 +546,7 @@ export function AudioLibrary({
                                   className="italic uppercase"
                                   style={{
                                     fontFamily: "var(--tome-display)",
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     letterSpacing: "0.08em",
                                     color: "var(--tome-gold)",
                                     border: "1px solid var(--tome-rule)",
@@ -568,7 +568,7 @@ export function AudioLibrary({
                             className="cursor-pointer italic uppercase"
                             style={{
                               fontFamily: "var(--tome-display)",
-                              fontSize: 11,
+                              fontSize: 13,
                               letterSpacing: "0.1em",
                               padding: "4px 10px",
                               background: "transparent",
@@ -584,7 +584,7 @@ export function AudioLibrary({
                             className="cursor-pointer italic uppercase"
                             style={{
                               fontFamily: "var(--tome-display)",
-                              fontSize: 11,
+                              fontSize: 13,
                               letterSpacing: "0.1em",
                               padding: "4px 10px",
                               background: "transparent",
@@ -638,7 +638,7 @@ export function AudioLibrary({
                 className="italic uppercase"
                 style={{
                   fontFamily: "var(--tome-display)",
-                  fontSize: 10,
+                  fontSize: 12,
                   color: "var(--tome-gold)",
                   letterSpacing: "0.18em",
                 }}
@@ -722,7 +722,7 @@ export function AudioLibrary({
               <span
                 style={{
                   fontFamily: "var(--tome-mono)",
-                  fontSize: 11,
+                  fontSize: 13,
                   color: "var(--tome-ink-faint)",
                   width: 42,
                   textAlign: "right",
@@ -749,7 +749,7 @@ export function AudioLibrary({
               <span
                 style={{
                   fontFamily: "var(--tome-mono)",
-                  fontSize: 11,
+                  fontSize: 13,
                   color: "var(--tome-ink-faint)",
                   width: 42,
                 }}
@@ -763,7 +763,7 @@ export function AudioLibrary({
                 className="italic uppercase"
                 style={{
                   fontFamily: "var(--tome-display)",
-                  fontSize: 10,
+                  fontSize: 12,
                   color: "var(--tome-ink-faint)",
                   letterSpacing: "0.18em",
                 }}
@@ -849,7 +849,7 @@ function UploadZone({
         className="italic uppercase mt-1"
         style={{
           fontFamily: "var(--tome-display)",
-          fontSize: 10,
+          fontSize: 12,
           color: "var(--tome-ink-faint)",
           letterSpacing: "0.16em",
         }}

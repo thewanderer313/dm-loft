@@ -13,7 +13,7 @@ export default async function NewCampaignPage({
 
   return (
     <Shell>
-      <TomePage chapter="DM Loft · A New Chronicle" folio="i.°">
+      <TomePage chapter="A New Chronicle" folio="i.°">
         <div className="flex flex-col">
           <div
             className="italic uppercase text-[13px]"

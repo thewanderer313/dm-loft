@@ -10,7 +10,7 @@ export default async function SettingsPage() {
 
   return (
     <Shell>
-      <TomePage chapter="DM Loft · Of the Reader" folio="·">
+      <TomePage chapter="Of the Reader" folio="·">
         <div className="max-w-2xl">
           <div
             className="italic uppercase text-[13px]"
@@ -47,7 +47,7 @@ export default async function SettingsPage() {
             }}
           >
             <div
-              className="italic uppercase text-[11px]"
+              className="italic uppercase text-[13px]"
               style={{
                 fontFamily: "var(--tome-display)",
                 letterSpacing: "0.22em",

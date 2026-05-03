@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Shell } from "@/components/Shell";
 import { Sigil } from "@/components/Sigil";
 import { romanize } from "@/components/TomePage";
 import { getServerSupabase } from "@/lib/supabase/server";
@@ -35,7 +36,7 @@ export default async function AudioToolPage({
   const cap = `Cap. ${romanize(getToolIndex("audio") + 1).toUpperCase()}`;
 
   return (
-    <div className="tome-page min-h-screen flex flex-col">
+    <Shell>
       <div
         className="flex items-center gap-4 px-5 py-3 flex-wrap"
         style={{ borderBottom: "1px solid var(--tome-rule)" }}
@@ -45,7 +46,7 @@ export default async function AudioToolPage({
           className="italic uppercase flex items-center gap-2 shrink-0"
           style={{
             fontFamily: "var(--tome-display)",
-            fontSize: 11,
+            fontSize: 13,
             letterSpacing: "0.18em",
             color: "var(--tome-ink-faint)",
           }}
@@ -60,7 +61,7 @@ export default async function AudioToolPage({
           className="italic"
           style={{
             fontFamily: "var(--tome-display)",
-            fontSize: 11,
+            fontSize: 13,
             color: "var(--tome-gold)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -83,7 +84,7 @@ export default async function AudioToolPage({
           className="italic uppercase"
           style={{
             fontFamily: "var(--tome-display)",
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--tome-ink-faint)",
             letterSpacing: "0.18em",
           }}
@@ -96,6 +97,6 @@ export default async function AudioToolPage({
         initialTracks={tracks}
         currentUserId={currentUserId}
       />
-    </div>
+    </Shell>
   );
 }

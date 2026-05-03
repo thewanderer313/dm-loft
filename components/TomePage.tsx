@@ -41,21 +41,21 @@ export function TomePage({
         }}
       >
         <span
-          className="italic uppercase text-[11px] leading-snug max-w-[24ch]"
+          className="italic uppercase text-[13px] leading-snug max-w-[28ch]"
           style={{ letterSpacing: "0.18em" }}
         >
           {chapter}
         </span>
         <span
-          className="hidden sm:flex items-center gap-3 italic uppercase text-[11px]"
+          className="hidden sm:flex items-center gap-3 italic uppercase text-[13px]"
           style={{ letterSpacing: "0.22em", color: "var(--tome-ink-faint)" }}
         >
-          <Sigil kind="ornament" size={12} color="var(--tome-gold)" strokeWidth={1.1} />
+          <Sigil kind="ornament" size={14} color="var(--tome-gold)" strokeWidth={1.1} />
           <span>Anno · MMXXVI</span>
-          <Sigil kind="ornament" size={12} color="var(--tome-gold)" strokeWidth={1.1} />
+          <Sigil kind="ornament" size={14} color="var(--tome-gold)" strokeWidth={1.1} />
         </span>
         <span
-          className="italic uppercase text-[11px] text-right justify-self-end"
+          className="italic uppercase text-[13px] text-right justify-self-end"
           style={{ letterSpacing: "0.18em" }}
         >
           fol. {folio}

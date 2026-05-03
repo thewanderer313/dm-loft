@@ -34,7 +34,7 @@ export function NewCampaignForm({
             </div>
             <div>
               <label
-                className="block italic uppercase text-[11px]"
+                className="block italic uppercase text-[13px]"
                 htmlFor="new-campaign-name"
                 style={{
                   fontFamily: "var(--tome-display)",
@@ -79,7 +79,7 @@ export function NewCampaignForm({
           <div>
             <label
               htmlFor="new-campaign-description"
-              className="italic uppercase text-[11px]"
+              className="italic uppercase text-[13px]"
               style={{
                 fontFamily: "var(--tome-display)",
                 letterSpacing: "0.18em",
@@ -113,7 +113,7 @@ export function NewCampaignForm({
               className="flex justify-between mt-1 italic"
               style={{
                 fontFamily: "var(--tome-display)",
-                fontSize: 11,
+                fontSize: 13,
                 color: "var(--tome-ink-faint)",
                 letterSpacing: "0.1em",
               }}
@@ -192,7 +192,7 @@ export function NewCampaignForm({
       {/* Right — spine preview */}
       <aside className="flex flex-col gap-3 min-w-0">
         <div
-          className="italic uppercase text-[11px]"
+          className="italic uppercase text-[13px]"
           style={{
             fontFamily: "var(--tome-display)",
             letterSpacing: "0.22em",
@@ -234,7 +234,7 @@ export function NewCampaignForm({
             style={{
               bottom: 16,
               fontFamily: "var(--tome-display)",
-              fontSize: 11,
+              fontSize: 13,
               letterSpacing: "0.22em",
               color: "var(--tome-gold-light)",
               opacity: 0.8,

@@ -32,7 +32,7 @@ export function ToolGrid({ campaignId }: { campaignId: string }) {
                 className="italic"
                 style={{
                   fontFamily: "var(--tome-display)",
-                  fontSize: 11,
+                  fontSize: 13,
                   color: "var(--tome-gold)",
                   letterSpacing: "0.1em",
                 }}

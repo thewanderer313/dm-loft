@@ -53,7 +53,7 @@ export function ResumeCard({
       </div>
       <div className="min-w-0">
         <div
-          className="italic uppercase text-[11px]"
+          className="italic uppercase text-[13px]"
           style={{
             fontFamily: "var(--tome-display)",
             letterSpacing: "0.2em",

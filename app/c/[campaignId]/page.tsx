@@ -26,7 +26,7 @@ export default async function CampaignDashboard({
 
   return (
     <Shell>
-      <TomePage chapter={`DM Loft · ${campaign.name}`} folio={slugFolio(campaign.name)}>
+      <TomePage chapter={`The Chronicle of ${campaign.name}`} folio={slugFolio(campaign.name)}>
         <div className="flex flex-col">
           <div className="flex items-start justify-between gap-6 flex-wrap">
             <div className="min-w-0">

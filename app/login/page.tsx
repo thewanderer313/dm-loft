@@ -76,7 +76,7 @@ export default async function LoginPage({
             <span
               style={{
                 fontFamily: "var(--tome-mono)",
-                fontSize: 10,
+                fontSize: 12,
                 color: "var(--tome-ink-faint)",
                 letterSpacing: "0.18em",
               }}
@@ -109,7 +109,7 @@ export default async function LoginPage({
               <Sigil kind="eye" size={36} color="var(--tome-oxblood)" strokeWidth={1.3} />
             </div>
             <div
-              className="text-center italic uppercase text-[11px]"
+              className="text-center italic uppercase text-[13px]"
               style={{
                 fontFamily: "var(--tome-display)",
                 letterSpacing: "0.28em",
@@ -153,7 +153,7 @@ export default async function LoginPage({
             <div className="flex items-center gap-3 my-4" aria-hidden>
               <div className="flex-1 h-px" style={{ background: "var(--tome-rule)" }} />
               <span
-                className="italic uppercase text-[11px]"
+                className="italic uppercase text-[13px]"
                 style={{
                   fontFamily: "var(--tome-display)",
                   letterSpacing: "0.18em",
@@ -168,7 +168,7 @@ export default async function LoginPage({
             <form className="flex flex-col gap-3">
               <label className="block">
                 <span
-                  className="block italic uppercase text-[11px] mb-1"
+                  className="block italic uppercase text-[13px] mb-1"
                   style={{
                     fontFamily: "var(--tome-display)",
                     letterSpacing: "0.16em",
@@ -194,7 +194,7 @@ export default async function LoginPage({
               </label>
               <label className="block">
                 <span
-                  className="block italic uppercase text-[11px] mb-1"
+                  className="block italic uppercase text-[13px] mb-1"
                   style={{
                     fontFamily: "var(--tome-display)",
                     letterSpacing: "0.16em",

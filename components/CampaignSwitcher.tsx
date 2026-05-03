@@ -69,7 +69,7 @@ export function CampaignSwitcher({
         className="italic uppercase"
         style={{
           fontFamily: "var(--tome-display)",
-          fontSize: 11,
+          fontSize: 13,
           color: "var(--tome-ink-faint)",
           letterSpacing: "0.18em",
         }}

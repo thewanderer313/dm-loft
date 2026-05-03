@@ -29,7 +29,7 @@ export default async function EditCampaignPage({
 
   return (
     <Shell>
-      <TomePage chapter="DM Loft · Errata & Amendments" folio="·">
+      <TomePage chapter="Errata & Amendments" folio="·">
         <div className="max-w-3xl">
           <div
             className="italic uppercase text-[13px]"
@@ -66,7 +66,7 @@ export default async function EditCampaignPage({
           <form action={renameBound} className="flex flex-col gap-5">
             <label className="block">
               <span
-                className="block italic uppercase text-[11px] mb-1"
+                className="block italic uppercase text-[13px] mb-1"
                 style={{
                   fontFamily: "var(--tome-display)",
                   letterSpacing: "0.18em",
@@ -93,7 +93,7 @@ export default async function EditCampaignPage({
 
             <label className="block">
               <span
-                className="block italic uppercase text-[11px] mb-1"
+                className="block italic uppercase text-[13px] mb-1"
                 style={{
                   fontFamily: "var(--tome-display)",
                   letterSpacing: "0.18em",
@@ -166,7 +166,7 @@ export default async function EditCampaignPage({
             style={{ borderTop: "1px solid var(--tome-rule)" }}
           >
             <div
-              className="italic uppercase text-[11px] mb-3"
+              className="italic uppercase text-[13px] mb-3"
               style={{
                 fontFamily: "var(--tome-display)",
                 letterSpacing: "0.22em",
