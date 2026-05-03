@@ -9,7 +9,8 @@ export type SigilKind =
   | "book"
   | "ornament"
   | "eye"
-  | "star";
+  | "star"
+  | "note";
 
 export function Sigil({
   kind,
@@ -126,6 +127,28 @@ export function Sigil({
             {...common}
           />
           <circle cx={c} cy={c} r={s * 0.05} fill={color} stroke="none" />
+        </svg>
+      );
+    case "note":
+      return (
+        <svg {...svg}>
+          {/* Stem */}
+          <line x1={s * 0.62} y1={s * 0.18} x2={s * 0.62} y2={s * 0.74} {...common} />
+          {/* Flag — gentle curve off the top of the stem */}
+          <path
+            d={`M ${s * 0.62} ${s * 0.18} Q ${s * 0.86} ${s * 0.28}, ${s * 0.74} ${s * 0.46}`}
+            {...common}
+          />
+          {/* Note head — a tilted oval */}
+          <ellipse
+            cx={s * 0.45}
+            cy={s * 0.74}
+            rx={s * 0.18}
+            ry={s * 0.13}
+            transform={`rotate(-20 ${s * 0.45} ${s * 0.74})`}
+            {...common}
+            fill={color}
+          />
         </svg>
       );
   }

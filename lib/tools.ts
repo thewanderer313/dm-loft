@@ -59,6 +59,14 @@ export const TOOLS: Tool[] = [
     sigil: "book",
     tomeDesc: "A keeper's commonplace book.",
   },
+  {
+    id: "audio",
+    name: "Audio Library",
+    blurb: "Music & ambience",
+    icon: "🎵",
+    sigil: "note",
+    tomeDesc: "Music and ambience for the table.",
+  },
 ];
 
 export function getTool(id: string): Tool | null {

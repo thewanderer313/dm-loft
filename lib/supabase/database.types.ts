@@ -65,6 +65,45 @@ export type Database = {
         }
         Relationships: []
       }
+      tracks: {
+        Row: {
+          id: string
+          campaign_id: string
+          dm_id: string
+          title: string
+          tags: string[]
+          storage_path: string
+          duration_sec: number | null
+          mime_type: string | null
+          size_bytes: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          campaign_id: string
+          dm_id: string
+          title: string
+          tags?: string[]
+          storage_path: string
+          duration_sec?: number | null
+          mime_type?: string | null
+          size_bytes?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          campaign_id?: string
+          dm_id?: string
+          title?: string
+          tags?: string[]
+          storage_path?: string
+          duration_sec?: number | null
+          mime_type?: string | null
+          size_bytes?: number | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

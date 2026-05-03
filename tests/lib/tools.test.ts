@@ -2,9 +2,10 @@ import { describe, it, expect } from "vitest";
 import { TOOLS, getTool } from "@/lib/tools";
 
 describe("tool registry", () => {
-  it("contains the six MVP tools", () => {
+  it("contains the expected tools", () => {
     const ids = TOOLS.map(t => t.id).sort();
     expect(ids).toEqual([
+      "audio",
       "battle-map",
       "initiative",
       "reputation",
