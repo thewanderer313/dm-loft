@@ -1,0 +1,239 @@
+/*
+ * DM Loft · Tome — overlay stylesheet for tool iframes.
+ *
+ * Each tool is a standalone HTML file with its own <style> block. We
+ * inject this stylesheet AFTER that block so our rules cascade on top.
+ * Goals:
+ *   1. Re-type all body content in Cormorant Garamond / EB Garamond.
+ *   2. Re-tone surfaces to vellum / ink / oxblood / gold.
+ *   3. Map each tool's existing CSS variables (--bg-card, --accent,
+ *      --text-primary, --card, --btn, etc.) onto Tome tokens — overrides
+ *      only take effect for variables a tool actually uses.
+ *   4. Leave tool-specific feature colors alone (Time & Moon's sky
+ *      gradients, faction colors in Reputation, monster/player colors
+ *      in Battle Map, etc.).
+ *
+ * Tone: dark "Ink" theme by default; the parent app sets data-theme="ink"
+ * on each tool's <html>.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+/* ───────── Tome tokens (inlined for iframe scope) ───────── */
+:root {
+  --tome-paper:        #1a1410;
+  --tome-paper-edge:   #221a14;
+  --tome-paper-dark:   #2a2018;
+  --tome-ink:          #f0e6cc;
+  --tome-ink-soft:     #c9b88a;
+  --tome-ink-faint:    #8a7a5e;
+  --tome-oxblood:      #c44a4a;
+  --tome-oxblood-deep: #8a2828;
+  --tome-gold:         #d4a850;
+  --tome-gold-light:   #e8c870;
+  --tome-rule:         #5a4a30;
+  --tome-rule-soft:    #3a2e1e;
+
+  --tome-display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  --tome-body:    "EB Garamond", Georgia, serif;
+  --tome-mono:    "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ───────── Variable remap for tools that use these names ───────── */
+/* Pattern A: Initiative ("--*-bg" / "--accent" / etc.) */
+:root {
+  --bg-color:        var(--tome-paper);
+  --text-color:      var(--tome-ink);
+  --muted-text:      var(--tome-ink-soft);
+  --panel-bg:        rgba(244, 236, 204, 0.06);
+  --panel-bg-2:      rgba(244, 236, 204, 0.08);
+  --sidebar-bg:      rgba(34, 26, 20, 0.92);
+  --card-bg:         rgba(244, 236, 204, 0.05);
+  --border-color:    var(--tome-rule);
+  --border-color-2:  var(--tome-rule-soft);
+  --accent:          var(--tome-gold);
+  --accent-2:        var(--tome-gold-light);
+  --btn-text:        var(--tome-paper);
+  --warning:         var(--tome-gold-light);
+  --warning-border:  rgba(212, 168, 80, 0.6);
+  --danger:          rgba(196, 74, 74, 0.65);
+  --danger-2:        rgba(138, 40, 40, 0.7);
+  --danger-border:   rgba(196, 74, 74, 0.55);
+  --danger-text:     var(--tome-oxblood);
+  --shadow:          rgba(0, 0, 0, 0.55);
+  --focus-glow:      rgba(212, 168, 80, 0.25);
+}
+
+/* Pattern B: Roll Tables / Battle Map / Rules ("--bg-primary", "--bg-card") */
+:root {
+  --bg-primary:      var(--tome-paper);
+  --bg-secondary:    var(--tome-paper-edge);
+  --bg-tertiary:     var(--tome-paper-dark);
+  --bg-card:         rgba(244, 236, 204, 0.05);
+  --border-light:    var(--tome-rule-soft);
+  --border-strong:   var(--tome-rule);
+  --text-primary:    var(--tome-ink);
+  --text-secondary:  var(--tome-ink-soft);
+  --text-muted:      var(--tome-ink-faint);
+  --accent-hover:    var(--tome-gold-light);
+  --accent-glow:     rgba(212, 168, 80, 0.25);
+  --success:         var(--tome-gold);
+  --overlay:         rgba(26, 20, 16, 0.88);
+}
+
+/* Pattern C: Time & Moon ("--card" / "--btn" / semantic action colors) */
+:root {
+  --card:        rgba(244, 236, 204, 0.10);
+  --text-dark:   var(--tome-ink);
+  --text-muted:  var(--tome-ink-soft);
+  --btn:         var(--tome-oxblood);
+  --btn-red:     var(--tome-oxblood-deep);
+  --btn-green:   var(--tome-gold);
+  --btn-amber:   var(--tome-gold-light);
+}
+
+/* ───────── Body / typography ───────── */
+html {
+  background: var(--tome-paper);
+  color-scheme: dark;
+}
+body {
+  font-family: var(--tome-body) !important;
+  color: var(--tome-ink);
+  background: var(--tome-paper);
+}
+
+/* Paragraph / span / general text inherit the body font. Override common
+   sans-serif stacks the tools set on `* { font-family: ... }`. */
+*, *::before, *::after {
+  font-family: inherit;
+}
+
+/* Restore monospace for elements that need it. */
+code, kbd, pre, samp, .mono, [class*="mono"] {
+  font-family: var(--tome-mono);
+}
+
+/* Display font for headings + .title. Italic + slightly tightened. */
+h1, h2, h3, h4, h5, h6, .title, .info-title, [class*="title"] {
+  font-family: var(--tome-display) !important;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--tome-ink);
+}
+
+/* "Subtitle" / eyebrow / muted text get the italic display look in gold. */
+.subtitle, .eyebrow, .meta, .muted {
+  font-family: var(--tome-display);
+  font-style: italic;
+  color: var(--tome-ink-soft);
+}
+
+/* Inputs / selects / textareas */
+input, select, textarea {
+  font-family: var(--tome-body);
+  color: var(--tome-ink);
+  background: rgba(244, 236, 204, 0.04);
+  border-color: var(--tome-rule);
+}
+input::placeholder, textarea::placeholder {
+  color: var(--tome-ink-faint);
+  font-style: italic;
+}
+
+/* ───────── Buttons ─────────
+   Tools that use `<button>` get an italic uppercase serif treatment.
+   Tools with named variants (.btn-blue, .btn-green, .btn-red, .btn-purple)
+   get colour overrides below. */
+button, .btn, button.btn {
+  font-family: var(--tome-display);
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: var(--tome-ink);
+}
+
+button.btn-blue,   .btn-blue   { background: var(--tome-oxblood) !important; border-color: var(--tome-oxblood) !important; color: var(--tome-paper) !important; }
+button.btn-blue:hover:not(:disabled), .btn-blue:hover:not(:disabled) { background: var(--tome-oxblood-deep) !important; }
+
+button.btn-green,  .btn-green  { background: var(--tome-gold) !important; color: var(--tome-paper) !important; }
+button.btn-green:hover:not(:disabled), .btn-green:hover:not(:disabled) { background: var(--tome-gold-light) !important; }
+
+button.btn-purple, .btn-purple { background: var(--tome-oxblood-deep) !important; color: var(--tome-paper) !important; }
+button.btn-purple:hover:not(:disabled), .btn-purple:hover:not(:disabled) { background: var(--tome-oxblood) !important; }
+
+button.btn-red,    .btn-red    { background: var(--tome-oxblood-deep) !important; color: var(--tome-paper) !important; }
+button.btn-red:hover:not(:disabled), .btn-red:hover:not(:disabled) { background: var(--tome-oxblood) !important; }
+
+/* ───────── Reputation-specific (no CSS vars; literal hex everywhere) ───────── */
+body.reputation, body[class*="reputation"], body {
+  /* If this is the reputation tool, kill the unsplash background. */
+}
+
+/* Selectors that exist in the reputation tool — override its hardcoded colours. */
+.title {
+  /* The reputation tool's `.title` uses a yellow→orange gradient text fill.
+     Replace with a solid display title in vellum-ink, with a hint of oxblood. */
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: var(--tome-ink) !important;
+  color: var(--tome-ink) !important;
+}
+.subtitle {
+  color: var(--tome-ink-soft) !important;
+}
+.info-panel {
+  background: rgba(244, 236, 204, 0.04) !important;
+  border: 1px solid var(--tome-gold) !important;
+}
+.info-title {
+  color: var(--tome-gold) !important;
+}
+.info-section h4 {
+  color: var(--tome-gold) !important;
+  font-family: var(--tome-display) !important;
+  font-style: italic;
+  letter-spacing: 0.06em;
+}
+.info-section ul, .info-section li {
+  color: var(--tome-ink-soft) !important;
+}
+.settlement-card {
+  background: rgba(244, 236, 204, 0.04) !important;
+}
+.settlement-card.selected {
+  box-shadow: 0 0 0 2px var(--tome-gold) !important;
+}
+
+/* The reputation body uses a hosted Unsplash image — override on a body
+   that has been visually identified as the reputation tool via its
+   container class. We do this conditionally so we don't recolour every
+   tool's body. */
+body:has(.settlements-grid) {
+  background: var(--tome-paper) !important;
+  color: var(--tome-ink) !important;
+}
+
+/* ───────── Time & Moon ─────────
+   The tool dynamically gradients the sky background for game-time mood.
+   Leave those alone. We only retype the controls. */
+body:has(.sky) .panel,
+body:has(.sky) .card,
+body:has(.sky) .controls {
+  font-family: var(--tome-body);
+  color: var(--tome-ink);
+}
+
+/* ───────── Subtle ornamentation ───────── */
+hr {
+  border: none;
+  height: 3px;
+  border-top: 1px solid var(--tome-gold);
+  border-bottom: 1px solid var(--tome-gold);
+  background: transparent;
+  margin: 14px 0;
+}
+
+::selection {
+  background: var(--tome-oxblood);
+  color: var(--tome-paper);
+}
