@@ -67,42 +67,50 @@ export type Database = {
       }
       tracks: {
         Row: {
-          id: string
           campaign_id: string
+          created_at: string
           dm_id: string
-          title: string
-          tags: string[]
-          storage_path: string
           duration_sec: number | null
+          id: string
           mime_type: string | null
           size_bytes: number | null
-          created_at: string
+          storage_path: string
+          tags: string[]
+          title: string
         }
         Insert: {
-          id?: string
           campaign_id: string
+          created_at?: string
           dm_id: string
-          title: string
-          tags?: string[]
-          storage_path: string
           duration_sec?: number | null
+          id?: string
           mime_type?: string | null
           size_bytes?: number | null
-          created_at?: string
+          storage_path: string
+          tags?: string[]
+          title: string
         }
         Update: {
-          id?: string
           campaign_id?: string
+          created_at?: string
           dm_id?: string
-          title?: string
-          tags?: string[]
-          storage_path?: string
           duration_sec?: number | null
+          id?: string
           mime_type?: string | null
           size_bytes?: number | null
-          created_at?: string
+          storage_path?: string
+          tags?: string[]
+          title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "tracks_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
