@@ -4,6 +4,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getServerSupabase } from "@/lib/supabase/server";
 
+// Maps the plain-text exceptions raised inside the redeem_invite RPC
+// (see supabase/migrations/0008_campaign_invites.sql) to user-facing
+// copy. If a migration ever changes those messages, this table needs
+// to update in lockstep — anything that doesn't match falls through
+// to the generic fallback below.
 const FRIENDLY: Record<string, string> = {
   "Not signed in.":                          "You must sign in before joining.",
   "No such invite code.":                    "That invite code is unknown — double-check the link.",
@@ -33,8 +38,13 @@ export async function joinCampaign(code: string, formData: FormData) {
   if (error) {
     redirect(`/join/${code}?error=${encodeURIComponent(friendly(error.message))}`);
   }
-  const campaignId = data as unknown as string;
+  // The RPC returns the joined campaign's id. Supabase's typed client wraps
+  // this in `string | null`; on a successful (non-error) call the value is
+  // always a uuid string, but guard the impossible case rather than asserting.
+  if (!data) {
+    redirect(`/join/${code}?error=${encodeURIComponent("Could not join the chronicle.")}`);
+  }
   revalidatePath("/campaigns");
   revalidatePath("/");
-  redirect(`/c/${campaignId}`);
+  redirect(`/c/${data}`);
 }

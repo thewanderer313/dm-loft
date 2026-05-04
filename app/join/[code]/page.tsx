@@ -16,6 +16,10 @@ export default async function JoinPage({
   const errorMessage = sp.error ? decodeURIComponent(sp.error) : null;
   const bound = joinCampaign.bind(null, code);
 
+  // We pay an auth round-trip at render time so logged-out visitors see a
+  // "Sign in to join" CTA rather than typing a character name into a form
+  // that will immediately bounce them through /login. Worth the latency on
+  // a low-volume route like this one.
   const supabase = await getServerSupabase();
   const { data: userResp } = await supabase.auth.getUser();
   const isSignedIn = !!userResp.user;
