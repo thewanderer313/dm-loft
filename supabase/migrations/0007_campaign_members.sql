@@ -60,21 +60,22 @@ security definer
 set search_path = public
 as $$
 begin
-  if new.role <> old.role and not public.is_campaign_dm(old.campaign_id) then
+  if new.role is distinct from old.role and not public.is_campaign_dm(old.campaign_id) then
     raise exception 'Only a DM may change a member''s role.';
   end if;
-  if new.campaign_id <> old.campaign_id then
+  if new.campaign_id is distinct from old.campaign_id then
     raise exception 'campaign_id is immutable.';
   end if;
-  if new.user_id <> old.user_id then
+  if new.user_id is distinct from old.user_id then
     raise exception 'user_id is immutable.';
   end if;
   return new;
 end;
 $$;
 
-drop trigger if exists guard_campaign_members_role on public.campaign_members;
-create trigger guard_campaign_members_role
+drop trigger if exists guard_campaign_members_role        on public.campaign_members;
+drop trigger if exists guard_campaign_members_immutables  on public.campaign_members;
+create trigger guard_campaign_members_immutables
   before update on public.campaign_members
   for each row execute function public.guard_campaign_member_immutables();
 
