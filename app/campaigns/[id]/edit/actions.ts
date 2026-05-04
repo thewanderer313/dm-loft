@@ -5,13 +5,19 @@ import { revalidatePath } from "next/cache";
 import { getServerSupabase } from "@/lib/supabase/server";
 import { generateInviteCode } from "@/lib/invite-codes";
 
+// Throws (rather than redirecting like our other error paths) on purpose:
+// the campaign edit page renders no UI exposing these actions to non-DMs,
+// so reaching this failure means a hand-crafted request, a stale tab after
+// role change, or a bug. A generic 500 in those cases is fine.
 async function assertDM(supabase: Awaited<ReturnType<typeof getServerSupabase>>, campaignId: string) {
-  // The campaigns RLS now allows any member to read/update the row, so we
-  // need an application-layer check before destructive / DM-only actions.
   const { data, error } = await supabase.rpc("is_campaign_dm", { cid: campaignId });
   if (error) throw error;
   if (!data) throw new Error("Only the keeper of this chronicle may do that.");
 }
+
+// Postgres unique-violation. Stable across versions, more reliable than
+// matching on error.message text.
+const PG_UNIQUE_VIOLATION = "23505";
 
 export async function renameCampaign(id: string, formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
@@ -50,8 +56,7 @@ export async function generateInvite(campaignId: string, _formData: FormData) {
   const supabase = await getServerSupabase();
   await assertDM(supabase, campaignId);
   const { data: userResp } = await supabase.auth.getUser();
-  const uid = userResp.user?.id;
-  if (!uid) redirect("/login");
+  const uid = userResp.user!.id; // assertDM already proved we're authenticated
 
   const { data: campaign } = await supabase
     .from("campaigns")
@@ -74,7 +79,7 @@ export async function generateInvite(campaignId: string, _formData: FormData) {
       revalidatePath(`/campaigns/${campaignId}/edit`);
       return;
     }
-    if (!error.message.includes("duplicate") && !error.message.includes("unique")) {
+    if (error.code !== PG_UNIQUE_VIOLATION) {
       redirect(`/campaigns/${campaignId}/edit?error=${encodeURIComponent(error.message)}`);
     }
   }
