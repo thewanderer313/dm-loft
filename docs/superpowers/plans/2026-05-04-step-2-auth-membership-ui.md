@@ -72,7 +72,7 @@ A handful of small components (Tome-styled buttons, eyebrows) follow the pattern
 
 ### Task 1: Invite-code generator
 
-A pure function that takes a campaign name and returns a short, typeable code like `oakhart-9k2x`. Lowercase alphanumerics minus ambiguous characters (`l`, `1`, `o`, `0`). Slug from the name (truncated to 12 chars), hyphen, four random characters. Tested in vitest.
+A pure function that takes a campaign name and returns a short, typeable code like `oakhart-9k2x`. The slug derives from the campaign name (lowercased, non-alphanumerics → hyphens, truncated to 12 chars) and **preserves all letters** — its job is recognition, not entropy. The four-character random suffix is drawn from `abcdefghijkmnpqrstuvwxyz23456789` (lowercase a–z minus `l`, `o`, plus 2–9, no `0` or `1`) so it remains typeable from a phone screen. Tested in vitest.
 
 **Files:**
 - Create: `lib/invite-codes.ts`
@@ -86,22 +86,35 @@ import { describe, it, expect } from "vitest";
 import { generateInviteCode, slugify } from "@/lib/invite-codes";
 
 describe("slugify", () => {
-  it("lowercases", () => expect(slugify("Oakhart")).toBe("oakhart"));
+  it("lowercases", () => {
+    expect(slugify("Oakhart")).toBe("oakhart");
+  });
+
   it("replaces non-alphanum with hyphens and collapses runs", () => {
-    expect(slugify("The Salt Road!")).toBe("the-salt-road");
+    expect(slugify("The---Salt!")).toBe("the-salt");
   });
-  it("strips ambiguous characters and re-collapses", () => {
-    expect(slugify("ALL Ohms 1010")).toBe("a-hms"); // 'l','o','1','0' all stripped
-  });
+
   it("trims leading/trailing hyphens", () => {
     expect(slugify("-- hi --")).toBe("hi");
   });
-  it("truncates long names to 12 chars", () => {
-    expect(slugify("Beneath the Brassgate of Oakhart")).toHaveLength(12);
+
+  it("truncates long names and strips a trailing hyphen left by truncation", () => {
+    // raw → "beneath-the-brassgate-of-oakhart"; first 12 chars → "beneath-the-"
+    // trailing hyphen then stripped → "beneath-the"
+    expect(slugify("Beneath the Brassgate of Oakhart")).toBe("beneath-the");
   });
-  it("falls back to 'chronicle' on empty input", () => {
+
+  it("preserves ambiguous letters in the slug for human recognition", () => {
+    // The random-suffix alphabet drops l/1/o/0 for typeability, but the
+    // slug should still read as the campaign's name.
+    expect(slugify("Oakhart")).toBe("oakhart");
+    expect(slugify("Lola 1010")).toBe("lola-1010");
+  });
+
+  it("falls back to 'chronicle' on input that has no alphanumerics", () => {
     expect(slugify("   ")).toBe("chronicle");
-    expect(slugify("01l0")).toBe("chronicle"); // every char stripped
+    expect(slugify("---")).toBe("chronicle");
+    expect(slugify("!!!")).toBe("chronicle");
   });
 });
 
@@ -110,6 +123,7 @@ describe("generateInviteCode", () => {
     const code = generateInviteCode("Oakhart");
     expect(code).toMatch(/^oakhart-[a-z2-9]{4}$/);
   });
+
   it("uses ambiguous-free random suffix (no l, 1, o, 0)", () => {
     for (let i = 0; i < 50; i++) {
       const code = generateInviteCode("Oakhart");
@@ -118,6 +132,7 @@ describe("generateInviteCode", () => {
       expect(suffix).not.toMatch(/[l1o0]/);
     }
   });
+
   it("returns different codes on successive calls (not a constant)", () => {
     const a = generateInviteCode("Oakhart");
     const b = generateInviteCode("Oakhart");
@@ -137,19 +152,28 @@ Expected: 8 failures with "Cannot find module '@/lib/invite-codes'".
 // lib/invite-codes.ts
 //
 // Human-typeable invite codes of the shape `<slug>-<random>`. Slug is
-// derived from the campaign name (truncated, hyphen-collapsed, ambiguous
-// characters stripped); random suffix is four characters from a-z2-9 with
-// l/1/o/0 removed so a player typing the code from a phone screen has a
-// fighting chance.
+// derived from the campaign name (lowercased, non-alphanumerics collapsed
+// to hyphens, truncated). Random suffix is four characters from a-z2-9
+// with l/1/o/0 omitted so a player typing the code from a phone screen
+// has a fighting chance.
+//
+// We deliberately do NOT strip ambiguous characters from the slug — the
+// slug exists for recognition ("oh, this is the Oakhart invite"), not
+// for entropy. The four-char random suffix carries the unguessability.
+// 256 % 32 === 0 so the suffix-byte modulo is unbiased.
 
 const SAFE_CHARS = "abcdefghijkmnpqrstuvwxyz23456789"; // no l, 1, o, 0
 const SLUG_MAX = 12;
 
 export function slugify(input: string): string {
-  const dropped = input.toLowerCase().replace(/[l1o0]/g, "");
-  const cleaned = dropped.replace(/[^a-z2-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  const cleaned = input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
   if (!cleaned) return "chronicle";
-  return cleaned.slice(0, SLUG_MAX);
+  // Truncate, then strip a trailing hyphen the truncation may have left.
+  return cleaned.slice(0, SLUG_MAX).replace(/-$/, "");
 }
 
 export function generateInviteCode(campaignName: string): string {
