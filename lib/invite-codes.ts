@@ -1,19 +1,27 @@
 // lib/invite-codes.ts
 //
 // Human-typeable invite codes of the shape `<slug>-<random>`. Slug is
-// derived from the campaign name (truncated, hyphen-collapsed, ambiguous
-// characters stripped); random suffix is four characters from a-z2-9 with
-// l/1/o/0 removed so a player typing the code from a phone screen has a
-// fighting chance.
+// derived from the campaign name (lowercased, non-alphanumerics collapsed
+// to hyphens, truncated). Random suffix is four characters from a-z2-9
+// with l/1/o/0 omitted so a player typing the code from a phone screen
+// has a fighting chance.
+//
+// We deliberately do NOT strip ambiguous characters from the slug — the
+// slug exists for recognition ("oh, this is the Oakhart invite"), not
+// for entropy. The four-char random suffix carries the unguessability.
 
 const SAFE_CHARS = "abcdefghijkmnpqrstuvwxyz23456789"; // no l, 1, o, 0
 const SLUG_MAX = 12;
 
 export function slugify(input: string): string {
-  const dropped = input.toLowerCase().replace(/[l1o0]/g, "");
-  const cleaned = dropped.replace(/[^a-z2-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  const cleaned = input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
   if (!cleaned) return "chronicle";
-  return cleaned.slice(0, SLUG_MAX);
+  // Truncate, then strip a trailing hyphen the truncation may have left.
+  return cleaned.slice(0, SLUG_MAX).replace(/-$/, "");
 }
 
 export function generateInviteCode(campaignName: string): string {
