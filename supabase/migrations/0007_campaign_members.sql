@@ -47,6 +47,37 @@ create policy "Members leave or DM kicks"
   to authenticated
   using (user_id = auth.uid() or public.is_campaign_dm(campaign_id));
 
+-- ───────── role-change guard ─────────
+-- The UPDATE policy lets a member update their own row (so they can rename
+-- their character). Without a column-level guard, that same code path
+-- would also let a player set role='dm' on themselves. Block changes to
+-- the immutable columns unless the caller is a DM of the campaign.
+
+create or replace function public.guard_campaign_member_immutables()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if new.role <> old.role and not public.is_campaign_dm(old.campaign_id) then
+    raise exception 'Only a DM may change a member''s role.';
+  end if;
+  if new.campaign_id <> old.campaign_id then
+    raise exception 'campaign_id is immutable.';
+  end if;
+  if new.user_id <> old.user_id then
+    raise exception 'user_id is immutable.';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists guard_campaign_members_role on public.campaign_members;
+create trigger guard_campaign_members_role
+  before update on public.campaign_members
+  for each row execute function public.guard_campaign_member_immutables();
+
 -- ───────── auto-DM trigger ─────────
 -- When a campaigns row is inserted, automatically add a campaign_members row
 -- for the DM with role='dm'. Uses SECURITY DEFINER so RLS doesn't block
