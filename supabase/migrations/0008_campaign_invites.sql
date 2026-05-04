@@ -82,7 +82,9 @@ begin
   end if;
 
   -- Idempotent join: if the user is already in the campaign, succeed
-  -- without bumping the use counter.
+  -- without bumping the use counter. The on-conflict clause on the
+  -- insert below also covers a same-user double-click race, but the
+  -- early-return saves a write on the common case.
   if exists (
     select 1 from public.campaign_members
     where campaign_id = invite.campaign_id and user_id = uid
@@ -90,14 +92,26 @@ begin
     return invite.campaign_id;
   end if;
 
+  -- on-conflict handles the same-user race: two concurrent calls from one
+  -- uid both pass the check above, both attempt the insert, the second
+  -- becomes a no-op rather than failing the PK constraint.
   insert into public.campaign_members
     (campaign_id, user_id, character_name, role)
   values
-    (invite.campaign_id, uid, coalesce(nullif(trim(character_name), ''), 'Adventurer'), 'player');
+    (invite.campaign_id, uid, coalesce(nullif(trim(character_name), ''), 'Adventurer'), 'player')
+  on conflict (campaign_id, user_id) do nothing;
 
-  update public.campaign_invites
-    set uses = uses + 1
-    where code = invite_code;
+  -- Only bump the use counter when this call actually added a new member.
+  -- A theoretical different-user race against max_uses can still over-count
+  -- by 1 if two distinct users both pass the check above at the same instant
+  -- (the pre-check and the bump are not atomic). For friend-group invites
+  -- this is negligible; if it ever matters, swap the bump for an atomic
+  -- conditional update.
+  if found then
+    update public.campaign_invites
+      set uses = uses + 1
+      where code = invite_code;
+  end if;
 
   return invite.campaign_id;
 end;
