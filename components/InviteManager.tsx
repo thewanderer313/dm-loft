@@ -25,6 +25,8 @@ export function InviteManager({
     try {
       await navigator.clipboard.writeText(url);
       setCopied(code);
+      // Only clear if our timer is the one whose code is still showing —
+      // the user may have clicked copy on a different row in the interim.
       setTimeout(() => setCopied(c => (c === code ? null : c)), 1500);
     } catch {
       window.prompt("Copy this invite link", url);
@@ -125,7 +127,14 @@ export function InviteManager({
                   {copied === inv.code ? "copied" : "copy"}
                 </button>
                 {!inv.revoked && (
-                  <form action={revokeBound}>
+                  <form
+                    action={revokeBound}
+                    onSubmit={(e) => {
+                      if (!confirm("Revoke this invite? Anyone with the link can no longer use it.")) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
                     <button
                       type="submit"
                       className="cursor-pointer italic uppercase"
