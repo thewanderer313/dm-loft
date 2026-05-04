@@ -7,6 +7,7 @@ import { getServerSupabase } from "@/lib/supabase/server";
 import { renameCampaign, deleteCampaign, kickMember } from "./actions";
 import { DeleteCampaignButton } from "@/components/DeleteCampaignButton";
 import { InviteManager } from "@/components/InviteManager";
+import { KickMemberButton } from "@/components/KickMemberButton";
 import { listInvitesForCampaign } from "@/lib/data/invites";
 import { listMembersForCampaign } from "@/lib/data/members";
 
@@ -229,6 +230,7 @@ export default async function EditCampaignPage({
                     >
                       <div className="flex items-baseline gap-3 min-w-0">
                         <span
+                          className="truncate min-w-0"
                           style={{
                             fontFamily: "var(--tome-display)",
                             fontSize: 18,
@@ -239,7 +241,7 @@ export default async function EditCampaignPage({
                         </span>
                         {m.role === "dm" && (
                           <span
-                            className="italic uppercase"
+                            className="italic uppercase shrink-0"
                             style={{
                               fontFamily: "var(--tome-display)",
                               fontSize: 11,
@@ -253,7 +255,7 @@ export default async function EditCampaignPage({
                           </span>
                         )}
                         <span
-                          className="italic"
+                          className="italic shrink-0"
                           style={{
                             fontFamily: "var(--tome-display)",
                             fontSize: 12,
@@ -264,23 +266,7 @@ export default async function EditCampaignPage({
                         </span>
                       </div>
                       {m.role !== "dm" && (
-                        <form action={kickBound}>
-                          <button
-                            type="submit"
-                            className="cursor-pointer italic uppercase"
-                            style={{
-                              fontFamily: "var(--tome-display)",
-                              fontSize: 12,
-                              letterSpacing: "0.1em",
-                              padding: "4px 10px",
-                              background: "transparent",
-                              color: "var(--tome-oxblood)",
-                              border: "1px solid var(--tome-rule)",
-                            }}
-                          >
-                            kick
-                          </button>
-                        </form>
+                        <KickMemberButton characterName={m.character_name} action={kickBound} />
                       )}
                     </li>
                   );
