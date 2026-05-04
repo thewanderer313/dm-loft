@@ -141,7 +141,6 @@ export default async function CampaignDashboard({
                   >
                     {isMe ? (
                       <CharacterNameForm
-                        campaignId={campaign.id}
                         currentName={m.character_name}
                         action={renameBound}
                       />
