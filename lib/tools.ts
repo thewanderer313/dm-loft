@@ -67,6 +67,14 @@ export const TOOLS: Tool[] = [
     sigil: "note",
     tomeDesc: "Music and ambience for the table.",
   },
+  {
+    id: "wordboard",
+    name: "Wordboard",
+    blurb: "Evocative words",
+    icon: "🪶",
+    sigil: "quill",
+    tomeDesc: "A keeper's compendium of evocative words.",
+  },
 ];
 
 export function getTool(id: string): Tool | null {

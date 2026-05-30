@@ -67,8 +67,9 @@ export default async function LoginPage({
               maxWidth: 460,
             }}
           >
-            Six instruments wait within. The order of battle. The march of hours. The standing of
-            factions. The compendium of fortunes. The keeper&rsquo;s charge, and the rules thereof.
+            Eight instruments wait within. The order of battle. The march of hours. The standing of
+            factions. The compendium of fortunes. The keeper&rsquo;s charge, the rules thereof, the
+            music &amp; ambience of the table, and a wordboard of evocative adjectives.
           </p>
 
           <div className="mt-7 flex items-center gap-4">
