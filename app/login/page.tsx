@@ -5,7 +5,7 @@ import { Sigil } from "@/components/Sigil";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; mode?: string }>;
+  searchParams: Promise<{ error?: string; mode?: string; redirect_to?: string }>;
 }) {
   const sp = await searchParams;
 
@@ -133,6 +133,7 @@ export default async function LoginPage({
             </h2>
 
             <form action={signInWithGoogle} className="mt-3">
+              {sp.redirect_to && <input type="hidden" name="redirect_to" value={sp.redirect_to} />}
               <button
                 type="submit"
                 className="w-full flex items-center justify-center gap-3 cursor-pointer"
@@ -167,6 +168,7 @@ export default async function LoginPage({
             </div>
 
             <form className="flex flex-col gap-3">
+              {sp.redirect_to && <input type="hidden" name="redirect_to" value={sp.redirect_to} />}
               <label className="block">
                 <span
                   className="block italic uppercase text-[13px] mb-1"

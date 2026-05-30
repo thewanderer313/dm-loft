@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Shell } from "@/components/Shell";
 import { TomePage, GildedRule } from "@/components/TomePage";
 import { getServerSupabase } from "@/lib/supabase/server";
-import { renameCampaign, deleteCampaign } from "./actions";
+import { renameCampaign, deleteCampaign, kickMember } from "./actions";
 import { DeleteCampaignButton } from "@/components/DeleteCampaignButton";
+import { InviteManager } from "@/components/InviteManager";
+import { KickMemberButton } from "@/components/KickMemberButton";
+import { listInvitesForCampaign } from "@/lib/data/invites";
+import { listMembersForCampaign } from "@/lib/data/members";
 
 export default async function EditCampaignPage({
   params,
@@ -22,6 +27,15 @@ export default async function EditCampaignPage({
     .eq("id", id)
     .maybeSingle();
   if (!c) notFound();
+
+  const [invites, members, hdrs] = await Promise.all([
+    listInvitesForCampaign(id),
+    listMembersForCampaign(id),
+    headers(),
+  ]);
+  const proto = hdrs.get("x-forwarded-proto") ?? "http";
+  const host = hdrs.get("host") ?? "localhost:3000";
+  const origin = `${proto}://${host}`;
 
   const renameBound = renameCampaign.bind(null, id);
   const deleteBound = deleteCampaign.bind(null, id);
@@ -160,6 +174,106 @@ export default async function EditCampaignPage({
               </Link>
             </div>
           </form>
+
+          <div
+            className="mt-12 pt-6"
+            style={{ borderTop: "1px solid var(--tome-rule)" }}
+          >
+            <div
+              className="italic uppercase text-[13px] mb-3"
+              style={{
+                fontFamily: "var(--tome-display)",
+                letterSpacing: "0.22em",
+                color: "var(--tome-gold)",
+              }}
+            >
+              Players &middot; invites and members
+            </div>
+
+            <h2
+              className="mb-4"
+              style={{
+                fontFamily: "var(--tome-display)",
+                fontWeight: 600,
+                fontSize: 28,
+                color: "var(--tome-ink)",
+              }}
+            >
+              Of <em style={{ color: "var(--tome-oxblood)" }}>Players</em>
+            </h2>
+
+            <InviteManager campaignId={id} invites={invites} origin={origin} />
+
+            <div className="mt-8">
+              <div
+                className="italic uppercase text-[13px] mb-3"
+                style={{
+                  fontFamily: "var(--tome-display)",
+                  letterSpacing: "0.22em",
+                  color: "var(--tome-gold)",
+                }}
+              >
+                Members at this table
+              </div>
+              <ul className="flex flex-col">
+                {members.map(m => {
+                  const kickBound = kickMember.bind(null, id, m.user_id);
+                  return (
+                    <li
+                      key={m.user_id}
+                      className="grid items-center gap-3"
+                      style={{
+                        gridTemplateColumns: "1fr auto",
+                        borderBottom: "1px dotted var(--tome-rule)",
+                        padding: "10px 0",
+                      }}
+                    >
+                      <div className="flex items-baseline gap-3 min-w-0">
+                        <span
+                          className="truncate min-w-0"
+                          style={{
+                            fontFamily: "var(--tome-display)",
+                            fontSize: 18,
+                            color: "var(--tome-ink)",
+                          }}
+                        >
+                          {m.character_name}
+                        </span>
+                        {m.role === "dm" && (
+                          <span
+                            className="italic uppercase shrink-0"
+                            style={{
+                              fontFamily: "var(--tome-display)",
+                              fontSize: 11,
+                              letterSpacing: "0.16em",
+                              color: "var(--tome-paper)",
+                              background: "var(--tome-oxblood)",
+                              padding: "1px 8px",
+                            }}
+                          >
+                            keeper
+                          </span>
+                        )}
+                        <span
+                          className="italic shrink-0"
+                          style={{
+                            fontFamily: "var(--tome-display)",
+                            fontSize: 12,
+                            color: "var(--tome-ink-faint)",
+                          }}
+                        >
+                          joined {new Date(m.joined_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      {m.role !== "dm" && (
+                        <KickMemberButton characterName={m.character_name} action={kickBound} />
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
 
           <div
             className="mt-12 pt-6"

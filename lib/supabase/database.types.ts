@@ -14,6 +14,121 @@ export type Database = {
   }
   public: {
     Tables: {
+      campaign_invites: {
+        Row: {
+          campaign_id: string
+          code: string
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          max_uses: number | null
+          revoked: boolean
+          uses: number
+        }
+        Insert: {
+          campaign_id: string
+          code: string
+          created_at?: string
+          created_by: string
+          expires_at?: string | null
+          max_uses?: number | null
+          revoked?: boolean
+          uses?: number
+        }
+        Update: {
+          campaign_id?: string
+          code?: string
+          created_at?: string
+          created_by?: string
+          expires_at?: string | null
+          max_uses?: number | null
+          revoked?: boolean
+          uses?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_invites_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_members: {
+        Row: {
+          campaign_id: string
+          character_name: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          character_name: string
+          joined_at?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          character_name?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_members_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaign_playback: {
+        Row: {
+          campaign_id: string
+          is_playing: boolean
+          started_at: string | null
+          track_id: string | null
+          updated_at: string
+          updated_by: string
+        }
+        Insert: {
+          campaign_id: string
+          is_playing?: boolean
+          started_at?: string | null
+          track_id?: string | null
+          updated_at?: string
+          updated_by: string
+        }
+        Update: {
+          campaign_id?: string
+          is_playing?: boolean
+          started_at?: string | null
+          track_id?: string | null
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_playback_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: true
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaign_playback_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaigns: {
         Row: {
           accent_color: string | null
@@ -106,7 +221,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_campaign_dm: { Args: { cid: string }; Returns: boolean }
+      is_campaign_member: { Args: { cid: string }; Returns: boolean }
+      redeem_invite: {
+        Args: { character_name?: string; invite_code: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
