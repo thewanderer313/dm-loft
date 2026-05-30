@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="ink">
+<head>
+<script>/* dm-loft:localStorage-namespace */
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var c = p.get('campaign');
+  if (!c) return;
+  var ns = 'dmloft:' + c + ':';
+  var ls = window.localStorage;
+  var origGet = ls.getItem.bind(ls),
+      origSet = ls.setItem.bind(ls),
+      origRemove = ls.removeItem.bind(ls);
+  ls.getItem    = function (k) { return origGet(ns + k); };
+  ls.setItem    = function (k, v) { return origSet(ns + k, v); };
+  ls.removeItem = function (k) { return origRemove(ns + k); };
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wordboard · DM Loft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ───────── Tome tokens (ink theme) ───────── */
+  :root {
+    --tome-paper:        #1a1410;
+    --tome-paper-edge:   #221a14;
+    --tome-paper-dark:   #2a2018;
+    --tome-ink:          #f0e6cc;
+    --tome-ink-soft:     #c9b88a;
+    --tome-ink-faint:    #8a7a5e;
+    --tome-oxblood:      #c44a4a;
+    --tome-oxblood-deep: #8a2828;
+    --tome-gold:         #d4a850;
+    --tome-gold-light:   #e8c870;
+    --tome-rule:         #5a4a30;
+    --tome-rule-soft:    #3a2e1e;
+    --tome-display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+    --tome-body:    "EB Garamond", Georgia, serif;
+    --tome-mono:    "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: var(--tome-paper); color: var(--tome-ink); }
+  html { font-size: 17px; }
+  body {
+    font-family: var(--tome-body);
+    line-height: 1.45;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 30% 20%, rgba(180,140,80,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 80%, rgba(180,140,80,0.04) 0%, transparent 55%);
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 32px 80px;
+    position: relative;
+  }
+  .page::before,
+  .page::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+  .page::before {
+    inset: 14px;
+    border: 1px solid var(--tome-gold);
+    opacity: 0.55;
+  }
+  .page::after {
+    inset: 18px;
+    border: 1px solid var(--tome-gold-light);
+    opacity: 0.22;
+  }
+  .page-inner { position: relative; padding: 14px 22px; }
+
+  /* ───────── Masthead ───────── */
+  .masthead { padding: 14px 0 12px; }
+  .eyebrow {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--tome-gold);
+  }
+  .title {
+    font-family: var(--tome-display);
+    font-weight: 600;
+    font-size: clamp(38px, 5vw, 56px);
+    line-height: 0.96;
+    letter-spacing: -0.01em;
+    color: var(--tome-ink);
+    margin-top: 2px;
+  }
+  .title em {
+    font-style: italic;
+    color: var(--tome-oxblood);
+  }
+  .subtitle {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--tome-ink-soft);
+    margin-top: 4px;
+    max-width: 720px;
+  }
+  .gilded-rule {
+    height: 3px;
+    border-top: 1px solid var(--tome-gold);
+    border-bottom: 1px solid var(--tome-gold);
+    margin: 18px 0 14px;
+  }
+
+  /* ───────── Tabs ───────── */
+  .tabs {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--tome-rule);
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    padding: 10px 0;
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 16px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--tome-ink-faint);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  .tab:hover { color: var(--tome-ink-soft); }
+  .tab.active { color: var(--tome-gold); border-bottom-color: var(--tome-oxblood); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ───────── Mood bar ───────── */
+  .mood-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .mood-btn {
+    background: rgba(244, 236, 204, 0.04);
+    border: 1px solid var(--tome-rule);
+    padding: 8px 18px;
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    color: var(--tome-ink-soft);
+    cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+  .mood-btn:hover {
+    border-color: var(--tome-gold);
+    color: var(--tome-ink);
+    background: rgba(244, 236, 204, 0.07);
+  }
+  .mood-btn.active {
+    background: var(--tome-oxblood);
+    border-color: var(--tome-oxblood);
+    color: var(--tome-paper);
+  }
+
+  /* ───────── Filter row ───────── */
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--tome-gold);
+  }
+  .cat-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cat-chip {
+    background: transparent;
+    border: 1px solid var(--tome-rule-soft);
+    padding: 4px 10px;
+    font-family: var(--tome-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tome-ink-soft);
+    cursor: pointer;
+    transition: border-color 100ms, color 100ms;
+  }
+  .cat-chip:hover { border-color: var(--tome-rule); color: var(--tome-ink); }
+  .cat-chip.active { border-color: var(--tome-gold); color: var(--tome-gold); }
+
+  .search-box { margin-left: auto; position: relative; min-width: 220px; }
+  #search, #thesaurus-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--tome-rule);
+    padding: 6px 26px 6px 2px;
+    font-family: var(--tome-body);
+    font-size: 15px;
+    color: var(--tome-ink);
+    outline: none;
+  }
+  #search::placeholder, #thesaurus-input::placeholder {
+    color: var(--tome-ink-faint);
+    font-style: italic;
+  }
+  #search:focus, #thesaurus-input:focus { border-bottom-color: var(--tome-gold); }
+  .search-hint {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--tome-mono);
+    font-size: 10px;
+    color: var(--tome-ink-faint);
+    pointer-events: none;
+  }
+
+  /* ───────── Word grid ───────── */
+  .word-count {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--tome-ink-faint);
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .word-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start;
+    min-height: 220px;
+  }
+  .word {
+    background: rgba(244, 236, 204, 0.04);
+    border: 1px solid var(--tome-rule);
+    padding: 6px 12px;
+    font-family: var(--tome-mono);
+    font-size: 13px;
+    color: var(--tome-ink);
+    cursor: pointer;
+    transition: background 100ms ease, border-color 100ms ease, color 100ms ease, transform 100ms ease;
+    user-select: none;
+  }
+  .word:hover {
+    background: rgba(244, 236, 204, 0.08);
+    border-color: var(--tome-gold);
+    color: var(--tome-gold-light);
+    transform: translateY(-1px);
+  }
+  .word:active { transform: translateY(0); }
+  .word.copied {
+    background: var(--tome-oxblood);
+    border-color: var(--tome-oxblood);
+    color: var(--tome-paper);
+  }
+  .word.from-api {
+    border-left: 2px solid var(--tome-oxblood);
+  }
+  .word.from-api:hover {
+    background: rgba(196, 74, 74, 0.14);
+    border-color: var(--tome-oxblood);
+    color: var(--tome-ink);
+  }
+
+  .empty-state {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--tome-ink-faint);
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* ───────── Thesaurus ───────── */
+  .lede {
+    font-family: var(--tome-body);
+    font-size: 16px;
+    color: var(--tome-ink-soft);
+    margin-bottom: 18px;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+  .thesaurus-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  #thesaurus-input {
+    width: 340px;
+    padding: 10px 4px;
+    font-size: 17px;
+  }
+  .result-section { margin-bottom: 26px; }
+  .result-section h3 {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--tome-gold);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .result-section h3::after {
+    content: "";
+    flex: 1;
+    height: 3px;
+    border-top: 1px solid var(--tome-gold);
+    border-bottom: 1px solid var(--tome-gold);
+  }
+  .result-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .save-hint {
+    font-family: var(--tome-body);
+    font-size: 14px;
+    color: var(--tome-ink-soft);
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(244, 236, 204, 0.05);
+    border-left: 2px solid var(--tome-gold);
+  }
+  .save-hint strong {
+    font-family: var(--tome-display);
+    font-style: italic;
+    color: var(--tome-gold);
+    font-weight: 600;
+  }
+
+  /* ───────── Toast ───────── */
+  #toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--tome-paper-dark);
+    border: 1px solid var(--tome-gold);
+    padding: 10px 22px;
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--tome-gold);
+    opacity: 0;
+    transition: transform 160ms ease, opacity 160ms ease;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  #toast.api { border-color: var(--tome-oxblood); color: var(--tome-oxblood); }
+
+  /* ───────── Page footer ───────── */
+  .page-footer {
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 1px solid var(--tome-rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .shortcuts {
+    display: flex;
+    gap: 18px;
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--tome-ink-faint);
+    letter-spacing: 0.04em;
+  }
+  .shortcuts span { display: flex; align-items: center; gap: 6px; }
+  kbd, .kbd {
+    font-family: var(--tome-mono);
+    background: rgba(244, 236, 204, 0.06);
+    border: 1px solid var(--tome-rule);
+    padding: 1px 6px;
+    font-size: 11px;
+    color: var(--tome-ink-soft);
+  }
+  .footer-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ───────── Buttons ───────── */
+  .btn {
+    background: transparent;
+    border: 1px solid var(--tome-ink);
+    padding: 7px 16px;
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tome-ink);
+    cursor: pointer;
+    transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+  .btn:hover { background: var(--tome-ink); color: var(--tome-paper); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn:disabled:hover { background: transparent; color: var(--tome-ink); }
+
+  .btn-primary {
+    background: var(--tome-oxblood);
+    border-color: var(--tome-oxblood);
+    color: var(--tome-paper);
+  }
+  .btn-primary:hover {
+    background: var(--tome-oxblood-deep);
+    border-color: var(--tome-oxblood-deep);
+    color: var(--tome-paper);
+  }
+
+  /* ───────── Modals ───────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 7, 4, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--tome-paper-edge);
+    border: 1.5px solid var(--tome-gold);
+    box-shadow: 0 0 0 4px var(--tome-paper), 0 0 0 5px var(--tome-gold-light);
+    padding: 28px 30px;
+    width: 90%;
+    max-width: 440px;
+    font-family: var(--tome-body);
+  }
+  .modal-eyebrow {
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--tome-gold);
+    text-align: center;
+  }
+  .modal h3 {
+    font-family: var(--tome-display);
+    font-weight: 600;
+    font-size: 28px;
+    text-align: center;
+    margin: 4px 0 22px;
+    color: var(--tome-ink);
+    line-height: 1.1;
+  }
+  .modal-field { margin-bottom: 18px; }
+  .modal-field label {
+    display: block;
+    font-family: var(--tome-display);
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tome-ink-soft);
+    margin-bottom: 5px;
+  }
+  .modal-field input, .modal-field select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--tome-rule);
+    padding: 8px 2px;
+    font-family: var(--tome-body);
+    font-size: 16px;
+    color: var(--tome-ink);
+    outline: none;
+  }
+  .modal-field select { cursor: pointer; }
+  .modal-field input:focus, .modal-field select:focus { border-bottom-color: var(--tome-gold); }
+  .modal-field select option { background: var(--tome-paper-dark); color: var(--tome-ink); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 26px;
+  }
+
+  /* ───────── Loading spinner ───────── */
+  .loading {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--tome-rule);
+    border-top-color: var(--tome-gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  ::selection { background: var(--tome-oxblood); color: var(--tome-paper); }
+
+  @media (max-width: 720px) {
+    .page { padding: 18px 14px 60px; }
+    .page-inner { padding: 10px 12px; }
+    .search-box { width: 100%; margin-left: 0; min-width: 0; }
+    .shortcuts { display: none; }
+    #thesaurus-input { width: 100%; }
+    .tabs { gap: 18px; }
+    .title { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-inner">
+    <header class="masthead">
+      <div class="eyebrow">By Mood &amp; Measure</div>
+      <h1 class="title">The <em>Wordboard</em></h1>
+      <p class="subtitle">A keeper&rsquo;s compendium of evocative words &mdash; choose a mood, or seek a synonym.</p>
+      <div class="gilded-rule" aria-hidden></div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="moods" role="tab">Browse by Mood</button>
+      <button class="tab" data-tab="thesaurus" role="tab">Thesaurus Lookup</button>
+    </nav>
+
+    <section class="tab-content active" id="tab-moods" role="tabpanel">
+      <div class="mood-bar" id="mood-bar"></div>
+      <div class="filter-row">
+        <span class="filter-label">Filter</span>
+        <div class="cat-chips" id="cat-chips"></div>
+        <div class="search-box">
+          <input type="search" id="search" placeholder="Search the compendium..." autocomplete="off">
+          <span class="search-hint">/</span>
+        </div>
+      </div>
+      <div class="word-count" id="word-count"></div>
+      <div class="word-grid" id="word-grid"></div>
+    </section>
+
+    <section class="tab-content" id="tab-thesaurus" role="tabpanel">
+      <p class="lede">Enter any word to find synonyms, related words, and similar-sounding alternatives. Results come from the Datamuse oracle &mdash; no key required.</p>
+      <div class="thesaurus-row">
+        <input type="text" id="thesaurus-input" placeholder="Enter a word (e.g., dark, scary, old)">
+        <button class="btn btn-primary" id="btn-lookup">Find Related Words</button>
+      </div>
+      <div id="thesaurus-results"></div>
+      <div class="save-hint">
+        <strong>Tip:</strong> Click any word to copy it. Right-click (or long-press on mobile) to preserve it in your custom wordlist with a mood and category.
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <div class="shortcuts">
+        <span><span class="kbd">/</span> search</span>
+        <span><span class="kbd">1-9,0,-</span> moods</span>
+        <span><span class="kbd">Esc</span> clear</span>
+        <span><span class="kbd">R</span> random</span>
+      </div>
+      <div class="footer-actions">
+        <button class="btn" id="btn-random">Random</button>
+        <button class="btn" id="btn-add">+ Custom</button>
+        <button class="btn" id="btn-export">Export</button>
+        <button class="btn" id="btn-import">Import</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- Add Custom Word Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-eyebrow">Of New Words</div>
+    <h3>Add a Custom Word</h3>
+    <div class="modal-field"><label>Word or Phrase</label><input type="text" id="custom-word" placeholder="e.g., bone-dry, whisper-thin"></div>
+    <div class="modal-field"><label>Primary Mood</label><select id="custom-mood"></select></div>
+    <div class="modal-field"><label>Category</label><select id="custom-cat"></select></div>
+    <div class="modal-actions"><button class="btn" id="modal-cancel">Cancel</button><button class="btn btn-primary" id="modal-save">Add Word</button></div>
+  </div>
+</div>
+
+<!-- Save API word modal -->
+<div class="modal-overlay" id="save-modal-overlay">
+  <div class="modal">
+    <div class="modal-eyebrow">To the Wordboard</div>
+    <h3>Preserve this Word</h3>
+    <div class="modal-field"><label>Word</label><input type="text" id="save-word" readonly></div>
+    <div class="modal-field"><label>Primary Mood</label><select id="save-mood"></select></div>
+    <div class="modal-field"><label>Category</label><select id="save-cat"></select></div>
+    <div class="modal-actions"><button class="btn" id="save-modal-cancel">Cancel</button><button class="btn btn-primary" id="save-modal-save">Save Word</button></div>
+  </div>
+</div>
+
+<input type="file" id="import-file" accept=".json" style="display:none">
+
+<script>
+const MOODS=[{id:'dread',label:'Dread'},{id:'tension',label:'Tension'},{id:'ominous',label:'Ominous'},{id:'menace',label:'Menace'},{id:'mystery',label:'Mystery'},{id:'wonder',label:'Wonder'},{id:'awe',label:'Awe'},{id:'sorrow',label:'Sorrow'},{id:'cozy',label:'Cozy'},{id:'serenity',label:'Serenity'},{id:'urgency',label:'Urgency'}];
+const CATEGORIES=[{id:'all',label:'All'},{id:'atmosphere',label:'Atmosphere'},{id:'light',label:'Light'},{id:'sound',label:'Sound'},{id:'smell',label:'Smell'},{id:'texture',label:'Texture'},{id:'movement',label:'Movement'},{id:'emotion',label:'Emotion'},{id:'terrain',label:'Terrain'},{id:'weather',label:'Weather'},{id:'wrongness',label:'Wrongness'},{id:'magic',label:'Magic'},{id:'body',label:'Body'},{id:'time',label:'Time'},{id:'nature',label:'Nature'}];
+
+const WORDS=[
+// ATMOSPHERE
+{w:"hollow",cat:"atmosphere",m:["dread","ominous"]},{w:"watchful",cat:"atmosphere",m:["dread","tension","ominous"]},{w:"hushed",cat:"atmosphere",m:["dread","tension","mystery"]},{w:"stagnant",cat:"atmosphere",m:["dread","ominous"]},{w:"close",cat:"atmosphere",m:["tension","urgency"]},{w:"brittle",cat:"atmosphere",m:["dread","sorrow","tension"]},{w:"uneasy",cat:"atmosphere",m:["tension","ominous"]},{w:"oppressive",cat:"atmosphere",m:["dread","tension","menace"]},{w:"stifling",cat:"atmosphere",m:["tension","dread","urgency"]},{w:"charged",cat:"atmosphere",m:["tension","urgency","wonder"]},{w:"expectant",cat:"atmosphere",m:["tension","wonder","mystery"]},{w:"thick",cat:"atmosphere",m:["tension","dread","ominous"]},{w:"heavy",cat:"atmosphere",m:["dread","sorrow","ominous"]},{w:"suffocating",cat:"atmosphere",m:["dread","urgency","tension"]},{w:"serene",cat:"atmosphere",m:["cozy","serenity","wonder"]},{w:"tranquil",cat:"atmosphere",m:["cozy","serenity"]},{w:"peaceful",cat:"atmosphere",m:["cozy","serenity"]},{w:"still",cat:"atmosphere",m:["tension","serenity","ominous"]},{w:"dead",cat:"atmosphere",m:["dread","ominous","sorrow"]},{w:"lifeless",cat:"atmosphere",m:["dread","sorrow","ominous"]},{w:"abandoned",cat:"atmosphere",m:["dread","sorrow","mystery"]},{w:"forsaken",cat:"atmosphere",m:["dread","sorrow","ominous"]},{w:"forgotten",cat:"atmosphere",m:["sorrow","mystery","dread"]},{w:"ancient",cat:"atmosphere",m:["wonder","mystery","awe"]},{w:"primeval",cat:"atmosphere",m:["wonder","dread","awe"]},{w:"hallowed",cat:"atmosphere",m:["wonder","awe","serenity"]},{w:"sacred",cat:"atmosphere",m:["wonder","awe","mystery"]},{w:"profane",cat:"atmosphere",m:["dread","ominous","menace"]},{w:"welcoming",cat:"atmosphere",m:["cozy","serenity"]},{w:"inviting",cat:"atmosphere",m:["cozy","wonder"]},{w:"intimate",cat:"atmosphere",m:["cozy","serenity"]},{w:"claustrophobic",cat:"atmosphere",m:["dread","tension","urgency"]},{w:"cavernous",cat:"atmosphere",m:["wonder","dread","awe"]},{w:"vast",cat:"atmosphere",m:["wonder","awe","dread"]},{w:"endless",cat:"atmosphere",m:["dread","wonder","awe"]},{w:"pregnant",cat:"atmosphere",m:["tension","ominous","mystery"]},{w:"laden",cat:"atmosphere",m:["ominous","tension","dread"]},{w:"brooding",cat:"atmosphere",m:["ominous","dread","menace"]},{w:"sepulchral",cat:"atmosphere",m:["dread","sorrow","ominous"]},{w:"funereal",cat:"atmosphere",m:["sorrow","dread","ominous"]},
+// LIGHT
+{w:"guttering",cat:"light",m:["dread","tension","ominous"]},{w:"flickering",cat:"light",m:["tension","cozy","ominous"]},{w:"wavering",cat:"light",m:["tension","mystery"]},{w:"dim",cat:"light",m:["dread","ominous","mystery"]},{w:"faint",cat:"light",m:["sorrow","mystery","dread"]},{w:"pale",cat:"light",m:["sorrow","dread","wonder"]},{w:"wan",cat:"light",m:["sorrow","dread","ominous"]},{w:"sickly",cat:"light",m:["dread","ominous","wrongness"]},{w:"jaundiced",cat:"light",m:["dread","wrongness","ominous"]},{w:"golden",cat:"light",m:["cozy","wonder","awe"]},{w:"amber",cat:"light",m:["cozy","wonder","serenity"]},{w:"honeyed",cat:"light",m:["cozy","serenity","wonder"]},{w:"silvery",cat:"light",m:["wonder","mystery","serenity"]},{w:"moonlit",cat:"light",m:["wonder","mystery","serenity"]},{w:"starlit",cat:"light",m:["wonder","serenity","awe"]},{w:"dappled",cat:"light",m:["wonder","cozy","serenity"]},{w:"mottled",cat:"light",m:["wrongness","dread","ominous"]},{w:"shadowed",cat:"light",m:["dread","mystery","ominous"]},{w:"shrouded",cat:"light",m:["mystery","dread","ominous"]},{w:"veiled",cat:"light",m:["mystery","ominous"]},{w:"murky",cat:"light",m:["dread","mystery","ominous"]},{w:"gloomy",cat:"light",m:["sorrow","dread","ominous"]},{w:"tenebrous",cat:"light",m:["dread","ominous","mystery"]},{w:"crepuscular",cat:"light",m:["mystery","wonder","ominous"]},{w:"blinding",cat:"light",m:["awe","urgency","wonder"]},{w:"blazing",cat:"light",m:["urgency","awe","wonder"]},{w:"glaring",cat:"light",m:["tension","urgency"]},{w:"harsh",cat:"light",m:["tension","urgency","dread"]},{w:"soft",cat:"light",m:["cozy","serenity","wonder"]},{w:"diffuse",cat:"light",m:["serenity","mystery"]},{w:"pooling",cat:"light",m:["mystery","tension","cozy"]},{w:"dancing",cat:"light",m:["wonder","cozy"]},{w:"dying",cat:"light",m:["sorrow","dread","ominous"]},{w:"fading",cat:"light",m:["sorrow","dread","urgency"]},{w:"swallowed",cat:"light",m:["dread","ominous"]},{w:"smothered",cat:"light",m:["dread","ominous","tension"]},{w:"bleeding",cat:"light",m:["dread","ominous","wrongness"]},{w:"bruised",cat:"light",m:["sorrow","ominous","dread"]},{w:"blood-red",cat:"light",m:["dread","menace","ominous"]},{w:"corpse-pale",cat:"light",m:["dread","sorrow","ominous"]},
+// SOUND
+{w:"silent",cat:"sound",m:["tension","dread","serenity"]},{w:"muffled",cat:"sound",m:["tension","ominous","mystery"]},{w:"distant",cat:"sound",m:["mystery","wonder","sorrow"]},{w:"echoing",cat:"sound",m:["mystery","wonder","dread"]},{w:"hollow",cat:"sound",m:["dread","ominous","sorrow"]},{w:"resonant",cat:"sound",m:["wonder","awe","mystery"]},{w:"reverberating",cat:"sound",m:["awe","wonder","dread"]},{w:"droning",cat:"sound",m:["dread","ominous","tension"]},{w:"humming",cat:"sound",m:["mystery","wonder","ominous"]},{w:"buzzing",cat:"sound",m:["tension","urgency","wrongness"]},{w:"whispering",cat:"sound",m:["mystery","tension","ominous"]},{w:"murmuring",cat:"sound",m:["mystery","cozy","serenity"]},{w:"rustling",cat:"sound",m:["tension","mystery","cozy"]},{w:"scratching",cat:"sound",m:["dread","tension","wrongness"]},{w:"scraping",cat:"sound",m:["dread","tension"]},{w:"grinding",cat:"sound",m:["dread","tension","urgency"]},{w:"creaking",cat:"sound",m:["tension","dread","ominous"]},{w:"groaning",cat:"sound",m:["dread","tension","sorrow"]},{w:"moaning",cat:"sound",m:["sorrow","dread","ominous"]},{w:"wailing",cat:"sound",m:["sorrow","dread","urgency"]},{w:"keening",cat:"sound",m:["sorrow","dread"]},{w:"shrieking",cat:"sound",m:["dread","urgency","tension"]},{w:"thundering",cat:"sound",m:["awe","urgency","dread"]},{w:"rumbling",cat:"sound",m:["ominous","tension","awe"]},{w:"crackling",cat:"sound",m:["cozy","tension","urgency"]},{w:"snapping",cat:"sound",m:["tension","urgency"]},{w:"dripping",cat:"sound",m:["tension","mystery","ominous"]},{w:"squelching",cat:"sound",m:["dread","wrongness"]},{w:"rhythmic",cat:"sound",m:["mystery","serenity","ominous"]},{w:"irregular",cat:"sound",m:["tension","wrongness"]},{w:"persistent",cat:"sound",m:["tension","ominous"]},{w:"wet",cat:"sound",m:["dread","wrongness","tension"]},{w:"thick",cat:"sound",m:["dread","wrongness"]},{w:"choked",cat:"sound",m:["dread","sorrow","tension"]},
+// SMELL
+{w:"acrid",cat:"smell",m:["dread","wrongness","urgency"]},{w:"bitter",cat:"smell",m:["dread","sorrow"]},{w:"metallic",cat:"smell",m:["dread","tension","wrongness"]},{w:"coppery",cat:"smell",m:["dread","tension","urgency"]},{w:"iron",cat:"smell",m:["dread","tension"]},{w:"musty",cat:"smell",m:["mystery","dread","ominous"]},{w:"moldy",cat:"smell",m:["dread","wrongness"]},{w:"damp",cat:"smell",m:["mystery","dread","cozy"]},{w:"earthy",cat:"smell",m:["cozy","mystery","serenity"]},{w:"loamy",cat:"smell",m:["cozy","serenity"]},{w:"petrichor",cat:"smell",m:["wonder","serenity","cozy"]},{w:"rotten",cat:"smell",m:["dread","wrongness","ominous"]},{w:"putrid",cat:"smell",m:["dread","wrongness"]},{w:"fetid",cat:"smell",m:["dread","wrongness","ominous"]},{w:"rank",cat:"smell",m:["dread","wrongness"]},{w:"sour",cat:"smell",m:["dread","wrongness","tension"]},{w:"sweet",cat:"smell",m:["cozy","wonder","wrongness"]},{w:"cloying",cat:"smell",m:["wrongness","dread","tension"]},{w:"fragrant",cat:"smell",m:["cozy","wonder","serenity"]},{w:"smoky",cat:"smell",m:["cozy","tension","mystery"]},{w:"charred",cat:"smell",m:["dread","urgency"]},{w:"burnt",cat:"smell",m:["dread","urgency","wrongness"]},{w:"ashen",cat:"smell",m:["dread","sorrow"]},{w:"piney",cat:"smell",m:["cozy","serenity","wonder"]},{w:"resinous",cat:"smell",m:["cozy","serenity"]},{w:"briny",cat:"smell",m:["wonder","serenity","mystery"]},{w:"sulfurous",cat:"smell",m:["dread","wrongness","ominous"]},{w:"blood-thick",cat:"smell",m:["dread","menace","wrongness"]},{w:"death-sweet",cat:"smell",m:["dread","wrongness","ominous"]},
+// TEXTURE
+{w:"rough",cat:"texture",m:["tension","cozy"]},{w:"coarse",cat:"texture",m:["tension","urgency"]},{w:"gritty",cat:"texture",m:["tension","urgency"]},{w:"smooth",cat:"texture",m:["cozy","serenity","wonder"]},{w:"silky",cat:"texture",m:["cozy","wonder","serenity"]},{w:"velvety",cat:"texture",m:["cozy","wonder"]},{w:"soft",cat:"texture",m:["cozy","serenity"]},{w:"yielding",cat:"texture",m:["cozy","wrongness"]},{w:"spongy",cat:"texture",m:["wrongness","mystery"]},{w:"rubbery",cat:"texture",m:["wrongness","tension"]},{w:"leathery",cat:"texture",m:["tension","cozy"]},{w:"papery",cat:"texture",m:["mystery","sorrow","dread"]},{w:"brittle",cat:"texture",m:["dread","tension","sorrow"]},{w:"crumbling",cat:"texture",m:["dread","sorrow","urgency"]},{w:"powdery",cat:"texture",m:["mystery","sorrow"]},{w:"dusty",cat:"texture",m:["mystery","sorrow","ominous"]},{w:"wet",cat:"texture",m:["dread","tension","mystery"]},{w:"slick",cat:"texture",m:["dread","urgency","tension"]},{w:"slimy",cat:"texture",m:["dread","wrongness"]},{w:"greasy",cat:"texture",m:["wrongness","dread"]},{w:"oily",cat:"texture",m:["wrongness","mystery"]},{w:"tacky",cat:"texture",m:["wrongness","tension"]},{w:"sticky",cat:"texture",m:["wrongness","tension","dread"]},{w:"viscous",cat:"texture",m:["wrongness","dread","ominous"]},{w:"clammy",cat:"texture",m:["dread","tension","wrongness"]},{w:"cold",cat:"texture",m:["dread","sorrow","tension"]},{w:"icy",cat:"texture",m:["dread","urgency","wonder"]},{w:"frozen",cat:"texture",m:["dread","sorrow","awe"]},{w:"warm",cat:"texture",m:["cozy","serenity","wonder"]},{w:"hot",cat:"texture",m:["urgency","tension","dread"]},{w:"burning",cat:"texture",m:["urgency","dread","tension"]},{w:"prickly",cat:"texture",m:["tension","urgency"]},{w:"sharp",cat:"texture",m:["tension","urgency","dread"]},{w:"jagged",cat:"texture",m:["dread","tension","urgency"]},{w:"splintered",cat:"texture",m:["dread","tension"]},{w:"frayed",cat:"texture",m:["sorrow","tension"]},{w:"worn",cat:"texture",m:["sorrow","cozy","mystery"]},{w:"weathered",cat:"texture",m:["sorrow","mystery","wonder"]},{w:"polished",cat:"texture",m:["wonder","cozy"]},{w:"gleaming",cat:"texture",m:["wonder","cozy","awe"]},
+// MOVEMENT
+{w:"creeping",cat:"movement",m:["dread","ominous","tension"]},{w:"crawling",cat:"movement",m:["dread","tension","wrongness"]},{w:"slithering",cat:"movement",m:["dread","wrongness","ominous"]},{w:"gliding",cat:"movement",m:["wonder","mystery","ominous"]},{w:"drifting",cat:"movement",m:["wonder","sorrow","serenity"]},{w:"floating",cat:"movement",m:["wonder","mystery","serenity"]},{w:"hovering",cat:"movement",m:["tension","mystery","ominous"]},{w:"circling",cat:"movement",m:["dread","tension","ominous"]},{w:"spiraling",cat:"movement",m:["dread","wonder","ominous"]},{w:"swirling",cat:"movement",m:["wonder","mystery","urgency"]},{w:"writhing",cat:"movement",m:["dread","wrongness","ominous"]},{w:"undulating",cat:"movement",m:["mystery","wrongness","wonder"]},{w:"pulsing",cat:"movement",m:["tension","urgency","mystery"]},{w:"throbbing",cat:"movement",m:["tension","dread","urgency"]},{w:"trembling",cat:"movement",m:["tension","dread","sorrow"]},{w:"shaking",cat:"movement",m:["tension","urgency","dread"]},{w:"quivering",cat:"movement",m:["tension","dread","sorrow"]},{w:"shuddering",cat:"movement",m:["dread","tension"]},{w:"twitching",cat:"movement",m:["dread","tension","wrongness"]},{w:"jerking",cat:"movement",m:["tension","urgency","wrongness"]},{w:"lurching",cat:"movement",m:["urgency","tension","dread"]},{w:"stumbling",cat:"movement",m:["urgency","tension","sorrow"]},{w:"staggering",cat:"movement",m:["urgency","sorrow","tension"]},{w:"dragging",cat:"movement",m:["sorrow","dread","tension"]},{w:"shuffling",cat:"movement",m:["dread","sorrow","ominous"]},{w:"prowling",cat:"movement",m:["tension","menace","dread"]},{w:"stalking",cat:"movement",m:["tension","menace","dread"]},{w:"lunging",cat:"movement",m:["urgency","tension","menace"]},{w:"darting",cat:"movement",m:["tension","urgency"]},{w:"flickering",cat:"movement",m:["mystery","tension","wonder"]},{w:"vanishing",cat:"movement",m:["mystery","dread"]},{w:"looming",cat:"movement",m:["dread","ominous","menace"]},{w:"approaching",cat:"movement",m:["tension","dread","ominous"]},{w:"retreating",cat:"movement",m:["tension","mystery"]},{w:"advancing",cat:"movement",m:["tension","menace","urgency"]},{w:"sudden",cat:"movement",m:["tension","urgency","dread"]},{w:"slow",cat:"movement",m:["dread","tension","ominous"]},{w:"deliberate",cat:"movement",m:["tension","menace","ominous"]},
+// EMOTION
+{w:"wary",cat:"emotion",m:["tension","dread"]},{w:"guarded",cat:"emotion",m:["tension","mystery"]},{w:"suspicious",cat:"emotion",m:["tension","dread"]},{w:"fearful",cat:"emotion",m:["dread","tension"]},{w:"terrified",cat:"emotion",m:["dread","urgency"]},{w:"anxious",cat:"emotion",m:["tension","urgency"]},{w:"nervous",cat:"emotion",m:["tension"]},{w:"uneasy",cat:"emotion",m:["tension","ominous"]},{w:"disturbed",cat:"emotion",m:["dread","wrongness"]},{w:"haunted",cat:"emotion",m:["dread","sorrow","ominous"]},{w:"tormented",cat:"emotion",m:["dread","sorrow"]},{w:"anguished",cat:"emotion",m:["sorrow","dread"]},{w:"grieving",cat:"emotion",m:["sorrow"]},{w:"mournful",cat:"emotion",m:["sorrow"]},{w:"melancholic",cat:"emotion",m:["sorrow","mystery"]},{w:"wistful",cat:"emotion",m:["sorrow","wonder"]},{w:"nostalgic",cat:"emotion",m:["sorrow","cozy"]},{w:"resigned",cat:"emotion",m:["sorrow","dread"]},{w:"hopeless",cat:"emotion",m:["sorrow","dread"]},{w:"desperate",cat:"emotion",m:["urgency","dread"]},{w:"frantic",cat:"emotion",m:["urgency","dread","tension"]},{w:"panicked",cat:"emotion",m:["urgency","dread"]},{w:"calm",cat:"emotion",m:["serenity","cozy"]},{w:"peaceful",cat:"emotion",m:["serenity","cozy"]},{w:"content",cat:"emotion",m:["cozy","serenity"]},{w:"relieved",cat:"emotion",m:["cozy","serenity"]},{w:"hopeful",cat:"emotion",m:["wonder","cozy"]},{w:"awed",cat:"emotion",m:["awe","wonder"]},{w:"reverent",cat:"emotion",m:["awe","serenity"]},{w:"curious",cat:"emotion",m:["wonder","mystery"]},{w:"intrigued",cat:"emotion",m:["wonder","mystery"]},{w:"fascinated",cat:"emotion",m:["wonder","mystery"]},{w:"mesmerized",cat:"emotion",m:["wonder","mystery","ominous"]},{w:"entranced",cat:"emotion",m:["wonder","mystery","ominous"]},{w:"hollow",cat:"emotion",m:["sorrow","dread"]},{w:"numb",cat:"emotion",m:["sorrow","dread"]},{w:"cold",cat:"emotion",m:["dread","menace"]},{w:"hostile",cat:"emotion",m:["menace","tension"]},{w:"malevolent",cat:"emotion",m:["menace","dread","ominous"]},{w:"predatory",cat:"emotion",m:["menace","tension","dread"]},{w:"hungry",cat:"emotion",m:["menace","dread","urgency"]},{w:"patient",cat:"emotion",m:["ominous","menace","tension"]},
+// TERRAIN
+{w:"treacherous",cat:"terrain",m:["tension","dread","urgency"]},{w:"uneven",cat:"terrain",m:["tension"]},{w:"unstable",cat:"terrain",m:["tension","urgency","dread"]},{w:"shifting",cat:"terrain",m:["tension","mystery","wrongness"]},{w:"crumbling",cat:"terrain",m:["dread","urgency","tension"]},{w:"broken",cat:"terrain",m:["sorrow","dread"]},{w:"shattered",cat:"terrain",m:["dread","sorrow","urgency"]},{w:"scarred",cat:"terrain",m:["sorrow","dread"]},{w:"barren",cat:"terrain",m:["sorrow","dread","ominous"]},{w:"desolate",cat:"terrain",m:["sorrow","dread","ominous"]},{w:"blasted",cat:"terrain",m:["dread","sorrow"]},{w:"scorched",cat:"terrain",m:["dread","urgency"]},{w:"blackened",cat:"terrain",m:["dread","ominous"]},{w:"overgrown",cat:"terrain",m:["mystery","wonder","ominous"]},{w:"tangled",cat:"terrain",m:["tension","mystery","dread"]},{w:"dense",cat:"terrain",m:["tension","mystery","cozy"]},{w:"impassable",cat:"terrain",m:["tension","dread","urgency"]},{w:"winding",cat:"terrain",m:["mystery","tension"]},{w:"narrow",cat:"terrain",m:["tension","urgency"]},{w:"steep",cat:"terrain",m:["tension","urgency","awe"]},{w:"sheer",cat:"terrain",m:["dread","awe","urgency"]},{w:"vast",cat:"terrain",m:["awe","wonder","dread"]},{w:"endless",cat:"terrain",m:["awe","dread","wonder"]},{w:"rolling",cat:"terrain",m:["serenity","wonder"]},{w:"gentle",cat:"terrain",m:["cozy","serenity"]},{w:"lush",cat:"terrain",m:["wonder","cozy","serenity"]},{w:"verdant",cat:"terrain",m:["wonder","cozy"]},{w:"rocky",cat:"terrain",m:["tension"]},{w:"muddy",cat:"terrain",m:["tension","urgency"]},{w:"boggy",cat:"terrain",m:["tension","dread","mystery"]},{w:"marshy",cat:"terrain",m:["mystery","dread"]},{w:"flooded",cat:"terrain",m:["urgency","tension"]},{w:"parched",cat:"terrain",m:["tension","sorrow"]},{w:"frozen",cat:"terrain",m:["dread","tension","awe"]},
+// WEATHER
+{w:"stormy",cat:"weather",m:["tension","urgency","dread"]},{w:"thunderous",cat:"weather",m:["awe","urgency","dread"]},{w:"howling",cat:"weather",m:["dread","urgency","tension"]},{w:"biting",cat:"weather",m:["tension","urgency","dread"]},{w:"bitter",cat:"weather",m:["dread","sorrow","tension"]},{w:"freezing",cat:"weather",m:["urgency","dread","tension"]},{w:"frigid",cat:"weather",m:["dread","tension"]},{w:"icy",cat:"weather",m:["dread","tension","wonder"]},{w:"frosty",cat:"weather",m:["tension","wonder","cozy"]},{w:"misty",cat:"weather",m:["mystery","serenity","ominous"]},{w:"foggy",cat:"weather",m:["mystery","tension","ominous"]},{w:"hazy",cat:"weather",m:["mystery","serenity"]},{w:"overcast",cat:"weather",m:["sorrow","tension","ominous"]},{w:"grey",cat:"weather",m:["sorrow","tension"]},{w:"leaden",cat:"weather",m:["sorrow","ominous","dread"]},{w:"drizzling",cat:"weather",m:["sorrow","cozy"]},{w:"pouring",cat:"weather",m:["urgency","tension"]},{w:"torrential",cat:"weather",m:["urgency","dread","awe"]},{w:"muggy",cat:"weather",m:["tension"]},{w:"humid",cat:"weather",m:["tension","cozy"]},{w:"sweltering",cat:"weather",m:["tension","urgency"]},{w:"scorching",cat:"weather",m:["urgency","tension","dread"]},{w:"balmy",cat:"weather",m:["cozy","serenity"]},{w:"mild",cat:"weather",m:["cozy","serenity"]},{w:"crisp",cat:"weather",m:["cozy","wonder","serenity"]},{w:"brisk",cat:"weather",m:["cozy","urgency"]},{w:"clear",cat:"weather",m:["serenity","wonder","cozy"]},{w:"still",cat:"weather",m:["tension","serenity","ominous"]},{w:"calm",cat:"weather",m:["serenity","cozy"]},{w:"breezy",cat:"weather",m:["cozy","serenity"]},{w:"gusty",cat:"weather",m:["tension","urgency"]},{w:"gale-force",cat:"weather",m:["urgency","dread","awe"]},
+// WRONGNESS
+{w:"wrong",cat:"wrongness",m:["dread","ominous"]},{w:"off",cat:"wrongness",m:["tension","ominous"]},{w:"twisted",cat:"wrongness",m:["dread","ominous"]},{w:"warped",cat:"wrongness",m:["dread","ominous"]},{w:"bent",cat:"wrongness",m:["tension"]},{w:"crooked",cat:"wrongness",m:["tension","ominous"]},{w:"misshapen",cat:"wrongness",m:["dread"]},{w:"malformed",cat:"wrongness",m:["dread"]},{w:"unnatural",cat:"wrongness",m:["dread","ominous"]},{w:"aberrant",cat:"wrongness",m:["dread"]},{w:"impossible",cat:"wrongness",m:["dread","awe"]},{w:"paradoxical",cat:"wrongness",m:["mystery"]},{w:"inverted",cat:"wrongness",m:["mystery"]},{w:"fractured",cat:"wrongness",m:["dread"]},{w:"splintered",cat:"wrongness",m:["tension","dread"]},{w:"disjointed",cat:"wrongness",m:["tension"]},{w:"uncanny",cat:"wrongness",m:["dread","ominous"]},{w:"alien",cat:"wrongness",m:["dread","wonder"]},{w:"otherworldly",cat:"wrongness",m:["wonder","awe"]},{w:"eldritch",cat:"wrongness",m:["dread","ominous"]},{w:"abyssal",cat:"wrongness",m:["dread","awe"]},{w:"void-touched",cat:"wrongness",m:["dread","ominous"]},{w:"corrupted",cat:"wrongness",m:["dread","ominous"]},{w:"tainted",cat:"wrongness",m:["dread"]},{w:"blighted",cat:"wrongness",m:["dread","sorrow"]},{w:"diseased",cat:"wrongness",m:["dread"]},{w:"festering",cat:"wrongness",m:["dread"]},{w:"rotting",cat:"wrongness",m:["dread"]},{w:"decaying",cat:"wrongness",m:["dread","sorrow"]},{w:"withering",cat:"wrongness",m:["sorrow"]},
+// MAGIC
+{w:"crackling",cat:"magic",m:["tension","wonder","urgency"]},{w:"humming",cat:"magic",m:["mystery","wonder","tension"]},{w:"thrumming",cat:"magic",m:["tension","wonder","urgency"]},{w:"pulsing",cat:"magic",m:["tension","mystery","urgency"]},{w:"shimmering",cat:"magic",m:["wonder","mystery"]},{w:"glowing",cat:"magic",m:["wonder","mystery","awe"]},{w:"radiant",cat:"magic",m:["awe","wonder","serenity"]},{w:"luminous",cat:"magic",m:["wonder","awe","serenity"]},{w:"incandescent",cat:"magic",m:["awe","wonder","urgency"]},{w:"ethereal",cat:"magic",m:["wonder","mystery","serenity"]},{w:"spectral",cat:"magic",m:["dread","mystery","ominous"]},{w:"ghostly",cat:"magic",m:["dread","mystery","sorrow"]},{w:"phantasmal",cat:"magic",m:["mystery","dread"]},{w:"illusory",cat:"magic",m:["mystery"]},{w:"arcane",cat:"magic",m:["mystery","wonder","tension"]},{w:"eldritch",cat:"magic",m:["dread","ominous"]},{w:"primal",cat:"magic",m:["awe","tension","wonder"]},{w:"ancient",cat:"magic",m:["mystery","awe","wonder"]},{w:"forbidden",cat:"magic",m:["dread","tension","ominous"]},{w:"wild",cat:"magic",m:["tension","urgency","wonder"]},{w:"unstable",cat:"magic",m:["tension","urgency","dread"]},{w:"volatile",cat:"magic",m:["tension","urgency","dread"]},{w:"potent",cat:"magic",m:["awe","tension","wonder"]},{w:"overwhelming",cat:"magic",m:["awe","dread","urgency"]},{w:"subtle",cat:"magic",m:["mystery","tension"]},{w:"faint",cat:"magic",m:["mystery","sorrow"]},{w:"lingering",cat:"magic",m:["mystery","ominous","sorrow"]},{w:"binding",cat:"magic",m:["tension","dread","ominous"]},{w:"warding",cat:"magic",m:["tension","serenity"]},{w:"draining",cat:"magic",m:["dread","tension","sorrow"]},{w:"consuming",cat:"magic",m:["dread","urgency","ominous"]},
+// BODY
+{w:"gaunt",cat:"body",m:["dread","sorrow"]},{w:"emaciated",cat:"body",m:["dread","sorrow"]},{w:"skeletal",cat:"body",m:["dread"]},{w:"withered",cat:"body",m:["sorrow","dread"]},{w:"hunched",cat:"body",m:["sorrow","tension","dread"]},{w:"twisted",cat:"body",m:["dread"]},{w:"gnarled",cat:"body",m:["dread","mystery"]},{w:"bloated",cat:"body",m:["dread"]},{w:"swollen",cat:"body",m:["dread","tension"]},{w:"hulking",cat:"body",m:["menace","tension","awe"]},{w:"massive",cat:"body",m:["awe","menace","tension"]},{w:"towering",cat:"body",m:["awe","menace","tension"]},{w:"imposing",cat:"body",m:["tension","menace","awe"]},{w:"slight",cat:"body",m:["mystery","tension"]},{w:"frail",cat:"body",m:["sorrow","tension"]},{w:"delicate",cat:"body",m:["wonder","sorrow"]},{w:"graceful",cat:"body",m:["wonder","serenity"]},{w:"lithe",cat:"body",m:["wonder","tension"]},{w:"sinuous",cat:"body",m:["mystery","tension","menace"]},{w:"serpentine",cat:"body",m:["menace","mystery","dread"]},{w:"scarred",cat:"body",m:["tension","sorrow"]},{w:"branded",cat:"body",m:["dread","sorrow","mystery"]},{w:"marked",cat:"body",m:["mystery","tension","ominous"]},{w:"pallid",cat:"body",m:["dread","sorrow"]},{w:"ashen",cat:"body",m:["dread","sorrow"]},{w:"flushed",cat:"body",m:["tension","urgency"]},{w:"feverish",cat:"body",m:["tension","urgency","dread"]},{w:"trembling",cat:"body",m:["tension","dread"]},{w:"rigid",cat:"body",m:["tension","dread"]},{w:"tense",cat:"body",m:["tension"]},{w:"weary",cat:"body",m:["sorrow","tension"]},{w:"exhausted",cat:"body",m:["sorrow","tension","urgency"]},
+// TIME
+{w:"fleeting",cat:"time",m:["urgency","sorrow","mystery"]},{w:"momentary",cat:"time",m:["tension","urgency"]},{w:"brief",cat:"time",m:["tension","urgency"]},{w:"sudden",cat:"time",m:["tension","urgency","dread"]},{w:"abrupt",cat:"time",m:["tension","urgency"]},{w:"gradual",cat:"time",m:["tension","mystery","ominous"]},{w:"slow",cat:"time",m:["tension","ominous","dread"]},{w:"crawling",cat:"time",m:["tension","ominous","dread"]},{w:"endless",cat:"time",m:["dread","sorrow","ominous"]},{w:"eternal",cat:"time",m:["awe","dread","wonder"]},{w:"timeless",cat:"time",m:["wonder","awe","mystery"]},{w:"ancient",cat:"time",m:["mystery","awe","wonder"]},{w:"primordial",cat:"time",m:["awe","dread","mystery"]},{w:"forgotten",cat:"time",m:["mystery","sorrow","dread"]},{w:"lost",cat:"time",m:["sorrow","mystery"]},{w:"fading",cat:"time",m:["sorrow","mystery"]},{w:"waning",cat:"time",m:["sorrow","ominous"]},{w:"dying",cat:"time",m:["sorrow","dread","urgency"]},{w:"lingering",cat:"time",m:["tension","mystery","ominous"]},{w:"persistent",cat:"time",m:["tension","ominous"]},{w:"relentless",cat:"time",m:["tension","dread","urgency"]},{w:"inevitable",cat:"time",m:["dread","ominous"]},{w:"impending",cat:"time",m:["dread","tension","ominous"]},{w:"imminent",cat:"time",m:["urgency","tension","dread"]},
+// NATURE
+{w:"wild",cat:"nature",m:["wonder","tension","urgency"]},{w:"untamed",cat:"nature",m:["wonder","tension","menace"]},{w:"feral",cat:"nature",m:["menace","tension","dread"]},{w:"savage",cat:"nature",m:["menace","urgency","dread"]},{w:"primal",cat:"nature",m:["awe","tension","wonder"]},{w:"ancient",cat:"nature",m:["awe","mystery","wonder"]},{w:"primeval",cat:"nature",m:["awe","dread","mystery"]},{w:"verdant",cat:"nature",m:["wonder","cozy","serenity"]},{w:"lush",cat:"nature",m:["wonder","cozy"]},{w:"blooming",cat:"nature",m:["wonder","cozy","serenity"]},{w:"withered",cat:"nature",m:["sorrow","dread"]},{w:"wilting",cat:"nature",m:["sorrow"]},{w:"dying",cat:"nature",m:["sorrow","dread"]},{w:"dead",cat:"nature",m:["dread","sorrow"]},{w:"rotting",cat:"nature",m:["dread"]},{w:"decaying",cat:"nature",m:["dread","sorrow"]},{w:"overgrown",cat:"nature",m:["mystery","wonder","ominous"]},{w:"tangled",cat:"nature",m:["tension","mystery"]},{w:"thorny",cat:"nature",m:["tension","menace"]},{w:"gnarled",cat:"nature",m:["mystery","ominous","dread"]},{w:"twisted",cat:"nature",m:["ominous","dread"]},{w:"moss-covered",cat:"nature",m:["mystery","serenity","cozy"]},{w:"fungal",cat:"nature",m:["mystery","dread"]},{w:"venomous",cat:"nature",m:["menace","dread","tension"]},{w:"predatory",cat:"nature",m:["menace","tension"]},{w:"nocturnal",cat:"nature",m:["mystery","tension","ominous"]}
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let activeMood=null, activeCat='all', searchQuery='', customWords=[], currentTab='moods';
+
+function loadCustomWords(){try{const s=localStorage.getItem('dm-wordboard-custom');if(s)customWords=JSON.parse(s);}catch(e){customWords=[];}}
+function saveCustomWords(){localStorage.setItem('dm-wordboard-custom',JSON.stringify(customWords));}
+function getAllWords(){return[...WORDS,...customWords];}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATAMUSE API - Free, no key required
+// ═══════════════════════════════════════════════════════════════════════════════
+async function lookupWord(word) {
+  const results = { synonyms: [], similar: [], related: [], adjectives: [] };
+
+  try {
+    // Synonyms (words with similar meaning)
+    const synRes = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&max=20`);
+    const synData = await synRes.json();
+    results.synonyms = synData.map(w => w.word);
+
+    // Similar meaning (broader)
+    const mlRes = await fetch(`https://api.datamuse.com/words?ml=${encodeURIComponent(word)}&max=25`);
+    const mlData = await mlRes.json();
+    results.similar = mlData.map(w => w.word).filter(w => !results.synonyms.includes(w));
+
+    // Related words (triggered by)
+    const trigRes = await fetch(`https://api.datamuse.com/words?rel_trg=${encodeURIComponent(word)}&max=15`);
+    const trigData = await trigRes.json();
+    results.related = trigData.map(w => w.word);
+
+    // If it's a noun, get adjectives that describe it
+    const adjRes = await fetch(`https://api.datamuse.com/words?rel_jjb=${encodeURIComponent(word)}&max=20`);
+    const adjData = await adjRes.json();
+    results.adjectives = adjData.map(w => w.word);
+
+  } catch (err) {
+    console.error('API error:', err);
+  }
+
+  return results;
+}
+
+function renderThesaurusResults(results, searchedWord) {
+  const container = document.getElementById('thesaurus-results');
+
+  if (!results.synonyms.length && !results.similar.length && !results.related.length && !results.adjectives.length) {
+    container.innerHTML = '<div class="empty-state">No results found. Try a different word.</div>';
+    return;
+  }
+
+  let html = '';
+
+  if (results.synonyms.length) {
+    html += `<div class="result-section"><h3>Synonyms</h3><div class="result-grid">${results.synonyms.map(w => `<div class="word from-api" data-word="${w}">${w}</div>`).join('')}</div></div>`;
+  }
+
+  if (results.adjectives.length) {
+    html += `<div class="result-section"><h3>Adjectives for &ldquo;${searchedWord}&rdquo;</h3><div class="result-grid">${results.adjectives.map(w => `<div class="word from-api" data-word="${w}">${w}</div>`).join('')}</div></div>`;
+  }
+
+  if (results.similar.length) {
+    html += `<div class="result-section"><h3>Similar Words</h3><div class="result-grid">${results.similar.slice(0, 20).map(w => `<div class="word from-api" data-word="${w}">${w}</div>`).join('')}</div></div>`;
+  }
+
+  if (results.related.length) {
+    html += `<div class="result-section"><h3>Related Concepts</h3><div class="result-grid">${results.related.map(w => `<div class="word from-api" data-word="${w}">${w}</div>`).join('')}</div></div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MOOD BROWSER
+// ═══════════════════════════════════════════════════════════════════════════════
+function filterWords(){
+  const q=searchQuery.toLowerCase().trim(),all=getAllWords();
+  return all.filter(w=>{
+    if(q)return w.w.toLowerCase().includes(q);
+    if(!activeMood)return false;
+    if(!w.m.includes(activeMood))return false;
+    if(activeCat!=='all'&&w.cat!==activeCat)return false;
+    return true;
+  });
+}
+
+function renderMoodBar(){document.getElementById('mood-bar').innerHTML=MOODS.map((m,i)=>'<button class="mood-btn'+(activeMood===m.id?' active':'')+'" data-mood="'+m.id+'">'+m.label+'</button>').join('');}
+function renderCatChips(){document.getElementById('cat-chips').innerHTML=CATEGORIES.map(c=>'<div class="cat-chip'+(activeCat===c.id?' active':'')+'" data-cat="'+c.id+'">'+c.label+'</div>').join('');}
+
+function renderWordGrid(){
+  const grid=document.getElementById('word-grid'),countEl=document.getElementById('word-count'),filtered=filterWords();
+  if(searchQuery){countEl.textContent=filtered.length+' result'+(filtered.length!==1?'s':'')+' for "'+searchQuery+'"';}
+  else if(activeMood){const mLabel=MOODS.find(m=>m.id===activeMood)?.label||activeMood;const cLabel=activeCat==='all'?'':' · '+CATEGORIES.find(c=>c.id===activeCat)?.label;countEl.textContent=filtered.length+' '+mLabel.toLowerCase()+' word'+(filtered.length!==1?'s':'')+cLabel;}
+  else{countEl.textContent='Select a mood to see words';}
+  if(filtered.length===0){grid.innerHTML='<div class="empty-state">'+((!activeMood&&!searchQuery)?'Click a mood above to summon its words':'No words match. Try a different mood or category.')+'</div>';return;}
+  filtered.sort((a,b)=>a.w.localeCompare(b.w));
+  grid.innerHTML=filtered.map(w=>'<div class="word'+(w.custom?' from-api':'')+'" data-word="'+w.w+'">'+w.w+'</div>').join('');
+}
+
+function render(){renderMoodBar();renderCatChips();renderWordGrid();}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════════════════════════════════
+function toast(msg, isApi=false){const el=document.getElementById('toast');el.textContent=msg;el.className=isApi?'api':'';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1200);}
+function copyWord(w){navigator.clipboard.writeText(w).then(()=>toast('Copied: '+w)).catch(()=>toast(w));}
+function randomWord(){const filtered=filterWords();if(filtered.length===0){const all=getAllWords();if(all.length===0)return;copyWord(all[Math.floor(Math.random()*all.length)].w);return;}copyWord(filtered[Math.floor(Math.random()*filtered.length)].w);}
+
+function showModal(){
+  document.getElementById('modal-overlay').classList.add('show');
+  document.getElementById('custom-mood').innerHTML=MOODS.map(m=>'<option value="'+m.id+'">'+m.label+'</option>').join('');
+  document.getElementById('custom-cat').innerHTML=CATEGORIES.filter(c=>c.id!=='all').map(c=>'<option value="'+c.id+'">'+c.label+'</option>').join('');
+  document.getElementById('custom-word').focus();
+}
+function hideModal(){document.getElementById('modal-overlay').classList.remove('show');document.getElementById('custom-word').value='';}
+
+function showSaveModal(word){
+  document.getElementById('save-modal-overlay').classList.add('show');
+  document.getElementById('save-word').value=word;
+  document.getElementById('save-mood').innerHTML=MOODS.map(m=>'<option value="'+m.id+'">'+m.label+'</option>').join('');
+  document.getElementById('save-cat').innerHTML=CATEGORIES.filter(c=>c.id!=='all').map(c=>'<option value="'+c.id+'">'+c.label+'</option>').join('');
+}
+function hideSaveModal(){document.getElementById('save-modal-overlay').classList.remove('show');}
+
+function addCustomWord(){
+  const w=document.getElementById('custom-word').value.trim();
+  if(!w){toast('Enter a word');return;}
+  if(getAllWords().some(x=>x.w.toLowerCase()===w.toLowerCase())){toast('Already exists');return;}
+  customWords.push({w:w,cat:document.getElementById('custom-cat').value,m:[document.getElementById('custom-mood').value],custom:true});
+  saveCustomWords();hideModal();render();toast('Added: '+w);
+}
+
+function saveApiWord(){
+  const w=document.getElementById('save-word').value.trim();
+  if(getAllWords().some(x=>x.w.toLowerCase()===w.toLowerCase())){toast('Already exists');hideSaveModal();return;}
+  customWords.push({w:w,cat:document.getElementById('save-cat').value,m:[document.getElementById('save-mood').value],custom:true});
+  saveCustomWords();hideSaveModal();render();toast('Saved: '+w, true);
+}
+
+function exportWords(){if(customWords.length===0){toast('No custom words');return;}const b=new Blob([JSON.stringify(customWords,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dm-wordboard-custom.json';a.click();URL.revokeObjectURL(u);toast('Exported');}
+function importWords(){document.getElementById('import-file').click();}
+function handleImport(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const imp=JSON.parse(ev.target.result);if(!Array.isArray(imp))throw 0;let n=0;for(const w of imp){if(w.w&&!getAllWords().some(x=>x.w.toLowerCase()===w.w.toLowerCase())){customWords.push({w:w.w,cat:w.cat||'atmosphere',m:w.m||['mystery'],custom:true});n++;}}saveCustomWords();render();toast('Imported '+n);}catch(err){toast('Failed');}};r.readAsText(f);e.target.value='';}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INITIALIZATION
+// ═══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  loadCustomWords();
+  render();
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      currentTab = tab.dataset.tab;
+    });
+  });
+
+  // Mood bar
+  document.getElementById('mood-bar').addEventListener('click',e=>{const b=e.target.closest('.mood-btn');if(b){activeMood=activeMood===b.dataset.mood?null:b.dataset.mood;searchQuery='';document.getElementById('search').value='';render();}});
+
+  // Category chips
+  document.getElementById('cat-chips').addEventListener('click',e=>{const c=e.target.closest('.cat-chip');if(c){activeCat=c.dataset.cat;render();}});
+
+  // Word grid clicks (copy) and context menu (save)
+  document.getElementById('word-grid').addEventListener('click',e=>{const w=e.target.closest('.word');if(w){copyWord(w.dataset.word);w.classList.add('copied');setTimeout(()=>w.classList.remove('copied'),200);}});
+  document.getElementById('word-grid').addEventListener('contextmenu',e=>{const w=e.target.closest('.word');if(w){e.preventDefault();showSaveModal(w.dataset.word);}});
+
+  // Thesaurus results (copy and save)
+  document.getElementById('thesaurus-results').addEventListener('click',e=>{const w=e.target.closest('.word');if(w){copyWord(w.dataset.word);w.classList.add('copied');setTimeout(()=>w.classList.remove('copied'),200);}});
+  document.getElementById('thesaurus-results').addEventListener('contextmenu',e=>{const w=e.target.closest('.word');if(w){e.preventDefault();showSaveModal(w.dataset.word);}});
+
+  // Search
+  document.getElementById('search').addEventListener('input',e=>{searchQuery=e.target.value;if(searchQuery)activeMood=null;render();});
+
+  // Thesaurus lookup
+  const thesaurusInput = document.getElementById('thesaurus-input');
+  const lookupBtn = document.getElementById('btn-lookup');
+
+  async function doLookup() {
+    const word = thesaurusInput.value.trim();
+    if (!word) { toast('Enter a word first'); return; }
+
+    lookupBtn.disabled = true;
+    lookupBtn.innerHTML = 'Searching<span class="loading"></span>';
+
+    const results = await lookupWord(word);
+    renderThesaurusResults(results, word);
+
+    lookupBtn.disabled = false;
+    lookupBtn.textContent = 'Find Related Words';
+  }
+
+  lookupBtn.addEventListener('click', doLookup);
+  thesaurusInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLookup(); });
+
+  // Buttons
+  document.getElementById('btn-random').addEventListener('click',randomWord);
+  document.getElementById('btn-add').addEventListener('click',showModal);
+  document.getElementById('btn-export').addEventListener('click',exportWords);
+  document.getElementById('btn-import').addEventListener('click',importWords);
+  document.getElementById('import-file').addEventListener('change',handleImport);
+
+  // Modals
+  document.getElementById('modal-cancel').addEventListener('click',hideModal);
+  document.getElementById('modal-save').addEventListener('click',addCustomWord);
+  document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)hideModal();});
+
+  document.getElementById('save-modal-cancel').addEventListener('click',hideSaveModal);
+  document.getElementById('save-modal-save').addEventListener('click',saveApiWord);
+  document.getElementById('save-modal-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)hideSaveModal();});
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown',e=>{
+    const inInput=['INPUT','TEXTAREA'].includes(document.activeElement.tagName);
+    const keyMap={'1':0,'2':1,'3':2,'4':3,'5':4,'6':5,'7':6,'8':7,'9':8,'0':9,'-':10};
+
+    if(!inInput&&keyMap[e.key]!==undefined&&keyMap[e.key]<MOODS.length&&currentTab==='moods'){
+      e.preventDefault();
+      const m=MOODS[keyMap[e.key]].id;
+      activeMood=activeMood===m?null:m;
+      searchQuery='';
+      document.getElementById('search').value='';
+      render();
+    }
+    if(e.key==='/'&&!inInput){e.preventDefault();document.getElementById(currentTab==='moods'?'search':'thesaurus-input').focus();}
+    if(e.key==='Escape'){
+      if(document.getElementById('modal-overlay').classList.contains('show')){hideModal();}
+      else if(document.getElementById('save-modal-overlay').classList.contains('show')){hideSaveModal();}
+      else{document.getElementById('search').value='';searchQuery='';document.getElementById('search').blur();render();}
+    }
+    if(e.key.toLowerCase()==='r'&&!inInput){e.preventDefault();randomWord();}
+    if(e.key==='Enter'){
+      if(document.getElementById('modal-overlay').classList.contains('show')){e.preventDefault();addCustomWord();}
+      if(document.getElementById('save-modal-overlay').classList.contains('show')){e.preventDefault();saveApiWord();}
+    }
+  });
+});
+</script>
+</body>
+</html>

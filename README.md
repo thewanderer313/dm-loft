@@ -1,9 +1,9 @@
 # DM Loft
 
 A keeper's tome for running D&D campaigns at the table. Each campaign has its
-own state and a launchpad of seven instruments — initiative, time & moon,
-reputation, battle map, roll tables, rules reference, and a shared audio
-library for music & ambience.
+own state and a launchpad of eight instruments — initiative, time & moon,
+reputation, battle map, roll tables, rules reference, a shared audio library
+for music & ambience, and a wordboard of evocative adjectives.
 
 Built on Next.js 16 (App Router), Supabase (auth + Postgres + Storage),
 Tailwind 4, and deployed on Vercel.
@@ -30,12 +30,14 @@ The launchpad on every campaign opens one of these:
 | Roll Tables          | d20       | static HTML at `public/tools/roll-tables/`      |
 | Rules Reference      | book      | static HTML at `public/tools/rules/`            |
 | Audio Library        | note      | native Next.js route at `app/c/[id]/t/audio/`   |
+| Wordboard            | quill     | static HTML at `public/tools/wordboard/`        |
 
-The first six are standalone HTML pages loaded into an iframe; each tool keeps
-its own per-campaign localStorage (the parent injects a `?campaign=…` param
-and the tool namespaces its keys). All six share the cosmetic Tome overlay at
-`public/tools/_tome.css` so they fit the surrounding aesthetic without
-touching their JS or markup.
+Seven of the eight are standalone HTML pages loaded into an iframe; each tool
+keeps its own per-campaign localStorage (the parent injects a `?campaign=…`
+param and the tool namespaces its keys). The first six share the cosmetic
+Tome overlay at `public/tools/_tome.css` so they fit the surrounding aesthetic
+without touching their JS or markup; the Wordboard is Tome-native — it ships
+with the vellum/ink palette baked in and does not need the overlay.
 
 The Audio Library is different — it's a real Next.js route backed by a
 `tracks` table and a private Supabase Storage bucket. It's a single shared

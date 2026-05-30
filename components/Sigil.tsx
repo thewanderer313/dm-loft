@@ -10,7 +10,8 @@ export type SigilKind =
   | "ornament"
   | "eye"
   | "star"
-  | "note";
+  | "note"
+  | "quill";
 
 export function Sigil({
   kind,
@@ -149,6 +150,19 @@ export function Sigil({
             {...common}
             fill={color}
           />
+        </svg>
+      );
+    case "quill":
+      return (
+        <svg {...svg}>
+          {/* Shaft — long diagonal from upper-right to lower-left */}
+          <line x1={s * 0.80} y1={s * 0.18} x2={s * 0.20} y2={s * 0.80} {...common} />
+          {/* Feather barbs — short strokes branching off the upper half */}
+          <line x1={s * 0.72} y1={s * 0.18} x2={s * 0.56} y2={s * 0.18} {...common} />
+          <line x1={s * 0.62} y1={s * 0.30} x2={s * 0.44} y2={s * 0.28} {...common} />
+          <line x1={s * 0.50} y1={s * 0.44} x2={s * 0.32} y2={s * 0.42} {...common} />
+          {/* Ink dot at the nib */}
+          <circle cx={s * 0.16} cy={s * 0.84} r={s * 0.05} fill={color} stroke="none" />
         </svg>
       );
   }
